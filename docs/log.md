@@ -1,10 +1,9 @@
-```text
 StudyPilot – Iteration 1 Log
 =================================
 
 Repository Structure
 ---------------------------------
-
+```text
 📦 project-group-3-studypilot
 ├── 📂 docs
 ├── 📜 README.md
@@ -42,14 +41,16 @@ Repository Structure
     ├── 📜 build.gradle
     ├── 📜 gradlew
     ├── 📜 settings.gradle
-    └── 📜 tailwind.config.js  
+    └── 📜 tailwind.config.js
+``` 
 
 TEAM MEMBERS
-Member Tessa Cloutier
-Member Gabriella Crook
-Member Monabbir Bhuiyan
-Member Ashvin Kawleswaran
-Member Sandeepon Saha
+==================================================
+* **Tessa Cloutier**
+* **Gabriella Crook**
+* **Monabbir Bhuiyan**
+* **Ashvin Kawleswaran**
+* **Sandeepon Saha**
 
 ITERATION 0 REFERENCE
 ==================================================
