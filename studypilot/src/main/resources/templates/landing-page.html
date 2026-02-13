@@ -3,31 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StudyPilot</title>
+    <title>StudyPilot | The Academic Force Multiplier</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              primary: "#3b82f6", // Adjust to match your theme
-              accent: "#f3f4f6",
-            },
-            animation: {
-              float: "float 3s ease-in-out infinite",
-            },
-            keyframes: {
-              float: {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-10px)" },
-              },
+              primary: "#2563eb",
+              secondary: "#f8fafc",
+              accent: "#0f172a",
             },
           },
         },
       };
     </script>
     <style>
-      /* Replicating the "mounted" fade-in effect from hero.tsx */
+      html {
+        scroll-behavior: smooth;
+      }
       .fade-in {
         animation: fadeIn 1s ease-out forwards;
         opacity: 0;
@@ -51,9 +45,85 @@
       .delay-300 {
         animation-delay: 0.3s;
       }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .bento-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .bento-card:hover {
+        transform: translateY(-5px);
+        shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      }
     </style>
   </head>
-  <body class="bg-white text-slate-900 overflow-x-hidden">
+  <body class="bg-white text-slate-900 selection:bg-blue-100">
+    <!-- Navbar -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div
+            class="flex items-center gap-2 group cursor-pointer"
+            onclick="window.scrollTo(0, 0)"
+          >
+            <div
+              class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center transition-transform group-hover:rotate-12"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                />
+              </svg>
+            </div>
+            <span class="font-bold text-xl tracking-tight">StudyPilot</span>
+          </div>
+          <nav class="hidden md:flex items-center gap-8">
+            <a
+              href="#features"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >Features</a
+            >
+            <a
+              href="#philosophy"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >Philosophy</a
+            >
+            <a
+              href="#faq"
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              >FAQ</a
+            >
+          </nav>
+          <div class="flex items-center gap-3">
+            <a
+              href="/login"
+              class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+              >Log In</a
+            >
+            <a
+              href="/register"
+              class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:shadow-lg"
+              >Get Started</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
     <section class="py-20 lg:py-32">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -170,7 +240,272 @@
       </div>
     </section>
 
-    <button onclick="location.href = '/login'">Login</button>
-    <button onclick="location.href = '/register'">Register</button>
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 mb-4">
+            Workflow Automation
+          </h2>
+          <p class="text-slate-600">
+            Powerful tools designed to eliminate administrative fatigue.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4">
+          <div
+            class="md:col-span-2 md:row-span-2 bg-white p-8 rounded-3xl border border-slate-200 bento-card flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-6"
+              >
+                📝
+              </div>
+              <h3 class="text-2xl font-bold mb-4">Notes to Tools</h3>
+              <p class="text-slate-600 mb-6">
+                Instantly convert lecture slides, PDFs, and notes into
+                ready-to-use quizzes and study guides. Our AI extracts complex
+                STEM formulas and business frameworks with 95% accuracy.
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-slate-50 p-4 rounded-2xl">
+                <span class="block text-2xl font-bold text-blue-600">10x</span
+                ><span class="text-xs text-slate-500">Faster Prep</span>
+              </div>
+              <div class="bg-slate-50 p-4 rounded-2xl">
+                <span class="block text-2xl font-bold text-blue-600">LaTeX</span
+                ><span class="text-xs text-slate-500">Formula Support</span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="md:col-span-1 md:row-span-2 bg-slate-900 text-white p-8 rounded-3xl bento-card flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl mb-6"
+              >
+                🤖
+              </div>
+              <h3 class="text-xl font-bold mb-4 text-blue-400">
+                Kill the FAQ Loop
+              </h3>
+              <p class="text-slate-400 text-sm">
+                StudyPilot memorizes how you answer a question the first time
+                and automatically handles repeat inquiries from other students.
+              </p>
+            </div>
+            <div class="space-y-4">
+              <div
+                class="p-3 bg-white/5 rounded-xl border border-white/10 text-xs italic"
+              >
+                "When is the midterm?" → AI Handled
+              </div>
+              <div
+                class="p-3 bg-white/5 rounded-xl border border-white/10 text-xs italic"
+              >
+                "Midterm is Oct 12th in Hall B"
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-200 bento-card"
+          >
+            <div class="text-xl mb-3">🧪</div>
+            <h3 class="font-bold mb-1 text-sm">Cross-Disciplinary</h3>
+            <p class="text-slate-500 text-xs">
+              Optimized for Math, Engineering, and Business curricula.
+            </p>
+          </div>
+
+          <div
+            class="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-200 bento-card"
+          >
+            <div class="text-xl mb-3">📊</div>
+            <h3 class="font-bold mb-1 text-sm">Roster Insights</h3>
+            <p class="text-slate-500 text-xs">
+              Identify mastery levels and weak spots across your course.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy Secttion -->
+    <section id="philosophy" class="py-24 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="fade-in">
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">
+              The "Answer Once" Philosophy
+            </h2>
+            <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+              University instructors are overwhelmed by administrative volume.
+              We believe a professor's expertise should be spent on mentorship,
+              not answering the same email 50 times.
+            </p>
+            <div class="space-y-4">
+              <div
+                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
+              >
+                <div
+                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+                >
+                  1
+                </div>
+                <p class="text-sm text-slate-700 font-medium pt-2">
+                  You answer a unique student question once.
+                </p>
+              </div>
+              <div
+                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
+              >
+                <div
+                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+                >
+                  2
+                </div>
+                <p class="text-sm text-slate-700 font-medium pt-2">
+                  StudyPilot learns your voice and the verified answer.
+                </p>
+              </div>
+              <div
+                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
+              >
+                <div
+                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+                >
+                  3
+                </div>
+                <p class="text-sm text-slate-700 font-medium pt-2">
+                  Students get instant support; your inbox stays clear.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="relative fade-in">
+            <div
+              class="bg-blue-600 rounded-3xl p-1 aspect-square rotate-3 shadow-2xl overflow-hidden"
+            >
+              <div
+                class="bg-white h-full w-full rounded-[1.4rem] p-8 -rotate-3 flex flex-col justify-center"
+              >
+                <p class="text-slate-400 text-sm mb-2 italic">
+                  Student: "What is the policy for late submissions?"
+                </p>
+                <div
+                  class="p-4 bg-blue-50 text-blue-800 rounded-xl mb-4 border border-blue-100"
+                >
+                  <strong>StudyPilot AI:</strong> "Per Prof. Smith's previous
+                  response, late submissions incur a 10% penalty per day, capped
+                  at 3 days. Check Page 4 of the Syllabus."
+                </div>
+                <span
+                  class="text-[10px] text-slate-400 text-right uppercase tracking-widest font-bold"
+                  >Handled Automatically</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-slate-50">
+      <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          <details
+            class="group bg-white rounded-2xl border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary class="flex items-center justify-between cursor-pointer">
+              <h3 class="font-bold text-slate-900">
+                Is it compatible with my LMS?
+              </h3>
+              <span
+                class="ml-1.5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
+                >▼</span
+              >
+            </summary>
+            <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+              StudyPilot supports exports for Canvas, Blackboard, and Moodle.
+              Enterprise plans include direct API integration.
+            </p>
+          </details>
+          <details
+            class="group bg-white rounded-2xl border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary class="flex items-center justify-between cursor-pointer">
+              <h3 class="font-bold text-slate-900">
+                How accurate is the STEM extraction?
+              </h3>
+              <span
+                class="ml-1.5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
+                >▼</span
+              >
+            </summary>
+            <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+              Our AI uses specialized models for LaTeX and technical diagrams,
+              achieving a 95% accuracy rate on clear scans and digital
+              documents.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center"
+          >
+            <span class="text-white text-[10px]">✦</span>
+          </div>
+          <span class="font-bold text-slate-900">StudyPilot</span>
+        </div>
+        <p class="text-slate-500 text-sm">
+          © 2026 EECS2311X_Group-3. All rights reserved.
+        </p>
+        <div class="flex gap-6">
+          <a
+            href="#"
+            class="text-slate-400 hover:text-blue-600 transition-colors"
+            >Twitter</a
+          >
+          <a
+            href="#"
+            class="text-slate-400 hover:text-blue-600 transition-colors"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Intersection Observer for scroll animations
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.15 },
+      );
+
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
+    </script>
   </body>
 </html>
