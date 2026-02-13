@@ -1,0 +1,205 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | StudyPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: { colors: { primary: "#2563eb", accent: "#0f172a" } },
+        },
+      };
+    </script>
+    <style>
+      .fade-in {
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeInUp 0.5s ease-out forwards;
+      }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <aside
+      class="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex"
+    >
+      <div class="p-6 flex items-center gap-2 border-b border-slate-50">
+        <div
+          class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white"
+        >
+          ✦
+        </div>
+        <span class="font-bold text-xl">StudyPilot</span>
+      </div>
+      <nav class="flex-1 p-4 space-y-2">
+        <a
+          href="/prof/home"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>🏠</span> Dashboard
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>📚</span> My Courses
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>🤖</span> AI FAQ Library
+        </a>
+        <a
+          href="/settings"
+          class="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium"
+        >
+          <span>⚙️</span> Settings
+        </a>
+      </nav>
+      <div class="p-4 border-t border-slate-100">
+        <form th:action="@{/logout}" method="post">
+          <button
+            type="submit"
+            class="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <span>🚪</span> Logout
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <header
+        class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8"
+      >
+        <h1 class="font-bold text-lg text-slate-800">Account Settings</h1>
+        <div class="flex items-center gap-4">
+          <div
+            class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs"
+          >
+            P
+          </div>
+        </div>
+      </header>
+
+      <div class="p-8 max-w-4xl mx-auto w-full fade-in">
+        <div
+          class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+        >
+          <div class="p-8 border-b border-slate-100">
+            <h2 class="text-xl font-bold">Profile Information</h2>
+            <p class="text-sm text-slate-500">
+              Update your personal details and how students see your profile.
+            </p>
+          </div>
+
+          <div class="p-8 space-y-6">
+            <div class="grid md:grid-cols-3 gap-4 items-center">
+              <label class="text-sm font-medium text-slate-700"
+                >Full Name</label
+              >
+              <div class="md:col-span-2">
+                <input
+                  type="text"
+                  th:value="${fullName}"
+                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 outline-none transition-all"
+                  placeholder="Professor Name"
+                />
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 items-center">
+              <label class="text-sm font-medium text-slate-700"
+                >Email Address</label
+              >
+              <div class="md:col-span-2">
+                <input
+                  type="email"
+                  placeholder="prof@university.ca"
+                  class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            <hr class="border-slate-100 my-4" />
+
+            <div class="grid md:grid-cols-3 gap-4">
+              <div>
+                <h3 class="text-sm font-medium text-slate-700">AI Workflow</h3>
+                <p class="text-xs text-slate-500 mt-1">
+                  Configure your academic force multiplier settings.
+                </p>
+              </div>
+              <div class="md:col-span-2 space-y-4">
+                <div
+                  class="flex items-center justify-between p-4 bg-blue-50 rounded-2xl border border-blue-100"
+                >
+                  <div>
+                    <p class="text-sm font-bold text-blue-900">
+                      "Answer Once" Mode
+                    </p>
+                    <p class="text-xs text-blue-700">
+                      AI automatically handles repeat student questions.
+                    </p>
+                  </div>
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
+                    <input type="checkbox" checked class="sr-only peer" />
+                    <div
+                      class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
+                    ></div>
+                  </label>
+                </div>
+
+                <div
+                  class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200"
+                >
+                  <div>
+                    <p class="text-sm font-bold text-slate-900">
+                      Advanced STEM Rendering
+                    </p>
+                    <p class="text-xs text-slate-500">
+                      Enable LaTeX and diagram extraction.
+                    </p>
+                  </div>
+                  <label
+                    class="relative inline-flex items-center cursor-pointer"
+                  >
+                    <input type="checkbox" checked class="sr-only peer" />
+                    <div
+                      class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"
+                    ></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3"
+          >
+            <button
+              class="px-5 py-2 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              class="px-5 py-2 text-sm font-bold bg-blue-600 text-white rounded-lg shadow-md shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95"
+            >
+              Save Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

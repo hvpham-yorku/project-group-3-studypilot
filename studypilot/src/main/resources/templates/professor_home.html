@@ -1,12 +1,197 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Professor Home</title>
-</head>
-<body>
-<h1>Professor Dashboard</h1>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | StudyPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: { colors: { primary: "#2563eb", accent: "#0f172a" } },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <aside
+      class="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex"
+    >
+      <div class="p-6 flex items-center gap-2 border-b border-slate-50">
+        <div
+          class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white"
+        >
+          ✦
+        </div>
+        <span class="font-bold text-xl">StudyPilot</span>
+      </div>
+      <nav class="flex-1 p-4 space-y-2">
+        <a
+          href="/prof/home"
+          class="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium"
+        >
+          <span>🏠</span> Dashboard
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>📚</span> My Courses
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>🤖</span> AI FAQ Library
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>📊</span> Analytics
+        </a>
+        <a
+          href="/settings"
+          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <span>⚙️</span> Settings
+        </a>
+      </nav>
+      <div class="p-4 border-t border-slate-100">
+        <form th:action="@{/logout}" method="post">
+          <button
+            type="submit"
+            class="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <span>🚪</span> Logout
+          </button>
+        </form>
+      </div>
+    </aside>
 
-<p>Welcome, professor!</p>
+    <main class="flex-1 flex flex-col min-h-screen">
+      <header
+        class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8"
+      >
+        <h1 class="font-bold text-lg text-slate-800">
+          Welcome, <span th:text="${fullName}">Professor</span>!
+        </h1>
+        <div class="flex items-center gap-4">
+          <button class="p-2 bg-slate-100 rounded-full text-sm">🔔</button>
+          <div
+            class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs"
+          >
+            P
+          </div>
+        </div>
+      </header>
 
-</body>
+      <div class="p-8 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm text-slate-500 font-medium">Active Students</p>
+            <p class="text-3xl font-bold mt-1">1,240</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm text-slate-500 font-medium">AI Answers Sent</p>
+            <p class="text-3xl font-bold mt-1 text-blue-600">842</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm text-slate-500 font-medium">Time Saved (Hrs)</p>
+            <p class="text-3xl font-bold mt-1">12.5</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm text-slate-500 font-medium">Avg. Performance</p>
+            <p class="text-3xl font-bold mt-1">84%</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 space-y-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-bold">Active Courses</h2>
+              <button
+                class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-bold"
+              >
+                + New Course
+              </button>
+            </div>
+            <div
+              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all cursor-pointer"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                  >
+                    📚
+                  </div>
+                  <div>
+                    <h3 class="font-bold">MATH 201 – Linear Algebra</h3>
+                    <p class="text-xs text-slate-500">8 Lectures Processed</p>
+                  </div>
+                </div>
+                <span
+                  class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase"
+                  >Active</span
+                >
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full mb-4">
+                <div
+                  class="bg-blue-600 h-2 rounded-full"
+                  style="width: 75%"
+                ></div>
+              </div>
+              <div class="flex justify-between text-xs text-slate-500">
+                <span>24 Flashcards</span>
+                <span>3 Quizzes</span>
+                <span>12 Days until Midterm</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <h2 class="text-xl font-bold">Recent AI Support</h2>
+            <div
+              class="bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
+            >
+              <div
+                class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-sm"
+              >
+                <p class="font-bold text-xs text-blue-600 mb-1">
+                  Answered Automatically
+                </p>
+                <p class="italic text-slate-600">
+                  "Is the calculator allowed in the final exam?"
+                </p>
+              </div>
+              <div
+                class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-sm opacity-50"
+              >
+                <p class="font-bold text-xs text-slate-500 mb-1">
+                  Answered Automatically
+                </p>
+                <p class="italic text-slate-600">
+                  "What is the office hour location?"
+                </p>
+              </div>
+              <button
+                class="w-full py-2 text-sm text-blue-600 font-bold border border-blue-600 rounded-lg hover:bg-blue-50"
+              >
+                View All AI Logs
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
