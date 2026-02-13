@@ -1,60 +1,48 @@
+```text
 StudyPilot – Iteration 1 Log
 =================================
 
 Repository Structure
 ---------------------------------
 
-📦project-group-3-studypilot 
-┣ 📂docs
-┣📜README.md
-┗ 📜log.md
- ┣ 📂studypilot 
- ┃ ┣ 📂gradle
- ┃ ┃ ┗ 📂wrapper
- ┃ ┃ ┃ ┣ 📜gradle-wrapper.jar
- ┃ ┃ ┃ ┗ 📜gradle-wrapper.properties
- ┃ ┣ 📂src
- ┃ ┃ ┣ 📂main
- ┃ ┃ ┃ ┣ 📂java
- ┃ ┃ ┃ ┃ ┗ 📂com
- ┃ ┃ ┃ ┃ ┃ ┗ 📂studypilot
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂studypilot
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Authentication.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LandingController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginForm.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ProfessorHomeController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RegisterForm.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜StudentHomeController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜StudypilotApplication.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜User.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserRepo.java
- ┃ ┃ ┃ ┗ 📂resources
- ┃ ┃ ┃ ┃ ┣ 📂graphql
- ┃ ┃ ┃ ┃ ┣ 📂static
- ┃ ┃ ┃ ┃ ┣ 📂templates
- ┃ ┃ ┃ ┃ ┃ ┣ 📜landing-page.html
- ┃ ┃ ┃ ┃ ┃ ┣ 📜login.html
- ┃ ┃ ┃ ┃ ┃ ┣ 📜professor_home.html
- ┃ ┃ ┃ ┃ ┃ ┣ 📜register.html
- ┃ ┃ ┃ ┃ ┃ ┗ 📜student_home.html
- ┃ ┃ ┃ ┃ ┗ 📜application.properties
- ┃ ┃ ┗ 📂test
- ┃ ┃ ┃ ┗ 📂java
- ┃ ┃ ┃ ┃ ┗ 📂com
- ┃ ┃ ┃ ┃ ┃ ┗ 📂studypilot
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂studypilot
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜StudypilotApplicationTests.java
- ┃ ┣ 📜.gitattributes
- ┃ ┣ 📜.gitignore
- ┃ ┣ 📜build.gradle
- ┃ ┣ 📜gradlew
- ┃ ┣ 📜gradlew.bat
- ┃ ┣ 📜HELP.md
- ┃ ┣ 📜settings.gradle
- ┃ ┗ 📜tailwind.config.js
- ┗ 📜Planning_Document.pdf
-  
+📦 project-group-3-studypilot
+├── 📂 docs
+├── 📜 README.md
+├── 📜 log.md
+├── 📜 Planning_Document.pdf
+└── 📂 studypilot
+    ├── 📂 gradle/wrapper
+    │   ├── 📜 gradle-wrapper.jar
+    │   └── 📜 gradle-wrapper.properties
+    ├── 📂 src
+    │   ├── 📂 main
+    │   │   ├── 📂 java/com/studypilot/studypilot
+    │   │   │   ├── 📜 Authentication.java
+    │   │   │   ├── 📜 AuthenticationController.java
+    │   │   │   ├── 📜 LandingController.java
+    │   │   │   ├── 📜 LoginForm.java
+    │   │   │   ├── 📜 ProfessorHomeController.java
+    │   │   │   ├── 📜 RegisterForm.java
+    │   │   │   ├── 📜 StudentHomeController.java
+    │   │   │   ├── 📜 StudypilotApplication.java
+    │   │   │   ├── 📜 User.java
+    │   │   │   └── 📜 UserRepo.java
+    │   │   └── 📂 resources
+    │   │       ├── 📂 graphql
+    │   │       ├── 📂 static
+    │   │       ├── 📂 templates
+    │   │       │   ├── 📜 landing-page.html
+    │   │       │   ├── 📜 login.html
+    │   │       │   ├── 📜 professor_home.html
+    │   │       │   ├── 📜 register.html
+    │   │       │   └── 📜 student_home.html
+    │   │       └── 📜 application.properties
+    │   └── 📂 test/java/com/studypilot/studypilot
+    │       └── 📜 StudypilotApplicationTests.java
+    ├── 📜 build.gradle
+    ├── 📜 gradlew
+    ├── 📜 settings.gradle
+    └── 📜 tailwind.config.js  
 
 TEAM MEMBERS
 Member Tessa Cloutier
