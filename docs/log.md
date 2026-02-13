@@ -5,6 +5,9 @@ Repository Structure
 ---------------------------------
 
 📦project-group-3-studypilot 
+┣ 📂docs
+┣📜README.md
+┗ 📜log.md
  ┣ 📂studypilot 
  ┃ ┣ 📂gradle
  ┃ ┃ ┗ 📂wrapper
@@ -50,8 +53,8 @@ Repository Structure
  ┃ ┣ 📜HELP.md
  ┃ ┣ 📜settings.gradle
  ┃ ┗ 📜tailwind.config.js
- ┣ 📜Planning_Document.pdf
- ┗ 📜README.md
+ ┗ 📜Planning_Document.pdf
+  
 
 TEAM MEMBERS
 Member Tessa Cloutier
