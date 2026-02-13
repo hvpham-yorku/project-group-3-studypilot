@@ -179,6 +179,7 @@ Estimated Time: 2 hours
 
 UNIT TESTING
 ==================================================
+Feb 13, 2026 - Tessa
 Framework: JUnit 5
 Current Coverage:
 Basic application test configured for user stories, edge cases
@@ -237,12 +238,16 @@ Prepared system for future database integration
 
 SYSTEM ARCHITECTURE ORGANIZATION
 ==================================================
-Feb 13, 2026
+Feb 13, 2026 - Gabriella
 The system follows a layered architecture separating:
 Domain Model (User and authentication classes)
 Data Access Layer (repository and database configuration)
 Business Logic Layer (authentication processing)
 GUI Layer (controllers and templates)
+
+Estimated Time: 20 minutes
+ Actual Time: 20 minutes
+
 
 PLAN CHANGES FROM ITR0
 ==================================================
