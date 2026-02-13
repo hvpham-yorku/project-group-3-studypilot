@@ -1,41 +1,259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Register</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | StudyPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563eb",
+              accent: "#0f172a",
+            },
+            animation: {
+              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+              float: "float 3s ease-in-out infinite",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-white text-slate-900 min-h-screen">
+    <div class="flex min-h-screen">
+      <div
+        class="flex-1 flex items-center justify-center p-6 sm:p-12 order-2 lg:order-1"
+      >
+        <div class="w-full max-w-md animate-fade-in-up">
+          <div class="lg:hidden text-center mb-8">
+            <a href="/" class="inline-flex items-center gap-2">
+              <div
+                class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white"
+              >
+                ✦
+              </div>
+              <span class="text-xl font-bold">StudyPilot</span>
+            </a>
+          </div>
 
-<h2>Register</h2>
+          <div
+            class="bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-blue-500/5 p-8"
+          >
+            <div class="text-center mb-8">
+              <h2 class="text-2xl font-bold">Create your account</h2>
+              <p class="text-slate-500 text-sm mt-2">
+                The academic force multiplier for professors & students.
+              </p>
+            </div>
 
-<!-- Error message -->
-<div th:if="${error}" style="color:red;">
-  <p th:text="${error}"></p>
-</div>
+            <div
+              th:if="${error}"
+              class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2"
+            >
+              <span>✕</span>
+              <p th:text="${error}"></p>
+            </div>
 
-<form method="post" action="/register">
+            <form method="post" action="/register" class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-slate-700"
+                  >Full Name</label
+                >
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >👤</span
+                  >
+                  <input
+                    type="text"
+                    name="fullName"
+                    placeholder="John Doe"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-  <label>Full Name:</label><br>
-  <input type="text" name="fullName" required><br><br>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-slate-700"
+                  >University Email</label
+                >
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >✉</span
+                  >
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="you@university.ca"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-  <label>Email:</label><br>
-  <input type="email" name="email" required><br><br>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-slate-700"
+                  >Password</label
+                >
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >🔒</span
+                  >
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Min. 6 characters"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-  <label>Password:</label><br>
-  <input type="password" name="password" required><br><br>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-slate-700"
+                  >I am a...</label
+                >
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >🎓</span
+                  >
+                  <select
+                    name="role"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all appearance-none"
+                  >
+                    <option value="STUDENT">Student</option>
+                    <option value="PROFESSOR">Professor</option>
+                  </select>
+                </div>
+              </div>
 
-  <label>Role:</label><br>
-  <select name="role" required>
-    <option value="STUDENT">Student</option>
-    <option value="PROFESSOR">Professor</option>
-  </select><br><br>
+              <button
+                type="submit"
+                class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-200 active:scale-95 mt-4"
+              >
+                Create Account
+              </button>
+            </form>
 
-  <button type="submit">Register</button>
+            <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+              <p class="text-sm text-slate-500">
+                Already have an account?
+                <a href="/login" class="text-blue-600 font-bold hover:underline"
+                  >Sign in</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-</form>
+      <div
+        class="hidden lg:flex lg:w-1/2 bg-slate-50 relative overflow-hidden items-center justify-center p-12 order-1 lg:order-2"
+      >
+        <div class="absolute inset-0 overflow-hidden">
+          <div
+            class="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse"
+          ></div>
+          <div
+            class="absolute -top-20 -right-20 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse"
+          ></div>
+        </div>
 
-<br>
+        <div class="absolute top-24 right-24 animate-float">
+          <div
+            class="w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center text-2xl"
+          >
+            ✦
+          </div>
+        </div>
 
-<a href="/">Back to landing page</a>
+        <div class="relative z-10 max-w-lg">
+          <span
+            class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6 inline-block"
+            >StudyPilot Pro</span
+          >
+          <h2 class="text-4xl font-extrabold text-slate-900 mb-6">
+            Experience the Academic Force Multiplier
+          </h2>
 
-</body>
+          <div class="space-y-4">
+            <div
+              class="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 hover:shadow-md transition-all"
+            >
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"
+              >
+                📝
+              </div>
+              <span class="font-bold text-slate-700"
+                >Notes to Tools Conversion</span
+              >
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 hover:shadow-md transition-all"
+            >
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"
+              >
+                🤖
+              </div>
+              <span class="font-bold text-slate-700"
+                >Automated Student FAQ Support</span
+              >
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 hover:shadow-md transition-all"
+            >
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"
+              >
+                🔬
+              </div>
+              <span class="font-bold text-slate-700"
+                >STEM & Business Optimized AI</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="mt-12 p-6 bg-white/40 border border-slate-200 backdrop-blur-sm rounded-3xl"
+          >
+            <p class="text-slate-600 italic mb-4">
+              "StudyPilot transformed my course materials into interactive tools
+              in seconds. It's a game-changer for faculty."
+            </p>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+              >
+                AZ
+              </div>
+              <div>
+                <p class="text-sm font-bold">Afirdha Zaman</p>
+                <p class="text-xs text-slate-500">York University</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

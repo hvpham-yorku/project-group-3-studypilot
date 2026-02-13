@@ -1,32 +1,239 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Login</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In | StudyPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563eb",
+              accent: "#0f172a",
+            },
+            animation: {
+              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+              float: "float 3s ease-in-out infinite",
+              "scale-in": "scaleIn 0.3s ease-out forwards",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              scaleIn: {
+                "0%": { opacity: "0", transform: "scale(0.95)" },
+                "100%": { opacity: "1", transform: "scale(1)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-white text-slate-900 min-h-screen">
+    <div class="flex min-h-screen">
+      <div
+        class="hidden lg:flex lg:w-1/2 bg-slate-50 relative overflow-hidden items-center justify-center p-12"
+      >
+        <div class="absolute inset-0 overflow-hidden">
+          <div
+            class="absolute top-20 left-20 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl animate-pulse"
+          ></div>
+          <div
+            class="absolute bottom-20 right-20 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse delay-1000"
+          ></div>
+        </div>
 
-<h2>Login</h2>
+        <div class="absolute top-32 left-24 animate-float">
+          <div
+            class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-blue-600 text-2xl"
+          >
+            🧠
+          </div>
+        </div>
+        <div class="absolute top-48 right-32 animate-float delay-700">
+          <div
+            class="w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center text-blue-500 text-xl"
+          >
+            ✦
+          </div>
+        </div>
+        <div class="absolute bottom-40 left-32 animate-float delay-1000">
+          <div
+            class="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-amber-500 text-lg"
+          >
+            ⚡
+          </div>
+        </div>
 
-<!-- Error message -->
-<div th:if="${error}" style="color:red;">
-    <p th:text="${error}"></p>
-</div>
+        <div class="relative z-10 text-center max-w-md animate-fade-in-up">
+          <div
+            class="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-2xl shadow-xl mb-8"
+          >
+            <span class="text-white text-4xl">📚</span>
+          </div>
+          <h1 class="text-4xl font-bold text-slate-900 mb-4">
+            Welcome back to StudyPilot
+          </h1>
+          <p class="text-lg text-slate-600 leading-relaxed">
+            Your AI-powered academic force multiplier is ready to help you
+            optimize your workflow.
+          </p>
 
-<form method="post" action="/login">
+          <div class="grid grid-cols-3 gap-4 mt-10">
+            <div
+              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
+            >
+              <div class="text-2xl font-bold text-blue-600">1K+</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">
+                Professors
+              </div>
+            </div>
+            <div
+              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
+            >
+              <div class="text-2xl font-bold text-blue-600">50K+</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">
+                Flashcards
+              </div>
+            </div>
+            <div
+              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
+            >
+              <div class="text-2xl font-bold text-blue-600">98%</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">
+                Success
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+      <div
+        class="flex-1 flex items-center justify-center p-6 sm:p-12 order-2 lg:order-1 bg-white"
+      >
+        <div class="w-full max-w-md">
+          <div class="lg:hidden text-center mb-8">
+            <a href="/" class="inline-flex items-center gap-2">
+              <div
+                class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white"
+              >
+                ✦
+              </div>
+              <span class="text-xl font-bold">StudyPilot</span>
+            </a>
+          </div>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+          <div class="animate-scale-in">
+            <div class="text-center mb-8">
+              <h2 class="text-2xl font-bold">Sign in</h2>
+              <p class="text-slate-500 text-sm mt-2">
+                Enter your credentials to access your course tools.
+              </p>
+            </div>
 
-    <button type="submit">Login</button>
+            <div
+              th:if="${error}"
+              class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2"
+            >
+              <span>✕</span>
+              <p th:text="${error}"></p>
+            </div>
 
-</form>
+            <form method="post" action="/login" class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-slate-700">Email</label>
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >✉</span
+                  >
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="you@university.ca"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-<br>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <label class="text-sm font-medium text-slate-700"
+                    >Password</label
+                  >
+                  <a href="#" class="text-xs text-blue-600 hover:underline"
+                    >Forgot password?</a
+                  >
+                </div>
+                <div class="relative group">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
+                    >🔒</span
+                  >
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    required
+                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-<a href="/">Back to landing page</a>
+              <div class="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
+                />
+                <label
+                  for="remember"
+                  class="text-sm text-slate-500 cursor-pointer"
+                  >Remember me for 30 days</label
+                >
+              </div>
 
-</body>
+              <button
+                type="submit"
+                class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-200 active:scale-95 mt-4"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <div class="relative my-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-slate-200"></div>
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="bg-white px-2 text-slate-500 tracking-wider"
+                  >Or continue with</span
+                >
+              </div>
+            </div>
+
+            <div class="mt-8 text-center">
+              <p class="text-sm text-slate-500">
+                Don't have an account?
+                <a
+                  href="/register"
+                  class="text-blue-600 font-bold hover:underline"
+                  >Sign up for free</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
