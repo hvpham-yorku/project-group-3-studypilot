@@ -350,7 +350,7 @@ This supports future database replacement and system scalability.
 
 | Member     | Estimated | Actual |
 |------------|-----------|--------|
-| Tessa      |    3.0    |  4.0   |
+| Tessa      |    4.0    |  5.5   |
 | Gabriella  |    4.5    |  5.5   |
 | Ashvin     |    5.0    |  6.5   |
 | Monabbir   |    5.0    |  6.0   |
