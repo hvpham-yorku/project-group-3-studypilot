@@ -258,7 +258,7 @@ GUI intentionally simple for ITR1. Enhancements planned for ITR2.
 
 | Estimated Time | Actual Time |
 |---------------|-------------|
-| 1 hour        | 1 hour      |
+| 1 hour        | 2 hour      |
 
 ---
 
@@ -298,7 +298,7 @@ The system follows a layered architecture separating:
 
 | Estimated Time | Actual Time |
 |---------------|-------------|
-| 20 minutes    | 20 minutes  |
+| 20 minutes    | 30 minutes  |
 
 ---
 
