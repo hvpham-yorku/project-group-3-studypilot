@@ -123,7 +123,7 @@ TEAM MEMBERS
 **Feb 12–13, 2026 — Monabbir (Logged and Uploaded by Gabriella)**
 
 **Tasks Completed:**
-- Created initial project folder structure  
+- Created initial project folder structure
 - Added `README.md`  
 - Added `log.md`  
 - Uploaded planning documents  
@@ -149,12 +149,12 @@ Standardizing repository structure improved collaboration, reduced version confl
 ---
 
 ## DOMAIN LAYER IMPLEMENTATION
-**Feb 12–13, 2026**
+**Feb 12–13, 2026 - Ashvin**
 
 **Implemented:**
-- User domain model  
-- Authentication-related classes  
-- Input validation for login and registration  
+- User domain model and classes 
+- Authentication related classes  
+- Input validation for login and registration
 
 **Ensured:**
 - Proper constructors  
@@ -168,7 +168,7 @@ Standardizing repository structure improved collaboration, reduced version confl
 ---
 
 ## DATABASE LAYER (STUB IMPLEMENTATION)
-**Feb 13, 2026**
+**Feb 13, 2026 - Ashvin**
 
 **Implemented:**
 - User repository interface  
@@ -176,7 +176,7 @@ Standardizing repository structure improved collaboration, reduced version confl
 - Non-persistent data storage  
 
 **Characteristics:**
-- In-memory storage only  
+- In memory storage only  
 - Prepared system for future database replacement  
 - Supports authentication testing  
 
@@ -190,7 +190,7 @@ Using an in-memory database allows rapid testing and supports future integration
 ---
 
 ## BUSINESS LOGIC LAYER
-**Feb 13, 2026**
+**Feb 13, 2026 - Ashvin**
 
 **Implemented:**
 - User registration functionality  
@@ -204,7 +204,7 @@ Using an in-memory database allows rapid testing and supports future integration
 
 | Estimated Time | Actual Time |
 |---------------|-------------|
-| 2 hours       | 2 hours     |
+| 2 hours       | 3 hours     |
 
 ---
 
@@ -228,7 +228,7 @@ Full unit testing deferred; focus was delivering a functional system.
 ---
 
 ## GUI IMPLEMENTATION (FOR USER STORIES)
-**Feb 13, 2026**
+**Feb 13, 2026 - Base Template(Ashvin), Refinement and Improvement(Monabbir)**
 
 **Implemented:**
 - Landing page interface  
@@ -250,7 +250,7 @@ GUI intentionally simple for ITR1. Enhancements planned for ITR2.
 ---
 
 ## DOCUMENTATION
-**Feb 13, 2026 — Gabriella / Monabbir**
+**Feb 13, 2026 — Gabriella, Monabbir, Ashvin**
 
 **Completed:**
 - `log.md`
@@ -288,7 +288,7 @@ GUI intentionally simple for ITR1. Enhancements planned for ITR2.
 ---
 
 ## SYSTEM ARCHITECTURE ORGANIZATION
-**Feb 13, 2026 — Gabriella**
+**Feb 13, 2026 — Gabriella, Ashvin**
 
 The system follows a layered architecture separating:
 - **Domain Model** — User and authentication classes  
@@ -350,28 +350,17 @@ This supports future database replacement and system scalability.
 
 | Member     | Estimated | Actual |
 |------------|-----------|--------|
-| Tessa      |           |        |
-| Gabriella  |           |        |
-| Monabbir   |           |        |
-| Ashvin     |           |        |
+| Tessa      |    3.0    |  4.0   |
+| Gabriella  |    4.5    |  5.5   |
+| Ashvin     |    5.0    |  6.5   |
+| Monabbir   |    5.0    |  6.0   |
+
 
 ---
 
 ## DEPLOYMENT INSTRUCTIONS
 
-To run on a fresh machine:
-
-1. Clone repository  
-2. Open in IntelliJ or Eclipse  
-3. Run:
-
-./gradlew build
-
-
-4. Run the main application class (`StudyPilotApplication`)
-
-All dependencies are handled through Gradle.  
-No additional configuration required.
+Please refer to the run guide under Github WIKI
 
 ---
 
@@ -394,4 +383,3 @@ No additional configuration required.
 - Improve validation and error handling  
 - Enhance GUI features  
 - Prepare demonstration
-
