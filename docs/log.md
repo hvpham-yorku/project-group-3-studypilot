@@ -138,6 +138,18 @@ Standardizing repository structure and Git practices improved collaboration, red
  Estimated Time: 2 hours
  Actual Time: 2 hours
 
+PROJECT STRUCTURE SETUP
+==================================================
+Feb 13 2026- Gabriella - Ashvin - Tessa
+
+Start page - Gabriella
+Description - Tessa
+Architecture + sketch - Gabriella
+Packages and Major Source Code - Ashvin
+
+Estimated Time: 1 hour
+ Actual Time: 1 hour
+
 DOMAIN LAYER IMPLEMENTATION
 ==================================================
 Feb 12–13, 2026
