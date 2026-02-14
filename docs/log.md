@@ -107,7 +107,7 @@ Divide user stories/ITR1 tasks
 Time Spent: 15 minutes
 REPOSITORY SETUP
 ==================================================
-Feb 10, 2026
+Feb 10, 2026 i Monabbir
 Created repository using GitHub Classroom
 Cloned repository locally
 Verified project builds on fresh clone
@@ -115,7 +115,7 @@ Time Spent: 10 minutes
 
 PROJECT STRUCTURE SETUP
 ==================================================
-Feb 12 - 13, 2026 - Monabbir (Log and uploading document Gabriella)
+Feb 12 - 13, 2026 - Monabbir (Writing and commiting Log, Wiki and uploading document Gabriella)
 Tasks Completed:
 Created initial project folder structure
 Added README.md
@@ -140,7 +140,7 @@ Standardizing repository structure and Git practices improved collaboration, red
 
 DOMAIN LAYER IMPLEMENTATION
 ==================================================
-Feb 12–13, 2026
+Feb 12–13, 2026 - Monabbir - Ashvin
 Implemented:
 User domain model
 Authentication-related classes
@@ -151,11 +151,11 @@ Encapsulation
 Clean naming conventions
 
  Estimated Time: 2 hours
- Actual Time: 2 ½  hours
+ Actual Time: 1 1/2  hours
 
 DATABASE LAYER (STUB IMPLEMENTATION)
 ==================================================
-Feb 13, 2026
+Feb 13, 2026 - Monabbir
 Implemented:
 User repository interface
 H2 in-memory database configuration
@@ -165,14 +165,14 @@ In-memory storage only
 Prepares system for future database replacement
 Supports authentication testing
 
-Estimated Time: 2 hours
- Actual Time: 2 ½  hours
+Estimated Time: 1 hours
+ Actual Time: 1 1/2 hours
 Design Rationale:
 Using an in-memory database will allow rapid testing and supports future integration of persistent storage without changing business logic.
 
 BUSINESS LOGIC LAYER
 ==================================================
-Feb 13, 2026
+Feb 13, 2026 - Monnabir
 Implemented:
 User registration functionality
 Login authentication logic
@@ -192,16 +192,19 @@ Framework: JUnit 5
 Current Coverage:
 Basic application test configured for user stories, edge cases
 Make sure all tests pass
+Create new branch for tests
 Notes:
 Full unit testing deferred
 Focus of ITR1 was functional system implementation
 
+- Attemot of SettingControllersTests through new branch - Gabriella
+  
 Estimated Time: 1 hour
  Actual Time: 2 hour
 
 GUI IMPLEMENTATION (FOR USER STORIES)
 ==================================================
-Feb 13, 2026
+Feb 13, 2026 - Monabbir
 Implemented:
 Landing page interface
 register/login, and the home page
@@ -213,8 +216,8 @@ Notes:
 GUI intentionally simple for ITR1
 Additional styling planned for ITR2
 
-Estimated Time: 3 hours
- Actual Time: 3 hours
+Estimated Time: 1 hours
+ Actual Time: 1 hours
 
 DOCUMENTATION
 ==================================================
@@ -294,17 +297,20 @@ This supports future database replacement and system scalability.
 TIME SUMMARY
 ==================================================
 Member Tessa:
- Estimated:
- Actual: 
+ Estimated: 4.75 hours
+ Actual: 5.25 hours
 Member Gabriella:
- Estimated:
- Actual: 
+ Estimated: 4.25 hours
+ Actual: 5.25 hours
 Member Monabbir:
- Estimated:
- Actual:
-Member Ashvin:
- Estimated:
+ Estimated: 6.75 hours
+ Actual: 7 hours
+Member Ashvin: 4 hours
+ Estimated: 4.5 hours
  Actual: 
+ Member Sandeep:
+ Estimated:
+ Actual: 0 hours
 
 DEPLOYMENT INSTRUCTIONS
 ==================================================
