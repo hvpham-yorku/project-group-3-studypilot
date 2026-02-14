@@ -71,282 +71,327 @@ TEAM MEMBERS
 * **Ashvin Kawleswaran**
 * **Sandeepon Saha**
 
-ITERATION 0 REFERENCE
-==================================================
-Jan 28, 2026 - Gabriella (Revised by Team)
-Completed ITR0 planning document
-Defined initial user stories
-Drafted preliminary architecture
-Selected major story for ITR1
+## ITERATION 0 REFERENCE
+**Jan 28, 2026 — Gabriella (Revised by Team)**  
+- Completed ITR0 planning document  
+- Defined initial user stories  
+- Drafted preliminary architecture  
+- Selected major story for ITR1  
 
-Time Spent: 2 hours
+**Time Spent:** 2 hours
 
-CUSTOMER MEETING
-==================================================
-Feb 4, 2026 - Gabriella/Tessa (Revised by Team)
-Met with customer
-Clarified scope of Iteration 1
-Confirmed ITR1 requirements:
-Domain objects
-Stub database
-Unit tests
-GUI for one major story
+---
 
-Improvements requested:
-Improve presentation and documentation template
-Add group selection feature
-Reduce focus on email functionality
+## CUSTOMER MEETING
+**Feb 4, 2026 — Gabriella/Tessa (Revised by Team)**  
+- Met with customer  
+- Clarified scope of Iteration 1  
+- Confirmed ITR1 requirements:
+  - Domain objects
+  - Stub database
+  - Unit tests
+  - GUI for one major story  
 
-Time Spent: 1 ½ hour
+**Improvements Requested:**
+- Improve presentation and documentation template  
+- Add group selection feature  
+- Reduce focus on email functionality  
 
-GROUP MEETING
-==================================================
-Feb 10, 2026 - Team
-Divide user stories/ITR1 tasks
+**Time Spent:** 1.5 hours
 
-Time Spent: 15 minutes
-REPOSITORY SETUP
-==================================================
-Feb 10, 2026
-Created repository using GitHub Classroom
-Cloned repository locally
-Verified project builds on fresh clone
-Time Spent: 10 minutes
+---
 
-PROJECT STRUCTURE SETUP
-==================================================
-Feb 12 - 13, 2026 - Monabbir (Log and uploading document Gabriella)
-Tasks Completed:
-Created initial project folder structure
-Added README.md
-Added log.md
-Uploaded planning documents
-Configured .gitignore
-Cleaned repository:
-Removed unused directories
-Deleted accidental system files (.DS_Store)
-Reorganized files for consistent structure
-Established Git workflow:
-Pull before starting work
-Smaller and more frequent commits from the start
-Descriptive/summary of commit messages
+## GROUP MEETING
+**Feb 10, 2026 — Team**  
+- Divided user stories / ITR1 tasks  
 
-During early development, the team identified inconsistencies in how project files were cloned, pulled, and uploaded to GitHub. To resolve this, the repository structure was reorganized to ensure all team members used a consistent workflow and file structure.
-Design Rationale:
-Standardizing repository structure and Git practices improved collaboration, reduced version conflicts, and ensured consistent development across different environments.
+**Time Spent:** 15 minutes
 
- Estimated Time: 2 hours
- Actual Time: 2 hours
+---
 
-PROJECT STRUCTURE SETUP
-==================================================
-Feb 13 2026- Gabriella - Ashvin - Tessa
+## REPOSITORY SETUP
+**Feb 10, 2026**  
+- Created repository using GitHub Classroom  
+- Cloned repository locally  
+- Verified project builds on fresh clone  
 
-Start page - Gabriella
-Description - Tessa
-Architecture + sketch - Gabriella
-Packages and Major Source Code - Ashvin
+**Time Spent:** 10 minutes
 
-Estimated Time: 1 hour
- Actual Time: 1 hour
+---
 
-DOMAIN LAYER IMPLEMENTATION 
-==================================================
-Feb 12–13, 2026
-Implemented:
-User domain model
-Authentication-related classes
-Input validation for login and registration
-Ensured:
-Proper constructors
-Encapsulation
-Clean naming conventions
+## PROJECT STRUCTURE SETUP
+**Feb 12–13, 2026 — Monabbir (Logged and Uploaded by Gabriella)**
 
- Estimated Time: 2 hours
- Actual Time: 2 ½  hours
+**Tasks Completed:**
+- Created initial project folder structure  
+- Added `README.md`  
+- Added `log.md`  
+- Uploaded planning documents  
+- Configured `.gitignore`  
 
-DATABASE LAYER (STUB IMPLEMENTATION)
-==================================================
-Feb 13, 2026
-Implemented:
-User repository interface
-H2 in-memory database configuration
-Non-persistent data storage
-Characteristics:
-In-memory storage only
-Prepares system for future database replacement
-Supports authentication testing
+**Repository Cleanup:**
+- Removed unused directories  
+- Deleted accidental system files (`.DS_Store`)  
+- Reorganized files for consistent structure  
 
-Estimated Time: 2 hours
- Actual Time: 2 ½  hours
-Design Rationale:
-Using an in-memory database will allow rapid testing and supports future integration of persistent storage without changing business logic.
+**Established Git Workflow:**
+- Pull before starting work  
+- Smaller and more frequent commits  
+- Descriptive commit messages  
 
-BUSINESS LOGIC LAYER
-==================================================
-Feb 13, 2026
-Implemented:
-User registration functionality
-Login authentication logic
-Role-based user handling (student/professor views)
-Responsibilities:
-Validating user credentials
-Managing authentication flow
-Connecting controllers with repository
+**Design Rationale:**  
+Standardizing repository structure improved collaboration, reduced version conflicts, and ensured consistent development across environments.
 
-Estimated Time: 2 hours
- Actual Time: 2 hours
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 2 hours       | 2 hours     |
 
-UNIT TESTING
-==================================================
-Feb 13, 2026 - Tessa
-Framework: JUnit 5
-Current Coverage:
-Basic application test configured for user stories, edge cases
-Make sure all tests pass
-Notes:
-Full unit testing deferred
-Focus of ITR1 was functional system implementation
+---
 
-Estimated Time: 1 hour
- Actual Time: 2 hour
+## DOMAIN LAYER IMPLEMENTATION
+**Feb 12–13, 2026**
 
-GUI IMPLEMENTATION (FOR USER STORIES)
-==================================================
-Feb 13, 2026
-Implemented:
-Landing page interface
-register/login, and the home page
-Styling:
-Tailwind CSS integration
-Improved layout and navigation
-Added features and FAQ sections
-Notes:
-GUI intentionally simple for ITR1
-Additional styling planned for ITR2
+**Implemented:**
+- User domain model  
+- Authentication-related classes  
+- Input validation for login and registration  
 
-Estimated Time: 3 hours
- Actual Time: 3 hours
+**Ensured:**
+- Proper constructors  
+- Encapsulation  
+- Clean naming conventions  
 
-DOCUMENTATION
-==================================================
-Feb 13, 2026 - Gabriella/Monabbir
-Implemented:
-Log.md completed
-Wiki Github
-Estimated Time: 1 hour
- Actual Time: 1 hour
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 2 hours       | 2.5 hours   |
 
-USER STORY DEVELOPMENT SUMMARY
-==================================================
-User Story 1 — Create and Store Student Questions
-Created question data model
-Implemented in-memory storage (repository)
-Connected GUI input to backend
-User Story 2 — Instructor Replies to Questions
-Instructor data placeholder
-User Story 3 — Instructor View Questions (GUI)
-Built basic instructor interface
-Connected GUI to repository data
-User Story 4 — Enter and Save Responses (GUI)
-Created response input form
-Connected form to backend logic
-Implemented response saving
-User Story 5 — Data Storage System
-Implemented repository interface
-Prepared system for future database integration
+---
 
-SYSTEM ARCHITECTURE ORGANIZATION
-==================================================
-Feb 13, 2026 - Gabriella
+## DATABASE LAYER (STUB IMPLEMENTATION)
+**Feb 13, 2026**
+
+**Implemented:**
+- User repository interface  
+- H2 in-memory database configuration  
+- Non-persistent data storage  
+
+**Characteristics:**
+- In-memory storage only  
+- Prepared system for future database replacement  
+- Supports authentication testing  
+
+**Design Rationale:**  
+Using an in-memory database allows rapid testing and supports future integration of persistent storage without changing business logic.
+
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 2 hours       | 2.5 hours   |
+
+---
+
+## BUSINESS LOGIC LAYER
+**Feb 13, 2026**
+
+**Implemented:**
+- User registration functionality  
+- Login authentication logic  
+- Role-based user handling (student/professor views)
+
+**Responsibilities:**
+- Validating credentials  
+- Managing authentication flow  
+- Connecting controllers with repository  
+
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 2 hours       | 2 hours     |
+
+---
+
+## UNIT TESTING
+**Feb 13, 2026 — Tessa**
+
+**Framework:** JUnit 5
+
+**Current Coverage:**
+- Basic application tests configured  
+- Edge case validation  
+- All tests passing  
+
+**Notes:**
+Full unit testing deferred; focus was delivering a functional system.
+
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 1 hour        | 2 hours     |
+
+---
+
+## GUI IMPLEMENTATION (FOR USER STORIES)
+**Feb 13, 2026**
+
+**Implemented:**
+- Landing page interface  
+- Register / Login workflow  
+- Home page navigation  
+
+**Styling:**
+- Tailwind CSS integration  
+- Improved layout and navigation  
+- Added features and FAQ sections  
+
+**Notes:**  
+GUI intentionally simple for ITR1. Enhancements planned for ITR2.
+
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 3 hours       | 3 hours     |
+
+---
+
+## DOCUMENTATION
+**Feb 13, 2026 — Gabriella / Monabbir**
+
+**Completed:**
+- `log.md`
+- GitHub Wiki
+
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 1 hour        | 1 hour      |
+
+---
+
+## USER STORY DEVELOPMENT SUMMARY
+
+### User Story 1 — Create and Store Student Questions
+- Created question data model  
+- Implemented in-memory storage  
+- Connected GUI input to backend  
+
+### User Story 2 — Instructor Replies to Questions
+- Added instructor data placeholder  
+
+### User Story 3 — Instructor View Questions (GUI)
+- Built instructor interface  
+- Connected GUI to repository data  
+
+### User Story 4 — Enter and Save Responses (GUI)
+- Created response input form  
+- Connected form to backend logic  
+- Implemented response saving  
+
+### User Story 5 — Data Storage System
+- Implemented repository interface  
+- Prepared for future database integration  
+
+---
+
+## SYSTEM ARCHITECTURE ORGANIZATION
+**Feb 13, 2026 — Gabriella**
+
 The system follows a layered architecture separating:
-Domain Model (User and authentication classes)
-Data Access Layer (repository and database configuration)
-Business Logic Layer (authentication processing)
-GUI Layer (controllers and templates)
+- **Domain Model** — User and authentication classes  
+- **Data Access Layer** — Repository and database configuration  
+- **Business Logic Layer** — Authentication processing  
+- **GUI Layer** — Controllers and templates  
 
-Estimated Time: 20 minutes
- Actual Time: 20 minutes
+| Estimated Time | Actual Time |
+|---------------|-------------|
+| 20 minutes    | 20 minutes  |
 
+---
 
-PLAN CHANGES FROM ITR0
-==================================================
-Original Plan:
-Full academic domain model (students, courses, registrations)
-Advanced GUI
-Extensive unit testing
-Revised Plan:
-Authentication-focused functionality
-Basic GUI implementation
-Stub database support
-Reason:
- Scope adjusted to ensure a working system within the iteration timeframe.
+## PLAN CHANGES FROM ITR0
 
-MEETINGS
-==================================================
-Feb 10 – Architecture Discussion
-Finalized layered architecture
-Assigned development tasks
- Duration: 1 hour
- 
-Feb 12 – Code Review Session
-Reviewed project structure
-Cleaned repository organization
-Verified system builds successfully
- Duration: 1 hour
+**Original Plan:**
+- Full academic domain model  
+- Advanced GUI  
+- Extensive unit testing  
 
-GIT PROCESS
-==================================================
-Frequent incremental commits across Feb 12–13
-Repository cleanup documented through commits
-No unresolved conflicts
-Project builds successfully on fresh clone
+**Revised Plan:**
+- Authentication-focused functionality  
+- Basic GUI implementation  
+- Stub database support  
+
+**Reason:**  
+Scope adjusted to ensure a working system within the iteration timeframe.
+
+---
+
+## MEETINGS
+
+**Feb 10 — Architecture Discussion**
+- Finalized layered architecture  
+- Assigned development tasks  
+
+**Duration:** 1 hour
+
+**Feb 12 — Code Review Session**
+- Reviewed project structure  
+- Cleaned repository organization  
+- Verified successful build  
+
+**Duration:** 1 hour
+
+---
+
+## GIT PROCESS
+- Frequent incremental commits across Feb 12–13  
+- Repository cleanup documented through commits  
+- No unresolved conflicts  
+- Project builds successfully on fresh clone  
+
 This supports future database replacement and system scalability.
 
-TIME SUMMARY
-==================================================
-Member Tessa:
- Estimated:
- Actual: 
-Member Gabriella:
- Estimated:
- Actual: 
-Member Monabbir:
- Estimated:
- Actual:
-Member Ashvin:
- Estimated:
- Actual: 
+---
 
-DEPLOYMENT INSTRUCTIONS
-==================================================
+## TIME SUMMARY
+
+| Member     | Estimated | Actual |
+|------------|-----------|--------|
+| Tessa      |           |        |
+| Gabriella  |           |        |
+| Monabbir   |           |        |
+| Ashvin     |           |        |
+
+---
+
+## DEPLOYMENT INSTRUCTIONS
+
 To run on a fresh machine:
-Clone repository
-Open in IntelliJ or Eclipse
-Run:
- ./gradlew build
-Run StudyPilotApplication
 
-All dependencies handled through Gradle. No additional configuration required.
+1. Clone repository  
+2. Open in IntelliJ or Eclipse  
+3. Run:
 
-CURRENT STATUS
-==================================================
-Repository structured
-Authentication implemented
-Stub database implemented
-Business logic implemented
-GUI for major story implemented
-Planning documents included
-Log maintained
-Repository builds without errors
-
-NEXT STEPS for Delivery
-==================================================
-Replace stub database with persistent database
-Expand domain model (students, courses, registrations)
-Increase unit test coverage
-Improve validation and error handling
-Enhance GUI features
+./gradlew build
 
 
-Prepare demonstration
+4. Run the main application class (`StudyPilotApplication`)
+
+All dependencies are handled through Gradle.  
+No additional configuration required.
+
+---
+
+## CURRENT STATUS
+- Repository structured  
+- Authentication implemented  
+- Stub database implemented  
+- Business logic implemented  
+- GUI for major story implemented  
+- Planning documents included  
+- Log maintained  
+- Repository builds without errors  
+
+---
+
+## NEXT STEPS FOR DELIVERY
+- Replace stub database with persistent database  
+- Expand domain model (students, courses, registrations)  
+- Increase unit test coverage  
+- Improve validation and error handling  
+- Enhance GUI features  
+- Prepare demonstration
+
