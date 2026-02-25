@@ -1,10 +1,16 @@
-package com.studypilot.studypilot;
+package com.studypilot.studypilot.GUILayer;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.studypilot.studypilot.BusinessLogicLayer.Authentication;
+import com.studypilot.studypilot.DomainModel.User;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class AuthenticationController {
@@ -29,6 +35,7 @@ public class AuthenticationController {
             session.setAttribute("userId", user.getId());
             session.setAttribute("role", user.getRole());
             session.setAttribute("fullName", user.getFullName());
+            session.setAttribute("email", user.getEmail());
 
             return "STUDENT".equals(user.getRole()) ? "redirect:/student/home" : "redirect:/prof/home";
 
