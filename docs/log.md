@@ -13,31 +13,54 @@ Repository Structure
     ├── 📂 gradle/wrapper
     │   ├── 📜 gradle-wrapper.jar
     │   └── 📜 gradle-wrapper.properties
-    ├── 📂 src
-    │   ├── 📂 main
-    │   │   ├── 📂 java/com/studypilot/studypilot
-    │   │   │   ├── 📜 Authentication.java
-    │   │   │   ├── 📜 AuthenticationController.java
-    │   │   │   ├── 📜 LandingController.java
-    │   │   │   ├── 📜 LoginForm.java
-    │   │   │   ├── 📜 ProfessorHomeController.java
-    │   │   │   ├── 📜 RegisterForm.java
-    │   │   │   ├── 📜 StudentHomeController.java
-    │   │   │   ├── 📜 StudypilotApplication.java
-    │   │   │   ├── 📜 User.java
-    │   │   │   └── 📜 UserRepo.java
-    │   │   └── 📂 resources
-    │   │       ├── 📂 graphql
-    │   │       ├── 📂 static
-    │   │       ├── 📂 templates
-    │   │       │   ├── 📜 landing-page.html
-    │   │       │   ├── 📜 login.html
-    │   │       │   ├── 📜 professor_home.html
-    │   │       │   ├── 📜 register.html
-    │   │       │   └── 📜 student_home.html
-    │   │       └── 📜 application.properties
-    │   └── 📂 test/java/com/studypilot/studypilot
-    │       └── 📜 StudypilotApplicationTests.java
+    📦src
+     ┣ 📂main
+     ┃ ┣ 📂java
+     ┃ ┃ ┗ 📂com
+     ┃ ┃ ┃ ┗ 📂studypilot
+     ┃ ┃ ┃ ┃ ┗ 📂studypilot
+     ┃ ┃ ┃ ┃ ┃ ┣ 📂BusinessLogicLayer
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Authentication.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📂Configuration
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜SecurityConfig.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📂DataAccessLayer
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserRepo.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📂DomainModel
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜User.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📂GUILayer
+     ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationController.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LandingController.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginForm.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ProfessorHomeController.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RegisterForm.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜StudentHomeController.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜SettingsController.java
+     ┃ ┃ ┃ ┃ ┃ ┗ 📜StudypilotApplication.java
+     ┃ ┗ 📂resources
+     ┃ ┃ ┣ 📂graphql
+     ┃ ┃ ┣ 📂static
+     ┃ ┃ ┣ 📂templates
+     ┃ ┃ ┃ ┣ 📜landing-page.html
+     ┃ ┃ ┃ ┣ 📜login.html
+     ┃ ┃ ┃ ┣ 📜professor_home.html
+     ┃ ┃ ┃ ┣ 📜register.html
+     ┃ ┃ ┃ ┣ 📜settings.html
+     ┃ ┃ ┃ ┗ 📜student_home.html
+     ┃ ┃ ┗ 📜application.properties
+     ┗ 📂test
+     ┃ ┗ 📂java
+     ┃ ┃ ┗ 📂com
+     ┃ ┃ ┃ ┗ 📂studypilot
+     ┃ ┃ ┃ ┃ ┗ 📂studypilot
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationControllerTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜LandingControllerTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginFormTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜ProfessorHomeControllerTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜RegisterFormTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜StudentHomeControllerTests.java
+     ┃ ┃ ┃ ┃ ┃ ┣ 📜StudypilotApplicationTests.java
+     ┃ ┃ ┃ ┃ ┃ ┗ 📜UserTests.java
     ├── 📜 build.gradle
     ├── 📜 gradlew
     ├── 📜 settings.gradle
