@@ -8,68 +8,31 @@
     <script>
       tailwind.config = {
         theme: {
-          extend: { colors: { primary: "#2563eb", accent: "#0f172a" } },
+          extend: {
+            colors: { primary: "#2563eb", accent: "#0f172a" },
+            animation: {
+              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+              "scale-in": "scaleIn 0.35s ease-out forwards",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              scaleIn: {
+                "0%": { opacity: "0", transform: "scale(0.98)" },
+                "100%": { opacity: "1", transform: "scale(1)" },
+              },
+            },
+          },
         },
       };
     </script>
   </head>
   <body class="bg-slate-50 text-slate-900 min-h-screen flex">
-    <aside
-      class="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex"
-    >
-      <div class="p-6 flex items-center gap-2 border-b border-slate-50">
-        <div
-          class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white"
-        >
-          ✦
-        </div>
-        <span class="font-bold text-xl">StudyPilot</span>
-      </div>
-      <nav class="flex-1 p-4 space-y-2">
-        <a
-          href="/prof/home"
-          class="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium"
-        >
-          <span>🏠</span> Dashboard
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>📚</span> My Courses
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>🤖</span> AI FAQ Library
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>📊</span> Analytics
-        </a>
-        <a
-          href="/settings"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>⚙️</span> Settings
-        </a>
-      </nav>
-      <div class="p-4 border-t border-slate-100">
-        <form th:action="@{/logout}" method="post">
-          <button
-            type="submit"
-            class="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-          >
-            <span>🚪</span> Logout
-          </button>
-        </form>
-      </div>
-    </aside>
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
-    <main class="flex-1 flex flex-col min-h-screen">
+    <main class="flex-1 flex flex-col min-h-screen animate-fade-in-up">
       <header
         class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8"
       >
@@ -119,13 +82,24 @@
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-bold">Active Courses</h2>
               <button
+                type="button"
+                id="openCreateCourseModal"
                 class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-bold"
               >
                 + New Course
               </button>
             </div>
-            <div
-              class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all cursor-pointer"
+            <p
+              th:if="${error}"
+              class="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg"
+              th:text="${error}"
+            >
+              Error
+            </p>
+            <a
+              th:each="course : ${courses}"
+              th:href="@{/prof/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${course.courseSlug})}"
+              class="block bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all cursor-pointer"
             >
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
@@ -135,8 +109,14 @@
                     📚
                   </div>
                   <div>
-                    <h3 class="font-bold">MATH 201 – Linear Algebra</h3>
-                    <p class="text-xs text-slate-500">8 Lectures Processed</p>
+                    <h3 class="font-bold">
+                      <span th:text="${course.courseCode}">EECS2311</span>
+                      <span>–</span>
+                      <span th:text="${course.courseName}"
+                        >Software Design</span
+                      >
+                    </h3>
+                    <p class="text-xs text-slate-500">Course Created</p>
                   </div>
                 </div>
                 <span
@@ -144,17 +124,14 @@
                   >Active</span
                 >
               </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full mb-4">
-                <div
-                  class="bg-blue-600 h-2 rounded-full"
-                  style="width: 75%"
-                ></div>
-              </div>
-              <div class="flex justify-between text-xs text-slate-500">
-                <span>24 Flashcards</span>
-                <span>3 Quizzes</span>
-                <span>12 Days until Midterm</span>
-              </div>
+            </a>
+            <div
+              th:if="${#lists.isEmpty(courses)}"
+              class="bg-white p-6 rounded-2xl border border-slate-200 text-sm text-slate-500"
+            >
+              No courses yet. Click
+              <span class="font-semibold">+ New Course</span>
+              to create your first course.
             </div>
           </div>
 
@@ -193,5 +170,102 @@
         </div>
       </div>
     </main>
+
+    <div
+      id="createCourseModal"
+      class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center p-4"
+    >
+      <div
+        class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 animate-scale-in"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold">Create New Course</h3>
+          <button
+            id="closeCreateCourseModal"
+            type="button"
+            class="text-slate-500 hover:text-slate-800"
+          >
+            ✕
+          </button>
+        </div>
+        <form
+          th:action="@{/prof/course/create}"
+          method="post"
+          class="space-y-4"
+        >
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1"
+              >Course Code</label
+            >
+            <input
+              type="text"
+              name="courseCode"
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+              placeholder="e.g. EECS2311"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1"
+              >Course Name</label
+            >
+            <input
+              type="text"
+              name="courseName"
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+              placeholder="e.g. Software Design"
+              required
+            />
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              id="cancelCreateCourseModal"
+              class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-bold"
+            >
+              Create Course
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      const modal = document.getElementById("createCourseModal");
+      const openButton = document.getElementById("openCreateCourseModal");
+      const closeButton = document.getElementById("closeCreateCourseModal");
+      const cancelButton = document.getElementById("cancelCreateCourseModal");
+
+      function openModal() {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      openButton.addEventListener("click", openModal);
+      closeButton.addEventListener("click", closeModal);
+      cancelButton.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+
+      const shouldOpenModal = /*[[${openCreateCourseModal}]]*/ false;
+      if (shouldOpenModal) {
+        openModal();
+      }
+    </script>
   </body>
 </html>

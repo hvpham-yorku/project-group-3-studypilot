@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course | StudyPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    <main class="max-w-4xl mx-auto p-8">
+      <a
+        href="/prof/home"
+        class="inline-block mb-6 text-sm text-blue-600 hover:underline"
+      >
+        ← Back to Dashboard
+      </a>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+        <h1 class="text-2xl font-bold mb-2" th:text="${courseName}">
+          Course Name
+        </h1>
+        <p class="text-slate-600 mb-6">
+          Welcome, <span th:text="${fullName}">Professor</span>
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+            <p class="text-slate-500">Course ID (CUID)</p>
+            <p class="font-semibold mt-1" th:text="${courseId}">c123abc</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+            <p class="text-slate-500">Route Name</p>
+            <p class="font-semibold mt-1" th:text="${courseName}">
+              Software Design
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

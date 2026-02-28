@@ -8,73 +8,24 @@
     <script>
       tailwind.config = {
         theme: {
-          extend: { colors: { primary: "#2563eb", accent: "#0f172a" } },
+          extend: {
+            colors: { primary: "#2563eb", accent: "#0f172a" },
+            animation: {
+              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
         },
       };
     </script>
-    <style>
-      .fade-in {
-        opacity: 0;
-        transform: translateY(10px);
-        animation: fadeInUp 0.5s ease-out forwards;
-      }
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    </style>
   </head>
   <body class="bg-slate-50 text-slate-900 min-h-screen flex">
-    <aside
-      class="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex"
-    >
-      <div class="p-6 flex items-center gap-2 border-b border-slate-50">
-        <div
-          class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white"
-        >
-          ✦
-        </div>
-        <span class="font-bold text-xl">StudyPilot</span>
-      </div>
-      <nav class="flex-1 p-4 space-y-2">
-        <a
-          href="/prof/home"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>🏠</span> Dashboard
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>📚</span> My Courses
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-        >
-          <span>🤖</span> AI FAQ Library
-        </a>
-        <a
-          href="/settings"
-          class="flex items-center gap-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium"
-        >
-          <span>⚙️</span> Settings
-        </a>
-      </nav>
-      <div class="p-4 border-t border-slate-100">
-        <form th:action="@{/logout}" method="post">
-          <button
-            type="submit"
-            class="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-          >
-            <span>🚪</span> Logout
-          </button>
-        </form>
-      </div>
-    </aside>
+    <div th:replace="~{fragments/sidebar :: sidebar('settings')}"></div>
 
     <main class="flex-1 flex flex-col min-h-screen">
       <header
@@ -90,7 +41,7 @@
         </div>
       </header>
 
-      <div class="p-8 max-w-4xl mx-auto w-full fade-in">
+      <div class="p-8 max-w-4xl mx-auto w-full animate-fade-in-up">
         <div
           class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
         >
