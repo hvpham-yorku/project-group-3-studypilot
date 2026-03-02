@@ -32,8 +32,11 @@ To run the automated test suite using Gradle:
 ```
 
 ## Features
-Lecture Note Transformation - The AI analyzes uploaded lecture notes to automatically generate practical teaching tools like quizzes, assignments, and exam prep sheets.
-Automated Student Support - The system learns from a professor's previous answers and automatically replies to students asking common or repeated questions to reduce email fatigue.
+**Lecture Note Transformation - The AI analyzes uploaded lecture notes to automatically generate practical teaching tools like quizzes, assignments, and exam prep sheets.
+
+**Automated Student Support - The system learns from a professor's previous answers and automatically replies to students asking common or repeated questions to reduce email fatigue.
+
+**Professor Dashboard - A centralized hub to manage generated materials, view student queries, and approve automated responses.
 
 ## Tech Stack
 Languages: Java
