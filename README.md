@@ -2,7 +2,8 @@
 [Link to Jira/Kanban Board]([https://monabbir.atlassian.net/jira/software/projects/G3S/boards/34/backlog](https://monabbir.atlassian.net/jira/software/projects/G3S/boards/34/backlog?atlOrigin=eyJpIjoiMWZmMzNkZjJkNGY3NGQ0OTk3ZDMwNGJmYjE4ZWNiN2QiLCJwIjoiaiJ9))
 
 ### ITR0
-[Planning Document](Planning_Document.pdf)
+[Planning Document](docs/Planning_Document.pdf) is in the docs folder.
+
 Customer Meeting video: https://drive.google.com/file/d/12tvFfuYCM1BgyzKO5wU000lIFVXpxwiI/view?usp=sharing  
 
 ### ITR1
