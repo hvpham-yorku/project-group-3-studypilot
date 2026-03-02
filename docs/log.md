@@ -245,7 +245,7 @@ Using an in-memory database allows rapid testing and supports future integration
 - All tests passing  
 
 **Notes:**
-Full unit testing deferred; focus was delivering a functional system.
+Full unit testing deferred; focus was on delivering a functional system.
 
 | Estimated Time | Actual Time |
 |---------------|-------------|
@@ -276,7 +276,7 @@ GUI intentionally simple for ITR1. Enhancements planned for ITR2.
 ---
 
 ## DOCUMENTATION
-**Feb 13, 2026 — Gabriella / Monabbir**
+**Feb 13, 2026 — Ashvin, Gabriella, Monabbir**
 
 **Completed:**
 - `log.md`
@@ -284,7 +284,7 @@ GUI intentionally simple for ITR1. Enhancements planned for ITR2.
 
 | Estimated Time | Actual Time |
 |---------------|-------------|
-| 1 hour        | 1 hour      |
+| 1 hour        | 2 hour      |
 
 ---
 
@@ -384,7 +384,6 @@ This supports future database replacement and system scalability.
 ---
 
 ## CURRENT STATUS
-==================================================
 Repository structured
 Authentication implemented
 Stub database implemented
@@ -396,7 +395,6 @@ Repository builds without errors
 
 
 ## NEXT STEPS for Delivery
-==================================================
 Replace stub database with persistent database
 Expand domain model (students, courses, registrations)
 Increase unit test coverage
