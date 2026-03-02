@@ -68,21 +68,7 @@ Repository Structure
      ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RegisterFormTests.java
      ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜StudentHomeControllerTests.java
      ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜StudypilotApplicationTests.java
-     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserTests.java
-     ┗ 📂test
-     ┃ ┗ 📂java
-     ┃ ┃ ┗ 📂com
-     ┃ ┃ ┃ ┗ 📂studypilot
-     ┃ ┃ ┃ ┃ ┗ 📂studypilot
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationControllerTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthenticationTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜LandingControllerTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜LoginFormTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜ProfessorHomeControllerTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜RegisterFormTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜StudentHomeControllerTests.java
-     ┃ ┃ ┃ ┃ ┃ ┣ 📜StudypilotApplicationTests.java
-     ┃ ┃ ┃ ┃ ┃ ┗ 📜UserTests.java
+     ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserTests.java     
     ├── 📜 build.gradle
     ├── 📜 gradlew
     ├── 📜 settings.gradle
