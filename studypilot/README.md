@@ -20,10 +20,14 @@ cd `studypilot`
 Run the following command to build and start the Spring Boot application using the Gradle wrapper:
 
 **On macOS/Linux:**
-`./gradlew bootRun`
+``` bash
+./gradlew bootRun`
+```
 
 **On Windows:**
-`gradlew.bat bootRun`
+```bash
+gradlew.bat bootRun
+```
 
 The application will be accessible at `http://localhost:8080` once the startup sequence is complete.
 
@@ -33,7 +37,9 @@ The application will be accessible at `http://localhost:8080` once the startup s
 
 The project includes a comprehensive suite of unit and integration tests. To execute the tests and view the results:
 
-`./gradlew test`
+```bash
+./gradlew test
+```
 
 **Test Reports:**
 After the tests complete, a detailed HTML report is generated. You can view it by opening the following file in any web browser:
