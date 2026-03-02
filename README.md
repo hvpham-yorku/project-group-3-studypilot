@@ -1,5 +1,5 @@
 # Deliverables
-[Link to Jira/Kanban Board](https://monabbir.atlassian.net/jira/software/projects/G3S/boards/34/backlog?atlOrigin=eyJpIjoiMWZmMzNkZjJkNGY3NGQ0OTk3ZDMwNGJmYjE4ZWNiN2QiLCJwIjoiaiJ9)
+[Link to Jira](https://monabbir.atlassian.net/jira/software/projects/G3S/boards/34/backlog?atlOrigin=eyJpIjoiMWZmMzNkZjJkNGY3NGQ0OTk3ZDMwNGJmYjE4ZWNiN2QiLCJwIjoiaiJ9)
 
 ### ITR0
 [Planning Document](docs/Planning_Document.pdf) is in the `docs` folder.
