@@ -45,11 +45,12 @@ AI Integration: (e.g., OpenAI API)
 ## Repository Structure
 A more detailed repository structure is in the project's GitHub Wiki.
 
+```text
 studypilot-group-repo/
 ├── studypilot/                 # Main application (Java/Spring Boot/Gradle)
 ├── docs/                       # Submission documents for the iterations
 └── README.md                   # Project overview
-
+```
 
 
 
