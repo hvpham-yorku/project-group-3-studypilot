@@ -41,7 +41,7 @@ To run the automated test suite using Gradle:
 ## Tech Stack
 * **Languages: Java**
 * **Backend Framework: Spring Boot**
-* **Build Tool: Gradle **
+* **Build Tool: Gradle**
 * **Database: PosgreSQL (Neon Tech)**
 * **AI Integration: (Work under Progress)**
 
