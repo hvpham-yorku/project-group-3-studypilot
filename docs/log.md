@@ -376,10 +376,10 @@ This supports future database replacement and system scalability.
 
 | Member     | Estimated | Actual |
 |------------|-----------|--------|
-| Tessa      |           |        |
-| Gabriella  |           |        |
-| Monabbir   |           |        |
-| Ashvin     |           |        |
+| Tessa      |     7     |   9    |
+| Gabriella  |     8     |   9    |
+| Monabbir   |     7     |   9    |
+| Ashvin     |     7     |   9    |
 
 ---
 
