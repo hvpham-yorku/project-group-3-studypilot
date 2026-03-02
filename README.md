@@ -26,7 +26,7 @@ cd studypilot
 (If you are on Windows, use gradlew.bat bootRun)
 ```
 
-Then, follow any additional configuration directions in studypilot/README.md (such as setting up environment variables for the AI integrations or database).
+Then, follow any additional configuration directions in [studypilot/README.md](studypilot/README.md) 
 
 ## How to test
 To run the automated test suite using Gradle:
