@@ -9,6 +9,11 @@ Customer Meeting video: https://drive.google.com/file/d/12tvFfuYCM1BgyzKO5wU000l
 ### ITR1
 [log.md](docs/log.md) is in the docs folder.
 
+No changes in Planning Docuement.
+
+### Delivery 1
+[Peer evaluation from]() is in the docs folder
+
 # StudyPilot
 An AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. StudyPilot helps reduce the administrative burden on university professors by automating redundant tasks and generating teaching materials.
 
@@ -23,7 +28,7 @@ cd studypilot
 
 Then, follow any additional configuration directions in studypilot/README.md (such as setting up environment variables for the AI integrations or database).
 
-# How to test
+## How to test
 To run the automated test suite using Gradle:
 
 
