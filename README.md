@@ -12,7 +12,7 @@ Customer Meeting video: https://drive.google.com/file/d/12tvFfuYCM1BgyzKO5wU000l
 No changes in Planning Docuement.
 
 ### Delivery 1
-[Peer evaluation from](docs/Peer_Evalutaion_Form.pdf) is in the docs folder
+[Peer evaluation from](docs/EECS2311Z_Delivery1_PeerReview_Group3.pdf) is in the docs folder
 
 # StudyPilot
 An AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. StudyPilot helps reduce the administrative burden on university professors by automating redundant tasks and generating teaching materials.
