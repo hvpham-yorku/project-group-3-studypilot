@@ -32,18 +32,18 @@ To run the automated test suite using Gradle:
 ```
 
 ## Features
-**Lecture Note Transformation - The AI analyzes uploaded lecture notes to automatically generate practical teaching tools like quizzes, assignments, and exam prep sheets.
+* **Lecture Note Transformation - The AI analyzes uploaded lecture notes to automatically generate practical teaching tools like quizzes, assignments, and exam prep sheets.**
 
-**Automated Student Support - The system learns from a professor's previous answers and automatically replies to students asking common or repeated questions to reduce email fatigue.
+* **Automated Student Support - The system learns from a professor's previous answers and automatically replies to students asking common or repeated questions to reduce email fatigue.**
 
-**Professor Dashboard - A centralized hub to manage generated materials, view student queries, and approve automated responses.
+* **Professor Dashboard - A centralized hub to manage generated materials, view student queries, and approve automated responses.**
 
 ## Tech Stack
-Languages: Java
-Backend Framework: Spring Boot
-Build Tool: Gradle
-Database: (e.g., PostgreSQL / MySQL)
-AI Integration: (e.g., OpenAI API)
+* **Languages: Java**
+* **Backend Framework: Spring Boot**
+* **Build Tool: Gradle **
+* **Database: PosgreSQL (Neon Tech)**
+* **AI Integration: (Work under Progress)**
 
 ## Repository Structure
 A more detailed repository structure is in the project's GitHub Wiki.
