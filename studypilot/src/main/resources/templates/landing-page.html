@@ -4,20 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyPilot | The Academic Force Multiplier</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#2563eb",
-              secondary: "#f8fafc",
-              accent: "#0f172a",
-            },
-          },
-        },
-      };
-    </script>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
     <style>
       html {
         scroll-behavior: smooth;

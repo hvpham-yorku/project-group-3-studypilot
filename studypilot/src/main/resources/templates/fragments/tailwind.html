@@ -1,0 +1,40 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <th:block th:fragment="tailwind">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: "#2563eb",
+                secondary: "#f8fafc",
+                accent: "#0f172a",
+              },
+              animation: {
+                "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+                float: "float 3s ease-in-out infinite",
+                "scale-in": "scaleIn 0.35s ease-out forwards",
+              },
+              keyframes: {
+                fadeInUp: {
+                  "0%": { opacity: "0", transform: "translateY(10px)" },
+                  "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+                float: {
+                  "0%, 100%": { transform: "translateY(0)" },
+                  "50%": { transform: "translateY(-10px)" },
+                },
+                scaleIn: {
+                  "0%": { opacity: "0", transform: "scale(0.95)" },
+                  "100%": { opacity: "1", transform: "scale(1)" },
+                },
+              },
+            },
+          },
+        };
+      </script>
+    </th:block>
+  </body>
+</html>

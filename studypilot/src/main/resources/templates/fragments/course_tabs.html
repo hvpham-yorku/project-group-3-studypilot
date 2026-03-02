@@ -1,0 +1,228 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <div
+      th:fragment="courseTabs"
+      class="mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm"
+    >
+      <div class="p-4 border-b border-slate-100">
+        <nav class="flex flex-wrap gap-2" aria-label="Course sections">
+          <button
+            type="button"
+            data-tab="overview"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-blue-600 text-white"
+          >
+            Overview
+          </button>
+          <button
+            type="button"
+            data-tab="slides"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+          >
+            Lecture Slides
+          </button>
+          <button
+            type="button"
+            data-tab="quiz"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+          >
+            Quiz
+          </button>
+          <button
+            type="button"
+            data-tab="flashcards"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+          >
+            Flashcards
+          </button>
+          <button
+            type="button"
+            data-tab="faq"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+          >
+            FAQ
+          </button>
+          <button
+            type="button"
+            data-tab="exam"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+          >
+            Exam
+          </button>
+        </nav>
+      </div>
+
+      <section id="tab-overview" class="tab-panel p-6 animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Course Overview</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <p class="text-xs text-slate-500">Enrolled Students</p>
+            <p class="text-2xl font-bold mt-1">312</p>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <p class="text-xs text-slate-500">Average Quiz Score</p>
+            <p class="text-2xl font-bold mt-1 text-blue-600">84%</p>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <p class="text-xs text-slate-500">Upcoming Deadline</p>
+            <p class="text-base font-bold mt-2">Assignment 3 · Mar 12</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-slides" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Lecture Slides</h2>
+        <div class="space-y-3 text-sm">
+          <div
+            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+          >
+            <span>Week 1 · Introduction to Software Design</span>
+            <span class="text-blue-600 font-semibold">PDF</span>
+          </div>
+          <div
+            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+          >
+            <span>Week 2 · UML and Modeling Basics</span>
+            <span class="text-blue-600 font-semibold">PPTX</span>
+          </div>
+          <div
+            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+          >
+            <span>Week 3 · SOLID Principles</span>
+            <span class="text-blue-600 font-semibold">PDF</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-quiz" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Quiz</h2>
+        <div class="space-y-3 text-sm">
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Quiz 1 · OO Fundamentals</p>
+            <p class="text-slate-500 mt-1">
+              Availability: Mar 4 - Mar 8 · 10 questions
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Quiz 2 · Design Patterns</p>
+            <p class="text-slate-500 mt-1">
+              Availability: Mar 11 - Mar 15 · 12 questions
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="tab-flashcards"
+        class="tab-panel p-6 hidden animate-fade-in-up"
+      >
+        <h2 class="text-lg font-bold mb-4">Flashcards</h2>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Encapsulation</p>
+            <p class="text-slate-600 mt-2">
+              Bundling data and methods, restricting direct state access.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Polymorphism</p>
+            <p class="text-slate-600 mt-2">
+              Same interface, multiple implementations based on runtime type.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Single Responsibility</p>
+            <p class="text-slate-600 mt-2">
+              A class should have only one reason to change.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Composition over Inheritance</p>
+            <p class="text-slate-600 mt-2">
+              Prefer combining behaviors over deep inheritance trees.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-faq" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">FAQ</h2>
+        <div class="space-y-3 text-sm">
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Is late submission allowed?</p>
+            <p class="text-slate-600 mt-1">
+              Yes, up to 48 hours with a 10% daily penalty.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Will quizzes be open-book?</p>
+            <p class="text-slate-600 mt-1">
+              Quizzes are open-notes but no external collaboration is allowed.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="font-semibold">Where are office hours?</p>
+            <p class="text-slate-600 mt-1">
+              Bergeron Centre Room 3120 and Zoom (Friday afternoon).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-exam" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Exam</h2>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="text-slate-500">Final Exam Date</p>
+            <p class="font-semibold mt-1">Apr 18, 2026 · 9:00 AM</p>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <p class="text-slate-500">Format</p>
+            <p class="font-semibold mt-1">2 hours · Mixed MCQ + short answer</p>
+          </div>
+          <div
+            class="p-4 rounded-xl border border-slate-200 bg-slate-50 sm:col-span-2"
+          >
+            <p class="text-slate-500">Coverage</p>
+            <p class="font-semibold mt-1">
+              Weeks 1-11: OOP, design patterns, testing, and UML modeling.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const tabButtons = document.querySelectorAll(".tab-btn");
+          const tabPanels = document.querySelectorAll(".tab-panel");
+
+          function activateTab(tabId) {
+            tabButtons.forEach((button) => {
+              const isActive = button.dataset.tab === tabId;
+              button.classList.toggle("bg-blue-600", isActive);
+              button.classList.toggle("text-white", isActive);
+              button.classList.toggle("bg-slate-100", !isActive);
+              button.classList.toggle("text-slate-700", !isActive);
+            });
+
+            tabPanels.forEach((panel) => {
+              const isActive = panel.id === `tab-${tabId}`;
+              panel.classList.toggle("hidden", !isActive);
+              if (isActive) {
+                panel.classList.remove("animate-fade-in-up");
+                void panel.offsetWidth;
+                panel.classList.add("animate-fade-in-up");
+              }
+            });
+          }
+
+          tabButtons.forEach((button) => {
+            button.addEventListener("click", () =>
+              activateTab(button.dataset.tab),
+            );
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

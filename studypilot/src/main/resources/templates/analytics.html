@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('analytics')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader('Analytics', false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
+          >
+            <p class="text-xs text-slate-500">Weekly Questions Answered</p>
+            <p class="text-2xl font-bold mt-1 text-blue-600">412</p>
+          </div>
+          <div
+            class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
+          >
+            <p class="text-xs text-slate-500">Auto-Resolution Rate</p>
+            <p class="text-2xl font-bold mt-1">81%</p>
+          </div>
+          <div
+            class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
+          >
+            <p class="text-xs text-slate-500">Avg Response Time</p>
+            <p class="text-2xl font-bold mt-1">22s</p>
+          </div>
+        </div>
+
+        <section
+          class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
+        >
+          <h2 class="text-lg font-bold mb-4">Weekly Trend</h2>
+          <div class="grid grid-cols-5 gap-3 items-end h-52">
+            <div
+              th:each="trend : ${weeklyTrends}"
+              class="flex flex-col items-center gap-2"
+            >
+              <div
+                class="w-full rounded-t-lg bg-blue-200 hover:bg-blue-500 transition-all duration-300"
+                th:style="'height:' + ${trend.value} + '%'"
+              ></div>
+              <p class="text-xs text-slate-500" th:text="${trend.day}">Mon</p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
+        >
+          <h2 class="text-lg font-bold mb-4">Key Insights</h2>
+          <ul class="space-y-3">
+            <li
+              th:each="insight : ${insights}"
+              class="text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-lg p-3"
+            >
+              <span class="font-semibold text-blue-600 mr-2">•</span
+              ><span th:text="${insight}">Insight text</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

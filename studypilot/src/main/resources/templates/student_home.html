@@ -4,33 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Home | StudyPilot</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            animation: {
-              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
-            },
-            keyframes: {
-              fadeInUp: {
-                "0%": { opacity: "0", transform: "translateY(10px)" },
-                "100%": { opacity: "1", transform: "translateY(0)" },
-              },
-            },
-          },
-        },
-      };
-    </script>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
   </head>
   <body class="bg-slate-50 text-slate-900 min-h-screen flex">
     <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
-    <main class="flex-1 p-8 animate-fade-in-up">
-      <h1 class="text-2xl font-bold">Student Dashboard</h1>
-      <p class="text-slate-600 mt-2">
-        Welcome, <span th:text="${fullName}">Student</span>!
-      </p>
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up">
+        <h1 class="text-2xl font-bold">Student Dashboard</h1>
+      </div>
     </main>
   </body>
 </html>

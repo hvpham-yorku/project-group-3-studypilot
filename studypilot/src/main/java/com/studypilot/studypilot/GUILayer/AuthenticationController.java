@@ -65,6 +65,7 @@ public class AuthenticationController {
             session.setAttribute("userId", user.getId());
             session.setAttribute("role", user.getRole());
             session.setAttribute("fullName", user.getFullName());
+            session.setAttribute("email", user.getEmail());
 
             return "STUDENT".equals(user.getRole()) ? "redirect:/student/home" : "redirect:/prof/home";
 
