@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.DomainModel.Course;
@@ -66,10 +68,10 @@ public class ProfessorHomeController {
 
     @GetMapping("/prof/{courseId}/{courseSlug}")
     public String coursePage(@PathVariable("courseId") String courseId,
-            @PathVariable("courseSlug") String courseSlug, HttpSession session,
-            Model model) {
-        Object role = session.getAttribute("role");
-        if (!"PROFESSOR".equals(role)) {
+                             @PathVariable("courseSlug") String courseSlug,
+                             HttpSession session,
+                             Model model) {
+        if (!isProfessor(session)) {
             return "redirect:/login";
         }
 
@@ -78,16 +80,94 @@ public class ProfessorHomeController {
             return "redirect:/prof/home";
         }
 
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
         model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courseId", courseId);
+        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseCode", course.getCourseCode());
         model.addAttribute("courseName", course.getCourseName());
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
         return "professor_course_page";
+    }
+
+    @GetMapping("/prof/{courseId}/{courseSlug}/quiz-generator")
+    public String quizGeneratorPage(@PathVariable("courseId") String courseId,
+                                    @PathVariable("courseSlug") String courseSlug,
+                                    HttpSession session,
+                                    Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseCode", course.getCourseCode());
+        model.addAttribute("courseName", course.getCourseName());
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+        return "quiz_generator_page";
+    }
+
+    @PostMapping("/prof/{courseId}/{courseSlug}/quiz-generator/upload")
+    public String handleQuizUpload(@PathVariable("courseId") String courseId,
+                                   @PathVariable("courseSlug") String courseSlug,
+                                   @RequestParam("document") MultipartFile document,
+                                   HttpSession session,
+                                   Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseCode", course.getCourseCode());
+        model.addAttribute("courseName", course.getCourseName());
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+
+        if (document == null || document.isEmpty()) {
+            model.addAttribute("error", "Please upload a PDF or document file.");
+            return "quiz_generator_page";
+        }
+
+        model.addAttribute("successMessage", "File uploaded successfully: " + document.getOriginalFilename());
+
+        // Later, this is where you will call your AI quiz generation service.
+        return "quiz_generator_page";
+    }
+
+    private boolean isProfessor(HttpSession session) {
+        return "PROFESSOR".equals(session.getAttribute("role"));
     }
 
     private List<CourseCardView> toCourseCards(List<Course> courses) {
         return courses.stream()
-                .map(course -> new CourseCardView(course.getId(), course.getCourseCode(), course.getCourseName(),
-                toSlug(course.getCourseName())))
+                .map(course -> new CourseCardView(
+                        course.getId(),
+                        course.getCourseCode(),
+                        course.getCourseName(),
+                        toSlug(course.getCourseName())))
                 .toList();
     }
 

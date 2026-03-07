@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Group Formation Activity | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+<main class="max-w-5xl mx-auto px-6 py-8 space-y-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <p class="text-sm text-slate-500">Edit Activity</p>
+            <h1 class="text-3xl font-bold">Survey-Based Group Formation</h1>
+            <p class="text-slate-600 mt-2">
+                <span th:text="${course.courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${course.courseName}">Software Design</span>
+            </p>
+        </div>
+
+        <a
+                th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation'}"
+                class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+        >
+            Back to Activities
+        </a>
+    </div>
+
+    <div
+            th:if="${error}"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            th:text="${error}"
+    >
+        Error
+    </div>
+
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+        <form
+                th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activityId} + '/edit'}"
+                th:object="${form}"
+                method="post"
+                class="space-y-6"
+        >
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Activity Name</label>
+                <input
+                        type="text"
+                        th:field="*{activityName}"
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                        required
+                />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Preferred Group Size</label>
+                    <input type="number" min="2" th:field="*{preferredGroupSize}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Min Team Size</label>
+                    <input type="number" min="2" th:field="*{minTeamSize}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Max Team Size</label>
+                    <input type="number" min="2" th:field="*{maxTeamSize}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-3">
+                    <div>
+                        <h2 class="font-semibold">Topic Options</h2>
+                        <p class="text-sm text-slate-500">Exactly 5 different options.</p>
+                    </div>
+
+                    <input type="text" th:field="*{topic1}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{topic2}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{topic3}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{topic4}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{topic5}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Topic Matching Style</label>
+                        <select th:field="*{groupTopicsSimilarly}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                            <option th:value="true">Group students with similar topic interests</option>
+                            <option th:value="false">Group students with mixed topic interests</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <h2 class="font-semibold">Skill Options</h2>
+                        <p class="text-sm text-slate-500">Exactly 5 different options.</p>
+                    </div>
+
+                    <input type="text" th:field="*{skill1}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{skill2}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{skill3}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{skill4}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+                    <input type="text" th:field="*{skill5}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Skill Matching Style</label>
+                        <select th:field="*{groupSkillsSimilarly}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                            <option th:value="true">Group students with similar skill profiles</option>
+                            <option th:value="false">Group students with mixed skill profiles</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <a
+                        th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation'}"
+                        class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+                >
+                    Cancel
+                </a>
+
+                <button
+                        type="submit"
+                        class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+                >
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
