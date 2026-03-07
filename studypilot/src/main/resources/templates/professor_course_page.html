@@ -1,48 +1,30 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course Page | StudyPilot</title>
-    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
-  </head>
-  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
-    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${courseCode} + ' - ' + ${courseName}">Course Space</title>
+</head>
+<body>
+<h1 th:text="${courseCode} + ' - ' + ${courseName}">Course Space</h1>
+<p>Welcome, <span th:text="${fullName}">Professor</span></p>
 
-    <main class="flex-1 flex flex-col min-h-screen">
-      <div
-        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
-      ></div>
+<h2>Course Tools</h2>
 
-      <div class="max-w-4xl mx-auto w-full p-8 animate-fade-in-up">
-        <a
-          href="/prof/home"
-          class="inline-block mb-6 text-sm text-blue-600 hover:underline"
-        >
-          ← Back to Dashboard
-        </a>
+<div>
+  <a th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/group-formation'}">
+    Go to Survey-Based Group Formation
+  </a>
+</div>
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
-          <h1 class="text-2xl font-bold mb-2" th:text="${courseName}">
-            Course Name
-          </h1>
+<br>
 
-          <div class="grid sm:grid-cols-2 gap-4 text-sm">
-            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
-              <p class="text-slate-500">Course ID (CUID)</p>
-              <p class="font-semibold mt-1" th:text="${courseId}">c123abc</p>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
-              <p class="text-slate-500">Course Name</p>
-              <p class="font-semibold mt-1" th:text="${courseName}">
-                Software Design
-              </p>
-            </div>
-          </div>
-        </div>
+<div>
+  <a th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/quiz-generator'}">
+    Go to AI Quiz Generator
+  </a>
+</div>
 
-        <div th:replace="~{fragments/course_tabs :: courseTabs}"></div>
-      </div>
-    </main>
-  </body>
+<br>
+<a th:href="@{/prof/home}">Back to Professor Home</a>
+</body>
 </html>
