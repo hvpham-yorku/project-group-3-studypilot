@@ -9,4 +9,6 @@ import com.studypilot.studypilot.DomainModel.Course;
 public interface CourseRepo extends JpaRepository<Course, String> {
 
     List<Course> findByProfessorIdOrderByCreatedAtDesc(Long professorId);
+
+    List<Course> findAllByOrderByCreatedAtDesc();
 }

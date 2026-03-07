@@ -1,0 +1,100 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Result | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up">
+        <div class="max-w-5xl mx-auto w-full space-y-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm text-slate-500">Quiz Result</p>
+              <h1 class="text-3xl font-bold mt-1">
+                <span th:text="${course.courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${course.courseName}">Software Design</span>
+              </h1>
+            </div>
+            <a
+              th:href="@{/student/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${courseSlug})}"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+            >
+              Back to Course
+            </a>
+          </div>
+
+          <section
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+          >
+            <h2 class="text-xl font-bold">Score</h2>
+            <p class="text-3xl font-bold mt-2 text-blue-600">
+              <span th:text="${submission.score}">0</span>
+              <span class="text-slate-700">/</span>
+              <span
+                class="text-slate-700"
+                th:text="${submission.totalQuestions}"
+                >0</span
+              >
+            </p>
+          </section>
+
+          <section class="space-y-4">
+            <article
+              th:each="review : ${reviews}"
+              class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+            >
+              <h3
+                class="font-bold"
+                th:text="${review.question.questionOrder} + '. ' + ${review.question.questionText}"
+              >
+                Question
+              </h3>
+              <p class="text-sm mt-3">
+                Your answer:
+                <span
+                  class="font-semibold"
+                  th:text="${#strings.isEmpty(review.selectedOption) ? 'No answer' : review.selectedOption}"
+                  >A</span
+                >
+              </p>
+              <p class="text-sm mt-1">
+                Correct answer:
+                <span
+                  class="font-semibold"
+                  th:text="${review.question.correctOption}"
+                  >A</span
+                >
+              </p>
+              <p
+                class="text-sm mt-2"
+                th:classappend="${review.correct} ? ' text-green-700' : ' text-red-700'"
+                th:text="${review.correct} ? 'Correct' : 'Incorrect'"
+              >
+                Correct
+              </p>
+            </article>
+          </section>
+
+          <div class="flex justify-end">
+            <a
+              th:href="@{/student/{courseId}/{courseSlug}/quiz(courseId=${course.id},courseSlug=${courseSlug})}"
+              class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+            >
+              Retake Quiz
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

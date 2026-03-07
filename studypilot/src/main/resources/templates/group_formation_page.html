@@ -1,240 +1,368 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Survey-Based Group Formation | StudyPilot</title>
-  <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
-</head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
-<main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div>
-      <p class="text-sm text-slate-500">Course Space</p>
-      <h1 class="text-3xl font-bold">
-        Survey-Based Group Formation
-      </h1>
-      <p class="text-slate-600 mt-2">
-        <span th:text="${course.courseCode}">EECS2311</span>
-        <span> - </span>
-        <span th:text="${course.courseName}">Software Design</span>
-      </p>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Survey-Based Group Formation | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
 
-    <a
-            th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug}}"
-            class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
-    >
-      Back to Course Space
-    </a>
-  </div>
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader('Survey-Based Group Formation', false)}"
+      ></div>
 
-  <div
-          th:if="${error}"
-          class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-          th:text="${error}"
-  >
-    Error
-  </div>
-
-  <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-      <div class="mb-6">
-        <h2 class="text-xl font-bold">Create Group Formation Activity</h2>
-        <p class="text-sm text-slate-500 mt-1">
-          Enter the professor-side setup for one activity.
-        </p>
-      </div>
-
-      <form
-              th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation'}"
-              th:object="${form}"
-              method="post"
-              class="space-y-6"
-      >
-        <div class="grid grid-cols-1 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Activity Name</label>
-            <input
-                    type="text"
-                    th:field="*{activityName}"
-                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g. Capstone Project Teams"
-                    required
-            />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Preferred Group Size</label>
-            <input
-                    type="number"
-                    min="2"
-                    th:field="*{preferredGroupSize}"
-                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                    required
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Min Team Size</label>
-            <input
-                    type="number"
-                    min="2"
-                    th:field="*{minTeamSize}"
-                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                    required
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Max Team Size</label>
-            <input
-                    type="number"
-                    min="2"
-                    th:field="*{maxTeamSize}"
-                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                    required
-            />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-3">
-            <div>
-              <h3 class="font-semibold">Topic Options</h3>
-              <p class="text-sm text-slate-500">Enter exactly 5 different topic choices.</p>
-            </div>
-
-            <input type="text" th:field="*{topic1}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 1" required />
-            <input type="text" th:field="*{topic2}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 2" required />
-            <input type="text" th:field="*{topic3}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 3" required />
-            <input type="text" th:field="*{topic4}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 4" required />
-            <input type="text" th:field="*{topic5}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 5" required />
-
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Topic Matching Style</label>
-              <select
-                      th:field="*{groupTopicsSimilarly}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option th:value="true">Group students with similar topic interests</option>
-                <option th:value="false">Group students with mixed topic interests</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <div>
-              <h3 class="font-semibold">Skill Options</h3>
-              <p class="text-sm text-slate-500">Enter exactly 5 different skill choices.</p>
-            </div>
-
-            <input type="text" th:field="*{skill1}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 1" required />
-            <input type="text" th:field="*{skill2}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 2" required />
-            <input type="text" th:field="*{skill3}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 3" required />
-            <input type="text" th:field="*{skill4}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 4" required />
-            <input type="text" th:field="*{skill5}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 5" required />
-
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Skill Matching Style</label>
-              <select
-                      th:field="*{groupSkillsSimilarly}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option th:value="true">Group students with similar skill profiles</option>
-                <option th:value="false">Group students with mixed skill profiles</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex justify-end">
-          <button
-                  type="submit"
-                  class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+      <div class="p-8 animate-fade-in-up space-y-8">
+        <div class="max-w-7xl mx-auto w-full space-y-8">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
           >
-            Save Activity
-          </button>
-        </div>
-      </form>
-    </section>
-
-    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-      <div class="mb-6">
-        <h2 class="text-xl font-bold">Saved Activities</h2>
-        <p class="text-sm text-slate-500 mt-1">
-          View, edit, or delete group formation setups for this course.
-        </p>
-      </div>
-
-      <div th:if="${#lists.isEmpty(activities)}" class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500">
-        No group formation activities have been created yet.
-      </div>
-
-      <div th:if="${!#lists.isEmpty(activities)}" class="space-y-4">
-        <div
-                th:each="activity : ${activities}"
-                class="rounded-2xl border border-slate-200 p-5"
-        >
-          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-            <div class="space-y-2">
-              <h3 class="text-lg font-bold" th:text="${activity.activityName}">Activity Name</h3>
-
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-slate-600">
-                <div>
-                  <span class="font-semibold text-slate-800">Preferred:</span>
-                  <span th:text="${activity.preferredGroupSize}">4</span>
-                </div>
-                <div>
-                  <span class="font-semibold text-slate-800">Min:</span>
-                  <span th:text="${activity.minTeamSize}">3</span>
-                </div>
-                <div>
-                  <span class="font-semibold text-slate-800">Max:</span>
-                  <span th:text="${activity.maxTeamSize}">5</span>
-                </div>
-              </div>
-
-              <div class="text-sm text-slate-600 space-y-1">
-                <p>
-                  <span class="font-semibold text-slate-800">Topic matching:</span>
-                  <span th:text="${activity.groupTopicsSimilarly} ? 'Similar students together' : 'Mixed topic groups'">Similar students together</span>
-                </p>
-                <p>
-                  <span class="font-semibold text-slate-800">Skill matching:</span>
-                  <span th:text="${activity.groupSkillsSimilarly} ? 'Similar students together' : 'Mixed skill groups'">Mixed skill groups</span>
-                </p>
-              </div>
+            <div>
+              <p class="text-sm text-slate-500">Course Space</p>
+              <h1 class="text-3xl font-bold">Survey-Based Group Formation</h1>
+              <p class="text-slate-600 mt-2">
+                <span th:text="${course.courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${course.courseName}">Software Design</span>
+              </p>
             </div>
 
-            <div class="flex gap-2">
-              <a
-                      th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/edit'}"
-                      class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
-              >
-                Edit
-              </a>
+            <a
+              th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug}}"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+            >
+              Back to Course Space
+            </a>
+          </div>
+
+          <div
+            th:if="${error}"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            th:text="${error}"
+          >
+            Error
+          </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <section
+              class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+            >
+              <div class="mb-6">
+                <h2 class="text-xl font-bold">
+                  Create Group Formation Activity
+                </h2>
+                <p class="text-sm text-slate-500 mt-1">
+                  Enter the professor-side setup for one activity.
+                </p>
+              </div>
 
               <form
-                      th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/delete'}"
-                      method="post"
-                      onsubmit="return confirm('Delete this activity?');"
+                th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation'}"
+                th:object="${form}"
+                method="post"
+                class="space-y-6"
               >
-                <button
-                        type="submit"
-                        class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
-                >
-                  Delete
-                </button>
+                <div class="grid grid-cols-1 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Activity Name</label
+                    >
+                    <input
+                      type="text"
+                      th:field="*{activityName}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="e.g. Capstone Project Teams"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Preferred Group Size</label
+                    >
+                    <input
+                      type="number"
+                      min="2"
+                      th:field="*{preferredGroupSize}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Min Team Size</label
+                    >
+                    <input
+                      type="number"
+                      min="2"
+                      th:field="*{minTeamSize}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1"
+                      >Max Team Size</label
+                    >
+                    <input
+                      type="number"
+                      min="2"
+                      th:field="*{maxTeamSize}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="space-y-3">
+                    <div>
+                      <h3 class="font-semibold">Topic Options</h3>
+                      <p class="text-sm text-slate-500">
+                        Enter exactly 5 different topic choices.
+                      </p>
+                    </div>
+
+                    <input
+                      type="text"
+                      th:field="*{topic1}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Topic 1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{topic2}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Topic 2"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{topic3}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Topic 3"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{topic4}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Topic 4"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{topic5}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Topic 5"
+                      required
+                    />
+
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-slate-700 mb-1"
+                        >Topic Matching Style</label
+                      >
+                      <select
+                        th:field="*{groupTopicsSimilarly}"
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      >
+                        <option th:value="true">
+                          Group students with similar topic interests
+                        </option>
+                        <option th:value="false">
+                          Group students with mixed topic interests
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="space-y-3">
+                    <div>
+                      <h3 class="font-semibold">Skill Options</h3>
+                      <p class="text-sm text-slate-500">
+                        Enter exactly 5 different skill choices.
+                      </p>
+                    </div>
+
+                    <input
+                      type="text"
+                      th:field="*{skill1}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Skill 1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{skill2}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Skill 2"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{skill3}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Skill 3"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{skill4}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Skill 4"
+                      required
+                    />
+                    <input
+                      type="text"
+                      th:field="*{skill5}"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      placeholder="Skill 5"
+                      required
+                    />
+
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-slate-700 mb-1"
+                        >Skill Matching Style</label
+                      >
+                      <select
+                        th:field="*{groupSkillsSimilarly}"
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                      >
+                        <option th:value="true">
+                          Group students with similar skill profiles
+                        </option>
+                        <option th:value="false">
+                          Group students with mixed skill profiles
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex justify-end">
+                  <button
+                    type="submit"
+                    class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+                  >
+                    Save Activity
+                  </button>
+                </div>
               </form>
-            </div>
+            </section>
+
+            <section
+              class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+            >
+              <div class="mb-6">
+                <h2 class="text-xl font-bold">Saved Activities</h2>
+                <p class="text-sm text-slate-500 mt-1">
+                  View, edit, or delete group formation setups for this course.
+                </p>
+              </div>
+
+              <div
+                th:if="${#lists.isEmpty(activities)}"
+                class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500"
+              >
+                No group formation activities have been created yet.
+              </div>
+
+              <div th:if="${!#lists.isEmpty(activities)}" class="space-y-4">
+                <div
+                  th:each="activity : ${activities}"
+                  class="rounded-2xl border border-slate-200 p-5"
+                >
+                  <div
+                    class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4"
+                  >
+                    <div class="space-y-2">
+                      <h3
+                        class="text-lg font-bold"
+                        th:text="${activity.activityName}"
+                      >
+                        Activity Name
+                      </h3>
+
+                      <div
+                        class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-slate-600"
+                      >
+                        <div>
+                          <span class="font-semibold text-slate-800"
+                            >Preferred:</span
+                          >
+                          <span th:text="${activity.preferredGroupSize}"
+                            >4</span
+                          >
+                        </div>
+                        <div>
+                          <span class="font-semibold text-slate-800">Min:</span>
+                          <span th:text="${activity.minTeamSize}">3</span>
+                        </div>
+                        <div>
+                          <span class="font-semibold text-slate-800">Max:</span>
+                          <span th:text="${activity.maxTeamSize}">5</span>
+                        </div>
+                      </div>
+
+                      <div class="text-sm text-slate-600 space-y-1">
+                        <p>
+                          <span class="font-semibold text-slate-800"
+                            >Topic matching:</span
+                          >
+                          <span
+                            th:text="${activity.groupTopicsSimilarly} ? 'Similar students together' : 'Mixed topic groups'"
+                            >Similar students together</span
+                          >
+                        </p>
+                        <p>
+                          <span class="font-semibold text-slate-800"
+                            >Skill matching:</span
+                          >
+                          <span
+                            th:text="${activity.groupSkillsSimilarly} ? 'Similar students together' : 'Mixed skill groups'"
+                            >Mixed skill groups</span
+                          >
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                      <a
+                        th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/edit'}"
+                        class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+                      >
+                        Edit
+                      </a>
+
+                      <form
+                        th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/delete'}"
+                        method="post"
+                        onsubmit="return confirm('Delete this activity?');"
+                      >
+                        <button
+                          type="submit"
+                          class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
-    </section>
-  </div>
-</main>
-</body>
+    </main>
+  </body>
 </html>

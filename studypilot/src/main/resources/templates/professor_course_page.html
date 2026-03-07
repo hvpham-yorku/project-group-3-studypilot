@@ -1,30 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title th:text="${courseCode} + ' - ' + ${courseName}">Course Space</title>
-</head>
-<body>
-<h1 th:text="${courseCode} + ' - ' + ${courseName}">Course Space</h1>
-<p>Welcome, <span th:text="${fullName}">Professor</span></p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${courseCode} + ' - ' + ${courseName} + ' | StudyPilot'">
+      Course Space | StudyPilot
+    </title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
 
-<h2>Course Tools</h2>
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
+      ></div>
 
-<div>
-  <a th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/group-formation'}">
-    Go to Survey-Based Group Formation
-  </a>
-</div>
+      <div class="p-8 animate-fade-in-up">
+        <div class="max-w-5xl mx-auto w-full space-y-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm text-slate-500">Course Space</p>
+              <h1 class="text-3xl font-bold mt-1">
+                <span th:text="${courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${courseName}">Software Design</span>
+              </h1>
+            </div>
+            <a
+              th:href="@{/prof/home}"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+            >
+              Back to Professor Home
+            </a>
+          </div>
 
-<br>
+          <section
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+          >
+            <h2 class="text-xl font-bold">Course Tools</h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Manage activities and AI tooling for this course.
+            </p>
 
-<div>
-  <a th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/quiz-generator'}">
-    Go to AI Quiz Generator
-  </a>
-</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <a
+                th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/group-formation'}"
+                class="block rounded-xl border border-slate-200 bg-slate-50 p-5 hover:bg-white hover:border-blue-300 transition-all"
+              >
+                <p class="text-xs font-semibold text-blue-600">Teamwork</p>
+                <h3 class="text-base font-bold mt-1">
+                  Survey-Based Group Formation
+                </h3>
+                <p class="text-sm text-slate-500 mt-2">
+                  Create and manage group formation activities based on topic
+                  and skill preferences.
+                </p>
+              </a>
 
-<br>
-<a th:href="@{/prof/home}">Back to Professor Home</a>
-</body>
+              <a
+                th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/quiz-generator'}"
+                class="block rounded-xl border border-slate-200 bg-slate-50 p-5 hover:bg-white hover:border-blue-300 transition-all"
+              >
+                <p class="text-xs font-semibold text-blue-600">Assessment</p>
+                <h3 class="text-base font-bold mt-1">AI Quiz Generator</h3>
+                <p class="text-sm text-slate-500 mt-2">
+                  Upload course content and generate quiz questions for this
+                  class.
+                </p>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>

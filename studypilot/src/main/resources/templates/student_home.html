@@ -14,8 +14,121 @@
         th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
       ></div>
 
-      <div class="p-8 animate-fade-in-up">
-        <h1 class="text-2xl font-bold">Student Dashboard</h1>
+      <div class="p-8 animate-fade-in-up space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5"
+          >
+            <p class="text-xs text-slate-500">Enrolled Courses</p>
+            <p
+              class="text-2xl font-bold mt-1"
+              th:text="${#lists.size(courses)}"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5"
+          >
+            <p class="text-xs text-slate-500">Open Courses To Join</p>
+            <p
+              class="text-2xl font-bold mt-1"
+              th:text="${#lists.size(availableCourses)}"
+            >
+              0
+            </p>
+          </div>
+          <div
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5"
+          >
+            <p class="text-xs text-slate-500">Status</p>
+            <p class="text-base font-bold mt-2 text-blue-600">
+              Learning in progress
+            </p>
+          </div>
+        </div>
+
+        <p
+          th:if="${error}"
+          class="text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl"
+          th:text="${error}"
+        >
+          Error
+        </p>
+
+        <section
+          class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4"
+        >
+          <div>
+            <h2 class="text-xl font-bold">Join a Course</h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Use the course list to enroll and unlock student activities.
+            </p>
+          </div>
+
+          <form
+            th:action="@{/student/course/join}"
+            th:object="${joinForm}"
+            method="post"
+            class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3"
+          >
+            <select
+              th:field="*{courseId}"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
+              required
+            >
+              <option value="">Select a course</option>
+              <option
+                th:each="course : ${availableCourses}"
+                th:value="${course.id}"
+                th:text="${course.courseCode} + ' - ' + ${course.courseName}"
+              >
+                EECS2311 - Software Design
+              </option>
+            </select>
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+            >
+              Enroll
+            </button>
+          </form>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold">My Courses</h2>
+          </div>
+
+          <div
+            th:if="${#lists.isEmpty(courses)}"
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 text-sm text-slate-500"
+          >
+            You are not enrolled in any courses yet.
+          </div>
+
+          <div
+            th:if="${!#lists.isEmpty(courses)}"
+            class="grid grid-cols-1 lg:grid-cols-2 gap-5"
+          >
+            <a
+              th:each="course : ${courses}"
+              th:href="@{/student/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${course.courseSlug})}"
+              class="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all"
+            >
+              <p
+                class="text-xs font-semibold text-blue-600"
+                th:text="${course.courseCode}"
+              >
+                EECS2311
+              </p>
+              <h3 class="text-lg font-bold mt-1" th:text="${course.courseName}">
+                Software Design
+              </h3>
+              <p class="text-sm text-slate-500 mt-2">Open course space</p>
+            </a>
+          </div>
+        </section>
       </div>
     </main>
   </body>

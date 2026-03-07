@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
+import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.DomainModel.Course;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,9 +25,11 @@ public class ProfessorHomeController {
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
 
     private final CourseService courseService;
+    private final QuizService quizService;
 
-    public ProfessorHomeController(CourseService courseService) {
+    public ProfessorHomeController(CourseService courseService, QuizService quizService) {
         this.courseService = courseService;
+        this.quizService = quizService;
     }
 
     @GetMapping("/prof/home")
@@ -68,9 +71,9 @@ public class ProfessorHomeController {
 
     @GetMapping("/prof/{courseId}/{courseSlug}")
     public String coursePage(@PathVariable("courseId") String courseId,
-                             @PathVariable("courseSlug") String courseSlug,
-                             HttpSession session,
-                             Model model) {
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -95,9 +98,9 @@ public class ProfessorHomeController {
 
     @GetMapping("/prof/{courseId}/{courseSlug}/quiz-generator")
     public String quizGeneratorPage(@PathVariable("courseId") String courseId,
-                                    @PathVariable("courseSlug") String courseSlug,
-                                    HttpSession session,
-                                    Model model) {
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -122,10 +125,10 @@ public class ProfessorHomeController {
 
     @PostMapping("/prof/{courseId}/{courseSlug}/quiz-generator/upload")
     public String handleQuizUpload(@PathVariable("courseId") String courseId,
-                                   @PathVariable("courseSlug") String courseSlug,
-                                   @RequestParam("document") MultipartFile document,
-                                   HttpSession session,
-                                   Model model) {
+            @PathVariable("courseSlug") String courseSlug,
+            @RequestParam("document") MultipartFile document,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -151,9 +154,9 @@ public class ProfessorHomeController {
             return "quiz_generator_page";
         }
 
-        model.addAttribute("successMessage", "File uploaded successfully: " + document.getOriginalFilename());
-
-        // Later, this is where you will call your AI quiz generation service.
+        quizService.createQuizFromUpload(professorId, courseId, document.getOriginalFilename());
+        model.addAttribute("success", "Quiz generated from: " + document.getOriginalFilename());
+        model.addAttribute("uploadedFileName", document.getOriginalFilename());
         return "quiz_generator_page";
     }
 
@@ -164,10 +167,10 @@ public class ProfessorHomeController {
     private List<CourseCardView> toCourseCards(List<Course> courses) {
         return courses.stream()
                 .map(course -> new CourseCardView(
-                        course.getId(),
-                        course.getCourseCode(),
-                        course.getCourseName(),
-                        toSlug(course.getCourseName())))
+                course.getId(),
+                course.getCourseCode(),
+                course.getCourseName(),
+                toSlug(course.getCourseName())))
                 .toList();
     }
 

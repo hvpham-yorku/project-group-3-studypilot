@@ -23,7 +23,7 @@
           <span>🏠</span> Dashboard
         </a>
         <a
-          href="/courses"
+          th:href="${session.role == 'STUDENT'} ? '/student/home' : '/courses'"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'courses'} ? ' bg-blue-50 text-blue-600 font-medium' : ' text-slate-600 hover:bg-slate-50'"
         >

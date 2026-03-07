@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.ui.Model;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
+import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.GUILayer.ProfessorHomeController;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,13 +25,15 @@ class ProfessorHomeControllerTests {
 
     private ProfessorHomeController controller;
     private CourseService mockCourseService;
+    private QuizService mockQuizService;
     private HttpSession mockSession;
     private Model mockModel;
 
     @BeforeEach
     void setup() {
         mockCourseService = mock(CourseService.class);
-        controller = new ProfessorHomeController(mockCourseService);
+        mockQuizService = mock(QuizService.class);
+        controller = new ProfessorHomeController(mockCourseService, mockQuizService);
         mockSession = mock(HttpSession.class);
         mockModel = mock(Model.class);
     }

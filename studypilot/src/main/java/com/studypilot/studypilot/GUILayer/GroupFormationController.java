@@ -1,15 +1,20 @@
 package com.studypilot.studypilot.GUILayer;
 
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.BusinessLogicLayer.GroupFormationService;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class GroupFormationController {
@@ -18,16 +23,16 @@ public class GroupFormationController {
     private final GroupFormationService groupFormationService;
 
     public GroupFormationController(CourseService courseService,
-                                    GroupFormationService groupFormationService) {
+            GroupFormationService groupFormationService) {
         this.courseService = courseService;
         this.groupFormationService = groupFormationService;
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/group-formation")
-    public String showGroupFormationPage(@PathVariable String courseId,
-                                         @PathVariable String courseSlug,
-                                         HttpSession session,
-                                         Model model) {
+    public String showGroupFormationPage(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -42,8 +47,8 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
-        List<GroupFormationActivity> activities =
-                groupFormationService.getActivitiesForCourse(courseId);
+        List<GroupFormationActivity> activities
+                = groupFormationService.getActivitiesForCourse(courseId);
 
         model.addAttribute("course", course);
         model.addAttribute("courseSlug", courseSlug);
@@ -55,11 +60,11 @@ public class GroupFormationController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/group-formation")
-    public String createGroupFormation(@PathVariable String courseId,
-                                       @PathVariable String courseSlug,
-                                       @ModelAttribute("form") CreateGroupFormationForm form,
-                                       HttpSession session,
-                                       Model model) {
+    public String createGroupFormation(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @ModelAttribute("form") CreateGroupFormationForm form,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -89,11 +94,11 @@ public class GroupFormationController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/group-formation/{activityId}/edit")
-    public String showEditPage(@PathVariable String courseId,
-                               @PathVariable String courseSlug,
-                               @PathVariable Long activityId,
-                               HttpSession session,
-                               Model model) {
+    public String showEditPage(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @PathVariable("activityId") Long activityId,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -108,8 +113,8 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
-        CreateGroupFormationForm form =
-                groupFormationService.getEditForm(courseId, activityId, professorId);
+        CreateGroupFormationForm form
+                = groupFormationService.getEditForm(courseId, activityId, professorId);
 
         model.addAttribute("course", course);
         model.addAttribute("courseSlug", courseSlug);
@@ -121,12 +126,12 @@ public class GroupFormationController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/group-formation/{activityId}/edit")
-    public String updateGroupFormation(@PathVariable String courseId,
-                                       @PathVariable String courseSlug,
-                                       @PathVariable Long activityId,
-                                       @ModelAttribute("form") CreateGroupFormationForm form,
-                                       HttpSession session,
-                                       Model model) {
+    public String updateGroupFormation(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @PathVariable("activityId") Long activityId,
+            @ModelAttribute("form") CreateGroupFormationForm form,
+            HttpSession session,
+            Model model) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
@@ -156,10 +161,10 @@ public class GroupFormationController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/group-formation/{activityId}/delete")
-    public String deleteGroupFormation(@PathVariable String courseId,
-                                       @PathVariable String courseSlug,
-                                       @PathVariable Long activityId,
-                                       HttpSession session) {
+    public String deleteGroupFormation(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @PathVariable("activityId") Long activityId,
+            HttpSession session) {
         if (!isProfessor(session)) {
             return "redirect:/login";
         }
