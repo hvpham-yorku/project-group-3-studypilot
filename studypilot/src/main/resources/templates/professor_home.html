@@ -3,10 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | StudyPilot</title>
+    <title>Professor Dashboard | GroupPilot</title>
     <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+    <style>
+      :root {
+        --bg-cream: #f8f2e8;
+        --bg-soft: #fffaf3;
+        --ink: #1f2a37;
+        --muted: #4b5563;
+        --line: #dfd2be;
+        --brand: #c85a39;
+        --brand-deep: #a2462b;
+        --mint: #2d6a62;
+      }
+
+      .paper {
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .chip-risk {
+        background: #ffe8de;
+        color: #9a3412;
+        border: 1px solid #fbcab4;
+      }
+
+      .chip-safe {
+        background: #e8f5ef;
+        color: #166534;
+        border: 1px solid #b9e8d2;
+      }
+    </style>
   </head>
-  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+  <body class="text-slate-900 min-h-screen flex" style="background: var(--bg-cream)">
     <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
     <main class="flex-1 flex flex-col min-h-screen animate-fade-in-up">
@@ -15,123 +44,219 @@
       ></div>
 
       <div class="p-8 space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm text-slate-500 font-medium">Active Students</p>
-            <p class="text-3xl font-bold mt-1">1,240</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm text-slate-500 font-medium">AI Answers Sent</p>
-            <p class="text-3xl font-bold mt-1 text-blue-600">842</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm text-slate-500 font-medium">Time Saved (Hrs)</p>
-            <p class="text-3xl font-bold mt-1">12.5</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm text-slate-500 font-medium">Avg. Performance</p>
-            <p class="text-3xl font-bold mt-1">84%</p>
-          </div>
-        </div>
-
-        <div class="grid lg:grid-cols-3 gap-8">
-          <div class="lg:col-span-2 space-y-6">
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-bold">Active Courses</h2>
+        <div class="paper rounded-2xl p-6 md:p-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-bold">Professor Dashboard</h1>
+              <p class="text-sm mt-1" style="color: var(--muted)">
+                Red flags first: teams at risk, missing surveys, and next meetings.
+              </p>
+            </div>
+            <div class="flex gap-3">
               <button
                 type="button"
                 id="openCreateCourseModal"
-                class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-bold"
+                class="px-4 py-2 text-sm rounded-lg font-bold text-white"
+                style="background: var(--brand)"
               >
                 + New Course
               </button>
             </div>
-            <p
-              th:if="${error}"
-              class="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg"
-              th:text="${error}"
-            >
-              Error
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="paper rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">At-Risk Teams</p>
+            <p class="text-3xl font-bold mt-1" style="color: #b91c1c">6</p>
+          </div>
+          <div class="paper rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Missing Surveys</p>
+            <p class="text-3xl font-bold mt-1" style="color: #9a3412">14</p>
+          </div>
+          <div class="paper rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Meetings This Week</p>
+            <p class="text-3xl font-bold mt-1" style="color: var(--mint)">9</p>
+          </div>
+          <div class="paper rounded-2xl p-5">
+            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Avg Team Health</p>
+            <p class="text-3xl font-bold mt-1">72%</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <section class="xl:col-span-2 paper rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold">Class Overview Dashboard</h2>
+              <span class="text-xs px-2 py-1 rounded-full chip-risk font-semibold">Needs Attention Now</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="rounded-xl p-4" style="background: #fff5ef; border: 1px solid #f8d3bf">
+                <h3 class="font-semibold mb-3">The At-Risk List</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="flex items-center justify-between">
+                    <span>Team 4 - API Integrators</span>
+                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Conflict: High</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Team 9 - UX Sprint</span>
+                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Health: 41%</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Team 12 - Data Layer</span>
+                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Trend: Down</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl p-4" style="background: #f7fbf8; border: 1px solid #cfe7dc">
+                <h3 class="font-semibold mb-3">Participation Tracking</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="flex items-center justify-between">
+                    <span>Samantha (Team 4)</span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full" style="background: #fee2e2; color: #b91c1c">Missing</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Yusuf (Team 9)</span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full" style="background: #fee2e2; color: #b91c1c">Missing</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Priya (Team 12)</span>
+                    <span class="chip-safe text-[11px] px-2 py-0.5 rounded-full font-semibold">Submitted</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="paper rounded-2xl p-6">
+            <h2 class="text-lg font-bold mb-4">Team Management</h2>
+            <p class="text-sm mb-4" style="color: var(--muted)">
+              Manually shuffle or match students by skills, interests, and availability.
             </p>
+            <div class="space-y-3">
+              <button
+                type="button"
+                class="w-full px-4 py-2 rounded-lg text-sm font-semibold text-white"
+                style="background: var(--brand)"
+              >
+                Shuffle Suggested Teams
+              </button>
+              <button
+                type="button"
+                class="w-full px-4 py-2 rounded-lg text-sm font-semibold"
+                style="border: 1px solid var(--line); background: #fffaf2"
+              >
+                Match by Skills/Time Zones
+              </button>
+            </div>
+
+            <div class="mt-5 rounded-xl p-4" style="background: #f0f1ec; border: 1px solid #e1e3da">
+              <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Manual Overrides</p>
+              <p class="text-sm">3 pending changes awaiting publish</p>
+            </div>
+          </section>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <section class="paper rounded-2xl p-6">
+            <h2 class="text-lg font-bold mb-4">Meeting Scheduler (The Matchmaker)</h2>
+            <p class="text-sm mb-4" style="color: var(--muted)">
+              Overlay your office hours with each team's common free time and send a one-click invite.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
+                <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Office Hours</p>
+                <p class="text-sm">Tue 14:00-16:00</p>
+                <p class="text-sm">Thu 10:00-12:00</p>
+              </div>
+              <div class="rounded-xl p-4" style="background: #f7fbf8; border: 1px solid #cfe7dc">
+                <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Team 4 Free Time</p>
+                <p class="text-sm">Tue 14:30-15:30</p>
+                <p class="text-sm">Thu 10:15-11:00</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Tue 14:30</button>
+              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Tue 15:00</button>
+              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Thu 10:15</button>
+            </div>
+
+            <button
+              type="button"
+              class="px-4 py-2 rounded-lg text-sm font-semibold text-white"
+              style="background: var(--mint)"
+            >
+              Send One-Click Invite
+            </button>
+          </section>
+
+          <section class="paper rounded-2xl p-6">
+            <h2 class="text-lg font-bold mb-4">Survey Analytics</h2>
+
+            <div class="mb-5">
+              <p class="text-sm font-semibold mb-2">Trend Lines (Team A)</p>
+              <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
+                <svg viewBox="0 0 260 80" class="w-full h-20" role="img" aria-label="Team health trend">
+                  <polyline
+                    fill="none"
+                    stroke="#2d6a62"
+                    stroke-width="3"
+                    points="0,60 40,54 80,52 120,46 160,38 200,32 240,24"
+                  />
+                  <line x1="0" y1="70" x2="260" y2="70" stroke="#d1d5db" stroke-width="1" />
+                </svg>
+                <p class="text-xs" style="color: var(--muted)">Health trending upward over the last 6 weeks.</p>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-sm font-semibold mb-2">Sentiment Analysis Keywords</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 rounded-full text-xs" style="background: #fee2e2; color: #991b1b">blocked</span>
+                <span class="px-2 py-1 rounded-full text-xs" style="background: #ffedd5; color: #9a3412">deadline</span>
+                <span class="px-2 py-1 rounded-full text-xs" style="background: #dcfce7; color: #166534">clear tasks</span>
+                <span class="px-2 py-1 rounded-full text-xs" style="background: #e0f2fe; color: #0c4a6e">better sync</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="paper rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold">Active Courses</h2>
+          </div>
+          <p
+            th:if="${error}"
+            class="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg mb-3"
+            th:text="${error}"
+          >
+            Error
+          </p>
+          <div class="grid md:grid-cols-2 gap-4">
             <a
               th:each="course : ${courses}"
               th:href="@{/prof/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${course.courseSlug})}"
-              class="block bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all cursor-pointer"
+              class="block p-5 rounded-xl border hover:shadow-sm transition-all"
+              style="background: #fffaf2; border-color: var(--line)"
             >
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
-                  >
-                    📚
-                  </div>
-                  <div>
-                    <h3 class="font-bold">
-                      <span th:text="${course.courseCode}">EECS2311</span>
-                      <span>–</span>
-                      <span th:text="${course.courseName}"
-                        >Software Design</span
-                      >
-                    </h3>
-                    <p class="text-xs text-slate-500">Course Created</p>
-                  </div>
-                </div>
-                <span
-                  class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase"
-                  >Active</span
-                >
-              </div>
+              <p class="text-sm font-semibold" th:text="${course.courseCode}">EECS2311</p>
+              <p class="text-sm" th:text="${course.courseName}">Software Design</p>
             </a>
-            <div
-              th:if="${#lists.isEmpty(courses)}"
-              class="bg-white p-6 rounded-2xl border border-slate-200 text-sm text-slate-500"
-            >
-              No courses yet. Click
-              <span class="font-semibold">+ New Course</span>
-              to create your first course.
-            </div>
           </div>
-
-          <div class="space-y-6">
-            <h2 class="text-xl font-bold">Recent AI Support</h2>
-            <div
-              class="bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
-            >
-              <div
-                class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-sm"
-              >
-                <p class="font-bold text-xs text-blue-600 mb-1">
-                  Answered Automatically
-                </p>
-                <p class="italic text-slate-600">
-                  "Is the calculator allowed in the final exam?"
-                </p>
-              </div>
-              <div
-                class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-sm opacity-50"
-              >
-                <p class="font-bold text-xs text-slate-500 mb-1">
-                  Answered Automatically
-                </p>
-                <p class="italic text-slate-600">
-                  "What is the office hour location?"
-                </p>
-              </div>
-              <button
-                class="w-full py-2 text-sm text-blue-600 font-bold border border-blue-600 rounded-lg hover:bg-blue-50"
-              >
-                View All AI Logs
-              </button>
-            </div>
+          <div
+            th:if="${#lists.isEmpty(courses)}"
+            class="p-4 rounded-xl text-sm mt-4"
+            style="background: #fffaf2; border: 1px solid var(--line); color: var(--muted)"
+          >
+            No courses yet. Click
+            <span class="font-semibold">+ New Course</span>
+            to create your first course.
           </div>
+        </section>
         </div>
       </div>
     </main>
@@ -140,9 +265,7 @@
       id="createCourseModal"
       class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center p-4"
     >
-      <div
-        class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 animate-scale-in"
-      >
+      <div class="w-full max-w-md paper rounded-2xl p-6 animate-scale-in">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold">Create New Course</h3>
           <button
@@ -165,7 +288,8 @@
             <input
               type="text"
               name="courseCode"
-              class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+              class="w-full rounded-lg px-3 py-2 text-sm"
+              style="border: 1px solid var(--line); background: #fffaf2"
               placeholder="e.g. EECS2311"
               required
             />
@@ -177,7 +301,8 @@
             <input
               type="text"
               name="courseName"
-              class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+              class="w-full rounded-lg px-3 py-2 text-sm"
+              style="border: 1px solid var(--line); background: #fffaf2"
               placeholder="e.g. Software Design"
               required
             />
@@ -186,13 +311,15 @@
             <button
               type="button"
               id="cancelCreateCourseModal"
-              class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-700"
+              class="px-4 py-2 text-sm rounded-lg text-slate-700"
+              style="border: 1px solid var(--line); background: #fffaf2"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg font-bold"
+              class="px-4 py-2 text-white text-sm rounded-lg font-bold"
+              style="background: var(--brand)"
             >
               Create Course
             </button>
