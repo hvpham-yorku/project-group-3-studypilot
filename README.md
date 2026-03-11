@@ -62,6 +62,14 @@ studypilot-group-repo/
 └── README.md                   # Project overview
 ```
 
+# StudyPilot Java Tests
+
+This project contains:
+
+- `UserTests.java` → JUnit tests for User Java objects.
+- `UserDatabaseTest.java` → Template test cases for Neon database CRUD operations.
+
+You can run Neon database tests once you have a working Neon connection.
 
 
 
