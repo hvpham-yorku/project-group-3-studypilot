@@ -43,6 +43,8 @@ To run the automated test suite using Gradle:
 
 * **Professor Dashboard - A centralized hub to manage generated materials, view student queries, and approve automated responses.**
 
+* Automated Grouping - Uses student survey responses to intelligently create balanced project groups, optimizing collaboration and compatibility.**
+
 ## Tech Stack
 * **Languages: Java**
 * **Backend Framework: Spring Boot**
