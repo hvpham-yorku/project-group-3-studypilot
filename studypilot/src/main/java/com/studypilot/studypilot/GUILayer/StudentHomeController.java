@@ -1,15 +1,27 @@
 package com.studypilot.studypilot.GUILayer;
 
-import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
-import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
-import com.studypilot.studypilot.DomainModel.*;
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
+import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
+import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+import com.studypilot.studypilot.DomainModel.QuizTest;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class StudentHomeController {
@@ -43,6 +55,18 @@ public class StudentHomeController {
         return "student_home";
     }
 
+    @GetMapping("/student/surveys")
+    public String studentSurveys(HttpSession session, Model model) {
+        if (!isStudent(session)) {
+            return "redirect:/login";
+        }
+
+        Long studentId = (Long) session.getAttribute("userId");
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courses", toStudentCourseCards(studentPortalService.getStudentCourses(studentId)));
+        return "student_surveys";
+    }
+
     @PostMapping("/student/course/join")
     public String joinCourse(@ModelAttribute("joinForm") StudentJoinCourseForm form,
             HttpSession session,
@@ -53,7 +77,7 @@ public class StudentHomeController {
 
         Long studentId = (Long) session.getAttribute("userId");
         try {
-            studentPortalService.enrollStudentInCourse(studentId, form.getCourseId());
+            studentPortalService.enrollStudentInCourseByJoinCode(studentId, form.getJoinCode());
             return "redirect:/student/home";
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());

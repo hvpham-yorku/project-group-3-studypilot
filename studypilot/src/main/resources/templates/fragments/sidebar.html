@@ -20,27 +20,46 @@
       </div>
 
       <nav class="flex-1 p-4 space-y-2">
+        <!-- Both roles: Red Flags / Dashboard -->
         <a
           th:href="${session.role == 'STUDENT'} ? '/student/home' : '/prof/home'"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'dashboard'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
-          <span>🚨</span> Red Flags
+          <span>📊</span> Dashboard
         </a>
+
+        <!-- Professor only: Courses & Teams -->
         <a
-          th:href="${session.role == 'STUDENT'} ? '/student/home' : '/courses'"
+          th:if="${session.role == 'PROFESSOR'}"
+          href="/courses"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'courses'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
-          <span>📚</span> Courses & Teams
+          <span>📚</span> Courses &amp; Teams
         </a>
+
+        <!-- Student only: My Courses -->
         <a
-          href="/faq-library"
+          th:if="${session.role == 'STUDENT'}"
+          href="/student/home"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
-          th:classappend="${activePage == 'faq'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
+          th:classappend="${activePage == 'courses'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
+        >
+          <span>📚</span> My Courses
+        </a>
+
+        <!-- Student only: Weekly Surveys -->
+        <a
+          th:if="${session.role == 'STUDENT'}"
+          href="/student/surveys"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
+          th:classappend="${activePage == 'surveys'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
           <span>📝</span> Weekly Surveys
         </a>
+
+        <!-- Both roles: Team Analytics -->
         <a
           href="/analytics"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
@@ -48,12 +67,14 @@
         >
           <span>📈</span> Team Analytics
         </a>
+
+        <!-- Both roles: Settings -->
         <a
           href="/settings"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'settings'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
-          <span>🗓️</span> Matchmaker
+          <span>⚙️</span> Settings
         </a>
       </nav>
 

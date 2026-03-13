@@ -2,6 +2,7 @@ package com.studypilot.studypilot.GUILayer;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
+import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,10 +30,15 @@ public class ProfessorHomeController {
 
     private final CourseService courseService;
     private final QuizService quizService;
+    private final CourseEnrollmentRepo courseEnrollmentRepo;
+    private final UserRepo userRepo;
 
-    public ProfessorHomeController(CourseService courseService, QuizService quizService) {
+    public ProfessorHomeController(CourseService courseService, QuizService quizService,
+            CourseEnrollmentRepo courseEnrollmentRepo, UserRepo userRepo) {
         this.courseService = courseService;
         this.quizService = quizService;
+        this.courseEnrollmentRepo = courseEnrollmentRepo;
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/prof/home")
@@ -88,11 +97,21 @@ public class ProfessorHomeController {
             return "redirect:/prof/home";
         }
 
+        List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseId(course.getId());
+        List<MemberView> enrolledStudents = enrollments.stream()
+                .map(e -> userRepo.findById(e.getStudentId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(u -> new MemberView(u.getFullName(), u.getEmail()))
+                .toList();
+
         model.addAttribute("fullName", session.getAttribute("fullName"));
         model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseJoinCode", course.getJoinCode());
         model.addAttribute("courseCode", course.getCourseCode());
         model.addAttribute("courseName", course.getCourseName());
         model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+        model.addAttribute("enrolledStudents", enrolledStudents);
         return "professor_course_page";
     }
 
@@ -182,6 +201,10 @@ public class ProfessorHomeController {
         String normalized = NON_ALNUM.matcher(lower).replaceAll("-");
         String slug = normalized.replaceAll("^-+|-+$", "");
         return slug.isBlank() ? "course" : slug;
+    }
+
+    public record MemberView(String fullName, String email) {
+
     }
 
     public static class CourseCardView {

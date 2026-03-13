@@ -2,13 +2,13 @@ package com.studypilot.studypilot.GUILayer;
 
 public class StudentJoinCourseForm {
 
-    private String courseId;
+    private String joinCode;
 
-    public String getCourseId() {
-        return courseId;
+    public String getJoinCode() {
+        return joinCode;
     }
 
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+    public void setJoinCode(String joinCode) {
+        this.joinCode = joinCode;
     }
 }

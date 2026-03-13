@@ -1,11 +1,26 @@
 package com.studypilot.studypilot.BusinessLogicLayer;
 
-import com.studypilot.studypilot.DataAccessLayer.*;
-import com.studypilot.studypilot.DomainModel.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
+import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
+import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.CourseEnrollment;
+import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
+import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
+import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
 
 @Service
 public class StudentPortalService {
@@ -59,6 +74,25 @@ public class StudentPortalService {
             }
         }
         return available;
+    }
+
+    @Transactional
+    public void enrollStudentInCourseByJoinCode(Long studentId, String joinCode) {
+        requireStudent(studentId);
+
+        String normalizedJoinCode = clean(joinCode).toUpperCase();
+        if (normalizedJoinCode.length() != 8) {
+            throw new IllegalArgumentException("Course ID must be exactly 8 characters.");
+        }
+
+        Course course = courseRepo.findByJoinCode(normalizedJoinCode)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found for that Course ID."));
+
+        if (courseEnrollmentRepo.existsByCourseIdAndStudentId(course.getId(), studentId)) {
+            return;
+        }
+
+        courseEnrollmentRepo.save(new CourseEnrollment(course.getId(), studentId));
     }
 
     @Transactional

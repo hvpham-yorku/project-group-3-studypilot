@@ -20,31 +20,37 @@
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
             <p class="text-xs text-slate-500">Total Courses</p>
-            <p
-              class="text-2xl font-bold mt-1"
-              th:text="${#lists.size(courses)}"
-            >
-              3
-            </p>
+            <p class="text-2xl font-bold mt-1" th:text="${totalCourses}">3</p>
           </div>
           <div
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
             <p class="text-xs text-slate-500">Total Enrolled Students</p>
-            <p class="text-2xl font-bold mt-1">869</p>
+            <p
+              class="text-2xl font-bold mt-1"
+              th:text="${totalEnrolledStudents}"
+            >
+              869
+            </p>
           </div>
           <div
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
             <p class="text-xs text-slate-500">Courses Requiring Review</p>
-            <p class="text-2xl font-bold mt-1 text-amber-600">1</p>
+            <p
+              class="text-2xl font-bold mt-1 text-amber-600"
+              th:text="${coursesRequiringReview}"
+            >
+              1
+            </p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <article
+          <a
             th:each="course : ${courses}"
-            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all"
+            th:href="${course.href}"
+            class="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all"
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -77,7 +83,7 @@
               <p class="text-slate-500">Students</p>
               <p class="font-bold" th:text="${course.students}">312</p>
             </div>
-          </article>
+          </a>
         </div>
       </div>
     </main>
