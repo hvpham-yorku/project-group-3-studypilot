@@ -22,6 +22,9 @@ public class Course {
     @Column(name = "course_name", nullable = false)
     private String courseName;
 
+    @Column(name = "join_code", unique = true, length = 8)
+    private String joinCode;
+
     @Column(name = "professor_id", nullable = false)
     private Long professorId;
 
@@ -32,10 +35,15 @@ public class Course {
     }
 
     public Course(String id, String courseCode, String courseName, Long professorId) {
+        this(id, courseCode, courseName, professorId, null);
+    }
+
+    public Course(String id, String courseCode, String courseName, Long professorId, String joinCode) {
         this.id = id;
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.professorId = professorId;
+        this.joinCode = joinCode;
     }
 
     @PrePersist
@@ -59,5 +67,13 @@ public class Course {
 
     public Long getProfessorId() {
         return professorId;
+    }
+
+    public String getJoinCode() {
+        return joinCode;
+    }
+
+    public void setJoinCode(String joinCode) {
+        this.joinCode = joinCode;
     }
 }
