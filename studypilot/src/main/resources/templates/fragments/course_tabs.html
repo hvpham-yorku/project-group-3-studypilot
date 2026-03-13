@@ -3,51 +3,78 @@
   <body>
     <div
       th:fragment="courseTabs"
-      class="mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm"
+      class="mt-6 rounded-2xl shadow-sm"
+      style="background: #fffdf8; border: 1px solid #dfd2be"
     >
-      <div class="p-4 border-b border-slate-100">
+      <div class="p-4" style="border-bottom: 1px solid #efe4d2">
         <nav class="flex flex-wrap gap-2" aria-label="Course sections">
           <button
             type="button"
             data-tab="overview"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-blue-600 text-white"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="background: #c85a39; color: #fff"
           >
             Overview
           </button>
           <button
             type="button"
-            data-tab="slides"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            data-tab="atrisk"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="
+              background: #fff8f1;
+              color: #4b5563;
+              border: 1px solid #ead8c4;
+            "
           >
-            Lecture Slides
+            At-Risk Teams
           </button>
           <button
             type="button"
-            data-tab="quiz"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            data-tab="meetings"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="
+              background: #fff8f1;
+              color: #4b5563;
+              border: 1px solid #ead8c4;
+            "
           >
-            Quiz
+            Meetings
           </button>
           <button
             type="button"
-            data-tab="flashcards"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            data-tab="analytics"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="
+              background: #fff8f1;
+              color: #4b5563;
+              border: 1px solid #ead8c4;
+            "
           >
-            Flashcards
+            Analytics
           </button>
           <button
             type="button"
-            data-tab="faq"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            data-tab="teams"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="
+              background: #fff8f1;
+              color: #4b5563;
+              border: 1px solid #ead8c4;
+            "
           >
-            FAQ
+            Team Management
           </button>
           <button
             type="button"
-            data-tab="exam"
-            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200"
+            data-tab="surveys"
+            class="tab-btn px-3 py-2 text-sm rounded-lg font-semibold"
+            style="
+              background: #fff8f1;
+              color: #4b5563;
+              border: 1px solid #ead8c4;
+            "
           >
-            Exam
+            Survey Log
           </button>
         </nav>
       </div>
@@ -55,137 +82,179 @@
       <section id="tab-overview" class="tab-panel p-6 animate-fade-in-up">
         <h2 class="text-lg font-bold mb-4">Course Overview</h2>
         <div class="grid sm:grid-cols-3 gap-4">
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <p class="text-xs text-slate-500">Enrolled Students</p>
-            <p class="text-2xl font-bold mt-1">312</p>
-          </div>
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <p class="text-xs text-slate-500">Average Quiz Score</p>
-            <p class="text-2xl font-bold mt-1 text-blue-600">84%</p>
-          </div>
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <p class="text-xs text-slate-500">Upcoming Deadline</p>
-            <p class="text-base font-bold mt-2">Assignment 3 · Mar 12</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-slides" class="tab-panel p-6 hidden animate-fade-in-up">
-        <h2 class="text-lg font-bold mb-4">Lecture Slides</h2>
-        <div class="space-y-3 text-sm">
           <div
-            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+            class="rounded-xl p-4"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
           >
-            <span>Week 1 · Introduction to Software Design</span>
-            <span class="text-blue-600 font-semibold">PDF</span>
+            <p class="text-xs text-slate-500">Total Teams</p>
+            <p class="text-2xl font-bold mt-1">14</p>
           </div>
           <div
-            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+            class="rounded-xl p-4"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
           >
-            <span>Week 2 · UML and Modeling Basics</span>
-            <span class="text-blue-600 font-semibold">PPTX</span>
+            <p class="text-xs text-slate-500">Average Team Health</p>
+            <p class="text-2xl font-bold mt-1" style="color: #2d6a62">72%</p>
           </div>
           <div
-            class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between"
+            class="rounded-xl p-4"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
           >
-            <span>Week 3 · SOLID Principles</span>
-            <span class="text-blue-600 font-semibold">PDF</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-quiz" class="tab-panel p-6 hidden animate-fade-in-up">
-        <h2 class="text-lg font-bold mb-4">Quiz</h2>
-        <div class="space-y-3 text-sm">
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Quiz 1 · OO Fundamentals</p>
-            <p class="text-slate-500 mt-1">
-              Availability: Mar 4 - Mar 8 · 10 questions
+            <p class="text-xs text-slate-500">Missing Surveys</p>
+            <p class="text-base font-bold mt-2" style="color: #9a3412">
+              8 students this week
             </p>
           </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Quiz 2 · Design Patterns</p>
+        </div>
+      </section>
+
+      <section id="tab-atrisk" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">At-Risk Teams</h2>
+        <div class="space-y-3 text-sm">
+          <div
+            class="p-4 rounded-xl flex items-center justify-between"
+            style="background: #fff5ef; border: 1px solid #f8d3bf"
+          >
+            <span>Team 4 · API Integrators</span>
+            <span class="text-orange-700 font-semibold"
+              >Conflict marker high</span
+            >
+          </div>
+          <div
+            class="p-4 rounded-xl flex items-center justify-between"
+            style="background: #fff5ef; border: 1px solid #f8d3bf"
+          >
+            <span>Team 9 · UX Sprint</span>
+            <span class="text-orange-700 font-semibold">Health score 41%</span>
+          </div>
+          <div
+            class="p-4 rounded-xl flex items-center justify-between"
+            style="background: #fff5ef; border: 1px solid #f8d3bf"
+          >
+            <span>Team 12 · Data Layer</span>
+            <span class="text-orange-700 font-semibold"
+              >Trend down 3 weeks</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="tab-meetings"
+        class="tab-panel p-6 hidden animate-fade-in-up"
+      >
+        <h2 class="text-lg font-bold mb-4">Meetings</h2>
+        <div class="space-y-3 text-sm">
+          <div
+            class="p-4 rounded-xl"
+            style="background: #f7fbf8; border: 1px solid #cfe7dc"
+          >
+            <p class="font-semibold">Team 4 Check-In</p>
+            <p class="text-slate-500 mt-1">Tue 14:30 · office hour overlap</p>
+          </div>
+          <div
+            class="p-4 rounded-xl"
+            style="background: #f7fbf8; border: 1px solid #cfe7dc"
+          >
+            <p class="font-semibold">Team 9 Intervention</p>
             <p class="text-slate-500 mt-1">
-              Availability: Mar 11 - Mar 15 · 12 questions
+              Thu 10:15 · one-click invite ready
             </p>
           </div>
         </div>
       </section>
 
       <section
-        id="tab-flashcards"
+        id="tab-analytics"
         class="tab-panel p-6 hidden animate-fade-in-up"
       >
-        <h2 class="text-lg font-bold mb-4">Flashcards</h2>
+        <h2 class="text-lg font-bold mb-4">Survey Analytics</h2>
         <div class="grid sm:grid-cols-2 gap-4 text-sm">
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Encapsulation</p>
+          <div
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
+          >
+            <p class="font-semibold">Team A Trend</p>
             <p class="text-slate-600 mt-2">
-              Bundling data and methods, restricting direct state access.
+              Improving over last 4 weeks (+12%).
             </p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Polymorphism</p>
-            <p class="text-slate-600 mt-2">
-              Same interface, multiple implementations based on runtime type.
-            </p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Single Responsibility</p>
-            <p class="text-slate-600 mt-2">
-              A class should have only one reason to change.
-            </p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Composition over Inheritance</p>
-            <p class="text-slate-600 mt-2">
-              Prefer combining behaviors over deep inheritance trees.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-faq" class="tab-panel p-6 hidden animate-fade-in-up">
-        <h2 class="text-lg font-bold mb-4">FAQ</h2>
-        <div class="space-y-3 text-sm">
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Is late submission allowed?</p>
-            <p class="text-slate-600 mt-1">
-              Yes, up to 48 hours with a 10% daily penalty.
-            </p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Will quizzes be open-book?</p>
-            <p class="text-slate-600 mt-1">
-              Quizzes are open-notes but no external collaboration is allowed.
-            </p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="font-semibold">Where are office hours?</p>
-            <p class="text-slate-600 mt-1">
-              Bergeron Centre Room 3120 and Zoom (Friday afternoon).
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-exam" class="tab-panel p-6 hidden animate-fade-in-up">
-        <h2 class="text-lg font-bold mb-4">Exam</h2>
-        <div class="grid sm:grid-cols-2 gap-4 text-sm">
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="text-slate-500">Final Exam Date</p>
-            <p class="font-semibold mt-1">Apr 18, 2026 · 9:00 AM</p>
-          </div>
-          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <p class="text-slate-500">Format</p>
-            <p class="font-semibold mt-1">2 hours · Mixed MCQ + short answer</p>
           </div>
           <div
-            class="p-4 rounded-xl border border-slate-200 bg-slate-50 sm:col-span-2"
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
           >
-            <p class="text-slate-500">Coverage</p>
+            <p class="font-semibold">Team D Trend</p>
+            <p class="text-slate-600 mt-2">
+              Declining over last 3 weeks (-9%).
+            </p>
+          </div>
+          <div
+            class="p-4 rounded-xl sm:col-span-2"
+            style="background: #f7fbf8; border: 1px solid #cfe7dc"
+          >
+            <p class="font-semibold">Sentiment keywords</p>
+            <p class="text-slate-600 mt-2">
+              blocked, uneven workload, better sync, milestone confusion
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-teams" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Team Management</h2>
+        <div class="space-y-3 text-sm">
+          <div
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
+          >
+            <p class="font-semibold">Manual Shuffle</p>
+            <p class="text-slate-600 mt-1">
+              Regenerate pairings using skill balance and timezone fit.
+            </p>
+          </div>
+          <div
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
+          >
+            <p class="font-semibold">Manual Match</p>
+            <p class="text-slate-600 mt-1">
+              Pin students by interests before publishing final teams.
+            </p>
+          </div>
+          <div
+            class="p-4 rounded-xl"
+            style="background: #f7fbf8; border: 1px solid #cfe7dc"
+          >
+            <p class="font-semibold">Current status</p>
+            <p class="text-slate-600 mt-1">3 team changes pending publish.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-surveys" class="tab-panel p-6 hidden animate-fade-in-up">
+        <h2 class="text-lg font-bold mb-4">Survey Log</h2>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
+          >
+            <p class="text-slate-500">Latest completion rate</p>
+            <p class="font-semibold mt-1">92% (Week 8)</p>
+          </div>
+          <div
+            class="p-4 rounded-xl"
+            style="background: #fffaf2; border: 1px solid #dfd2be"
+          >
+            <p class="text-slate-500">Outstanding responses</p>
+            <p class="font-semibold mt-1">8 students</p>
+          </div>
+          <div
+            class="p-4 rounded-xl sm:col-span-2"
+            style="background: #f7fbf8; border: 1px solid #cfe7dc"
+          >
+            <p class="text-slate-500">Reminder cadence</p>
             <p class="font-semibold mt-1">
-              Weeks 1-11: OOP, design patterns, testing, and UML modeling.
+              Auto-reminders sent every Monday 9:00 AM.
             </p>
           </div>
         </div>
@@ -199,10 +268,11 @@
           function activateTab(tabId) {
             tabButtons.forEach((button) => {
               const isActive = button.dataset.tab === tabId;
-              button.classList.toggle("bg-blue-600", isActive);
-              button.classList.toggle("text-white", isActive);
-              button.classList.toggle("bg-slate-100", !isActive);
-              button.classList.toggle("text-slate-700", !isActive);
+              button.style.background = isActive ? "#c85a39" : "#fff8f1";
+              button.style.color = isActive ? "#ffffff" : "#4b5563";
+              button.style.border = isActive
+                ? "1px solid #c85a39"
+                : "1px solid #ead8c4";
             });
 
             tabPanels.forEach((panel) => {

@@ -3,52 +3,149 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StudyPilot | The Academic Force Multiplier</title>
+    <title>GroupPilot | Build Better Student Teams</title>
     <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap");
+
+      :root {
+        --bg-cream: #f8f2e8;
+        --bg-soft: #fffaf3;
+        --ink: #1f2a37;
+        --muted: #4b5563;
+        --line: #dfd2be;
+        --brand: #c85a39;
+        --brand-deep: #a2462b;
+        --mint: #2d6a62;
+        --mint-soft: #ddf1eb;
+      }
+
       html {
         scroll-behavior: smooth;
       }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 90% -10%, #ffd8c8 0, transparent 35%),
+          radial-gradient(circle at 5% 30%, #d6ece2 0, transparent 30%),
+          var(--bg-cream);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", serif;
+        letter-spacing: -0.02em;
+      }
+
       .fade-in {
-        animation: fadeIn 1s ease-out forwards;
+        animation: fadeIn 0.8s ease-out forwards;
         opacity: 0;
       }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(22px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
+
       .delay-100 {
         animation-delay: 0.1s;
       }
+
       .delay-200 {
         animation-delay: 0.2s;
       }
+
       .delay-300 {
         animation-delay: 0.3s;
       }
+
       .fade-in.visible {
         opacity: 1;
         transform: translateY(0);
       }
+
       .bento-card {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
+
       .bento-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        transform: translateY(-5px) rotate(-0.4deg);
+        box-shadow: 0 22px 30px -12px rgb(49 37 20 / 0.2);
+      }
+
+      .grain {
+        position: relative;
+      }
+
+      .grain::before {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        opacity: 0.08;
+        background-image: radial-gradient(#000 0.55px, transparent 0.55px);
+        background-size: 5px 5px;
+      }
+
+      .glass-top {
+        background: color-mix(in oklab, var(--bg-soft) 78%, white 22%);
+        border-color: var(--line);
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        background: color-mix(in oklab, var(--bg-soft) 92%, white 8%);
+      }
+
+      .btn-primary {
+        background: var(--brand);
+      }
+
+      .btn-primary:hover {
+        background: var(--brand-deep);
+      }
+
+      .btn-outline {
+        border-color: var(--line);
+        color: var(--ink);
+        background: color-mix(in oklab, var(--bg-soft) 90%, white 10%);
+      }
+
+      .btn-outline:hover {
+        background: #fff;
+      }
+
+      .section-soft {
+        background: color-mix(in oklab, var(--bg-soft) 95%, white 5%);
+      }
+
+      .card-paper {
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .brand-text {
+        color: var(--brand);
+      }
+
+      .mint-text {
+        color: var(--mint);
       }
     </style>
   </head>
-  <body class="bg-white text-slate-900 selection:bg-blue-100">
+  <body class="selection:bg-orange-200">
     <!-- Navbar -->
     <header
-      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200"
+      class="fixed top-0 left-0 right-0 z-50 glass-top backdrop-blur-md border-b"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -57,7 +154,8 @@
             onclick="window.scrollTo(0, 0)"
           >
             <div
-              class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center transition-transform group-hover:rotate-12"
+              class="w-8 h-8 rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12"
+              style="background: var(--brand)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -75,34 +173,42 @@
                 />
               </svg>
             </div>
-            <span class="font-bold text-xl tracking-tight">StudyPilot</span>
+            <span
+              class="font-bold text-xl tracking-tight"
+              style="color: var(--ink)"
+              >GroupPilot</span
+            >
           </div>
           <nav class="hidden md:flex items-center gap-8">
             <a
               href="#features"
-              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              class="text-sm font-medium transition-colors hover:opacity-80"
+              style="color: var(--muted)"
               >Features</a
             >
             <a
               href="#philosophy"
-              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              class="text-sm font-medium transition-colors hover:opacity-80"
+              style="color: var(--muted)"
               >Philosophy</a
             >
             <a
               href="#faq"
-              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
+              class="text-sm font-medium transition-colors hover:opacity-80"
+              style="color: var(--muted)"
               >FAQ</a
             >
           </nav>
           <div class="flex items-center gap-3">
             <a
               href="/login"
-              class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+              class="px-4 py-2 text-sm font-medium rounded-lg transition-colors chip"
+              style="color: var(--ink)"
               >Log In</a
             >
             <a
               href="/register"
-              class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:shadow-lg"
+              class="px-4 py-2 text-sm font-medium text-white rounded-lg transition-all hover:shadow-lg btn-primary"
               >Get Started</a
             >
           </div>
@@ -111,17 +217,18 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="py-20 lg:py-32">
+    <section class="py-20 lg:py-32 grain">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div class="space-y-8 fade-in">
             <div
-              class="inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium bg-slate-100 text-slate-900 gap-2"
+              class="inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium gap-2 chip"
             >
-              <span class="text-blue-500">✦</span>
-              AI-powered study assistant
+              <span class="mint-text">✦</span>
+              New direction for team-based courses
               <span
-                class="ml-1 px-2 py-0.5 text-xs bg-blue-600 text-white rounded-full"
+                class="ml-1 px-2 py-0.5 text-xs text-white rounded-full"
+                style="background: var(--mint)"
                 >NEW</span
               >
             </div>
@@ -129,28 +236,30 @@
             <h1
               class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-balance fade-in delay-100"
             >
-              Your AI teaching copilot for
-              <span class="text-blue-600">Professors</span>
+              Build stronger project teams with
+              <span class="brand-text">GroupPilot</span>
             </h1>
 
             <p
-              class="text-lg text-slate-600 max-w-xl text-pretty fade-in delay-200"
+              class="text-lg max-w-xl text-pretty fade-in delay-200"
+              style="color: var(--muted)"
             >
-              Upload lectures and readings, get AI-generated summaries,
-              flashcards, quizzes, and a personalized exam study plan. Join
-              1,000+ professors automizing smarter.
+              We are moving from StudyPilot to GroupPilot. Students complete a
+              short weekly survey, GroupPilot suggests better team matchups, and
+              professors can schedule meetings using each group's shared
+              availability.
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 fade-in delay-300">
               <a
                 href="/register"
-                class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-all hover:scale-105 shadow-lg shadow-blue-200"
+                class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white transition-all hover:scale-105 shadow-lg btn-primary"
               >
-                Get started free
+                Start with your course
               </a>
               <a
                 href="/login"
-                class="inline-flex items-center justify-center px-6 py-3 border border-slate-300 text-base font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 transition-all hover:scale-105"
+                class="inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-all hover:scale-105 btn-outline"
               >
                 Login
               </a>
@@ -158,68 +267,85 @@
           </div>
 
           <div class="space-y-6 fade-in delay-300">
-            <div class="bg-white border rounded-xl p-6 shadow-xl animate-float">
+            <div class="card-paper rounded-2xl p-6 shadow-xl">
               <div class="flex items-center gap-3 mb-4">
                 <div
-                  class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600"
+                  class="w-10 h-10 rounded-lg flex items-center justify-center"
+                  style="background: var(--mint-soft); color: var(--mint)"
                 >
-                  📚
+                  👥
                 </div>
                 <div>
-                  <h3 class="text-base font-bold">MATH 201 – Linear Algebra</h3>
-                  <p class="text-sm text-slate-500">8 lectures processed</p>
+                  <h3 class="text-base font-bold">
+                    EECS 2311 - Project Studio
+                  </h3>
+                  <p class="text-sm text-slate-500">6 active teams this week</p>
                 </div>
               </div>
 
-              <div class="w-full bg-slate-100 rounded-full h-2 mb-6">
+              <div
+                class="w-full rounded-full h-2 mb-6"
+                style="background: #eadfce"
+              >
                 <div
-                  class="bg-blue-600 h-2 rounded-full"
-                  style="width: 75%"
+                  class="h-2 rounded-full"
+                  style="background: var(--brand); width: 82%"
                 ></div>
               </div>
 
               <div class="grid grid-cols-3 gap-3">
-                <div class="text-center p-3 rounded-lg bg-slate-50">
-                  <p class="text-2xl font-bold">24</p>
-                  <p class="text-xs text-slate-500">Flashcards</p>
+                <div
+                  class="text-center p-3 rounded-lg"
+                  style="background: #fff4ec"
+                >
+                  <p class="text-2xl font-bold">42</p>
+                  <p class="text-xs text-slate-500">Survey responses</p>
                 </div>
-                <div class="text-center p-3 rounded-lg bg-slate-50">
-                  <p class="text-2xl font-bold">3</p>
-                  <p class="text-xs text-slate-500">Quizzes</p>
+                <div
+                  class="text-center p-3 rounded-lg"
+                  style="background: #fff4ec"
+                >
+                  <p class="text-2xl font-bold">5</p>
+                  <p class="text-xs text-slate-500">Teams flagged</p>
                 </div>
-                <div class="text-center p-3 rounded-lg bg-slate-50">
-                  <p class="text-2xl font-bold">12</p>
-                  <p class="text-xs text-slate-500">Days left</p>
+                <div
+                  class="text-center p-3 rounded-lg"
+                  style="background: #fff4ec"
+                >
+                  <p class="text-2xl font-bold">11</p>
+                  <p class="text-xs text-slate-500">Meetings to book</p>
                 </div>
               </div>
             </div>
 
             <div class="space-y-3">
               <div
-                class="flex items-center gap-3 p-3 bg-white border rounded-lg hover:border-blue-400 transition-colors cursor-pointer group"
+                class="flex items-center gap-3 p-3 card-paper rounded-lg transition-colors cursor-pointer group"
               >
                 <div
-                  class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm group-hover:scale-110 transition-transform"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-sm group-hover:scale-110 transition-transform"
+                  style="background: #fff1e8"
                 >
-                  📄
+                  🧩
                 </div>
                 <span class="font-medium"
-                  >Summarize lecture slides in seconds</span
+                  >Match students using survey data, not random picks</span
                 >
-                <span class="ml-auto text-blue-600 font-bold">✓</span>
+                <span class="ml-auto font-bold brand-text">✓</span>
               </div>
               <div
-                class="flex items-center gap-3 p-3 bg-white border rounded-lg hover:border-blue-400 transition-colors cursor-pointer group"
+                class="flex items-center gap-3 p-3 card-paper rounded-lg transition-colors cursor-pointer group"
               >
                 <div
-                  class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm group-hover:scale-110 transition-transform"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-sm group-hover:scale-110 transition-transform"
+                  style="background: #e9f6f2"
                 >
-                  🧠
+                  📅
                 </div>
                 <span class="font-medium"
-                  >Auto-generate flashcards from any content</span
+                  >Book team meetings from shared availability windows</span
                 >
-                <span class="ml-auto text-blue-600 font-bold">✓</span>
+                <span class="ml-auto font-bold mint-text">✓</span>
               </div>
             </div>
           </div>
@@ -228,94 +354,144 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-24 bg-slate-50">
+    <section id="features" class="py-24 section-soft">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-16">
-          <h2 class="text-3xl font-bold text-slate-900 mb-4">
-            Workflow Automation
+          <h2 class="text-3xl font-bold mb-4" style="color: var(--ink)">
+            Built for Team Formation
           </h2>
-          <p class="text-slate-600">
-            Powerful tools designed to eliminate administrative fatigue.
+          <p style="color: var(--muted)">
+            Practical tools for forming groups, tracking team health, and
+            keeping projects on track.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
           <div
-            class="md:col-span-2 md:row-span-2 bg-white p-8 rounded-3xl border border-slate-200 bento-card flex flex-col justify-between"
+            class="md:col-span-3 p-8 rounded-3xl bento-card flex flex-col justify-between"
+            style="background: #fffdf8; border: 1px solid var(--line)"
           >
             <div>
               <div
-                class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-6"
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-6"
+                style="background: #fff2e9"
               >
                 📝
               </div>
-              <h3 class="text-2xl font-bold mb-4">Notes to Tools</h3>
-              <p class="text-slate-600 mb-6">
-                Instantly convert lecture slides, PDFs, and notes into
-                ready-to-use quizzes and study guides. Our AI extracts complex
-                STEM formulas and business frameworks with 95% accuracy.
+              <h3 class="text-2xl font-bold mb-4">
+                Survey-Based Group Matchup
+              </h3>
+              <p class="mb-6" style="color: var(--muted)">
+                Students answer a short survey and GroupPilot recommends team
+                groupings based on work style, preferences, and schedule fit.
+                You can accept suggestions as-is or make edits before publishing
+                teams.
               </p>
             </div>
             <div class="grid grid-cols-2 gap-4">
-              <div class="bg-slate-50 p-4 rounded-2xl">
-                <span class="block text-2xl font-bold text-blue-600">10x</span
-                ><span class="text-xs text-slate-500">Faster Prep</span>
+              <div class="p-4 rounded-2xl" style="background: #fff3ea">
+                <span class="block text-2xl font-bold brand-text">1 form</span
+                ><span class="text-xs text-slate-500"
+                  >per student per week</span
+                >
               </div>
-              <div class="bg-slate-50 p-4 rounded-2xl">
-                <span class="block text-2xl font-bold text-blue-600">LaTeX</span
-                ><span class="text-xs text-slate-500">Formula Support</span>
+              <div class="p-4 rounded-2xl" style="background: #eaf6f2">
+                <span class="block text-2xl font-bold mint-text">Editable</span
+                ><span class="text-xs text-slate-500"
+                  >before finalizing teams</span
+                >
               </div>
             </div>
           </div>
 
           <div
-            class="md:col-span-1 md:row-span-2 bg-slate-900 text-white p-8 rounded-3xl bento-card flex flex-col justify-between"
+            class="md:col-span-2 text-white p-8 rounded-3xl bento-card flex flex-col justify-between"
+            style="background: #1f4d47"
           >
             <div>
               <div
                 class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl mb-6"
               >
-                🤖
+                📈
               </div>
-              <h3 class="text-xl font-bold mb-4 text-blue-400">
-                Kill the FAQ Loop
+              <h3 class="text-xl font-bold mb-4" style="color: #bde6dc">
+                Weekly Team Health Monitor
               </h3>
-              <p class="text-slate-400 text-sm">
-                StudyPilot memorizes how you answer a question the first time
-                and automatically handles repeat inquiries from other students.
+              <p class="text-sm" style="color: #d8ece8">
+                Every week, students submit a quick pulse survey. GroupPilot
+                highlights teams that may need support so you can intervene
+                early instead of discovering problems at final demo time.
               </p>
             </div>
             <div class="space-y-4">
               <div
                 class="p-3 bg-white/5 rounded-xl border border-white/10 text-xs italic"
               >
-                "When is the midterm?" → AI Handled
+                "We are blocked waiting on one teammate"
               </div>
               <div
                 class="p-3 bg-white/5 rounded-xl border border-white/10 text-xs italic"
               >
-                "Midterm is Oct 12th in Hall B"
+                "Team 4 needs a check-in this week"
               </div>
             </div>
           </div>
 
           <div
-            class="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-200 bento-card"
+            class="md:col-span-1 p-6 rounded-3xl bento-card flex flex-col justify-between"
+            style="
+              background: linear-gradient(165deg, #f9ebe3, #fff7ef);
+              border: 1px solid var(--line);
+            "
           >
-            <div class="text-xl mb-3">🧪</div>
-            <h3 class="font-bold mb-1 text-sm">Cross-Disciplinary</h3>
-            <p class="text-slate-500 text-xs">
-              Optimized for Math, Engineering, and Business curricula.
+            <div>
+              <div class="text-xl mb-3">📅</div>
+              <h3 class="font-bold mb-2 text-sm">Meeting Setup</h3>
+              <p class="text-xs" style="color: var(--muted)">
+                Collect availability from each team and schedule professor
+                meetings without endless email threads.
+              </p>
+            </div>
+            <div class="mt-5 text-xs" style="color: #7a2f1c">
+              Smart overlap finder
+            </div>
+          </div>
+
+          <div
+            class="md:col-span-2 p-6 rounded-3xl bento-card"
+            style="background: #fffdf8; border: 1px solid var(--line)"
+          >
+            <div class="text-xl mb-3">🧭</div>
+            <h3 class="font-bold mb-1 text-sm">Manual Control Always On</h3>
+            <p class="text-xs" style="color: var(--muted)">
+              Suggestions are never locked. Professors can move students,
+              rebalance teams, and publish final groups with full control.
             </p>
           </div>
 
           <div
-            class="md:col-span-1 bg-white p-6 rounded-3xl border border-slate-200 bento-card"
+            class="md:col-span-2 p-6 rounded-3xl bento-card"
+            style="background: #fffdf8; border: 1px solid var(--line)"
           >
             <div class="text-xl mb-3">📊</div>
-            <h3 class="font-bold mb-1 text-sm">Roster Insights</h3>
-            <p class="text-slate-500 text-xs">
-              Identify mastery levels and weak spots across your course.
+            <h3 class="font-bold mb-1 text-sm">Course-Level Visibility</h3>
+            <p class="text-xs" style="color: var(--muted)">
+              See which teams are healthy, which teams are drifting, and who
+              needs help now.
+            </p>
+          </div>
+
+          <div
+            class="md:col-span-2 p-6 rounded-3xl bento-card"
+            style="background: #eaf6f2; border: 1px solid #cde4dd"
+          >
+            <div class="text-xl mb-3">⏱️</div>
+            <h3 class="font-bold mb-1 text-sm" style="color: #173f3a">
+              Weekly Pulse, Low Effort
+            </h3>
+            <p class="text-xs" style="color: #28544d">
+              Short check-ins keep response rates high and give you consistent
+              trend data all semester.
             </p>
           </div>
         </div>
@@ -325,76 +501,158 @@
     <!-- Philosophy Secttion -->
     <section id="philosophy" class="py-24 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div class="fade-in">
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">
-              The "Answer Once" Philosophy
-            </h2>
-            <p class="text-lg text-slate-600 mb-6 leading-relaxed">
-              University instructors are overwhelmed by administrative volume.
-              We believe a professor's expertise should be spent on mentorship,
-              not answering the same email 50 times.
-            </p>
-            <div class="space-y-4">
-              <div
-                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
+        <div
+          class="fade-in rounded-3xl p-6 md:p-8 lg:p-10"
+          style="background: #f0f1ec; border: 1px solid #e1e3da"
+        >
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center"
+          >
+            <div>
+              <h2
+                class="text-4xl font-bold mb-5 leading-tight"
+                style="color: #27302a"
               >
-                <div
-                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
-                >
-                  1
+                Design your own team playbook
+              </h2>
+              <p class="text-lg mb-8 max-w-xl" style="color: #5a655e">
+                GroupPilot is not just a matching screen. It is a structured
+                workspace where instructors can define how groups are formed,
+                track weekly team signals, and run interventions before project
+                breakdowns happen.
+              </p>
+
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-5 h-5 mt-1 rounded-full flex items-center justify-center text-white shrink-0"
+                    style="background: #7c8f6d"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="m20 6-11 11-5-5" />
+                    </svg>
+                  </div>
+                  <p style="color: #2f3a33">
+                    Customizable grouping rules per course
+                  </p>
                 </div>
-                <p class="text-sm text-slate-700 font-medium pt-2">
-                  You answer a unique student question once.
-                </p>
-              </div>
-              <div
-                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
-              >
-                <div
-                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
-                >
-                  2
+
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-5 h-5 mt-1 rounded-full flex items-center justify-center text-white shrink-0"
+                    style="background: #7c8f6d"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="m20 6-11 11-5-5" />
+                    </svg>
+                  </div>
+                  <p style="color: #2f3a33">
+                    Weekly health trends for every active team
+                  </p>
                 </div>
-                <p class="text-sm text-slate-700 font-medium pt-2">
-                  StudyPilot learns your voice and the verified answer.
-                </p>
-              </div>
-              <div
-                class="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100"
-              >
-                <div
-                  class="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
-                >
-                  3
+
+                <div class="flex items-start gap-3">
+                  <div
+                    class="w-5 h-5 mt-1 rounded-full flex items-center justify-center text-white shrink-0"
+                    style="background: #7c8f6d"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="m20 6-11 11-5-5" />
+                    </svg>
+                  </div>
+                  <p style="color: #2f3a33">
+                    Meeting-ready availability snapshots by team
+                  </p>
                 </div>
-                <p class="text-sm text-slate-700 font-medium pt-2">
-                  Students get instant support; your inbox stays clear.
-                </p>
               </div>
             </div>
-          </div>
-          <div class="relative fade-in">
-            <div
-              class="bg-blue-600 rounded-3xl p-1 aspect-square rotate-3 shadow-2xl overflow-hidden"
-            >
+
+            <div class="relative">
               <div
-                class="bg-white h-full w-full rounded-[1.4rem] p-8 -rotate-3 flex flex-col justify-center"
+                class="rounded-2xl p-4 md:p-5 shadow-xl"
+                style="
+                  background: #f8f8f6;
+                  border: 1px solid #e5e6e1;
+                  transform: rotate(2deg);
+                "
               >
-                <p class="text-slate-400 text-sm mb-2 italic">
-                  Student: "What is the policy for late submissions?"
-                </p>
                 <div
-                  class="p-4 bg-blue-50 text-blue-800 rounded-xl mb-4 border border-blue-100"
+                  class="rounded-xl p-4 md:p-5"
+                  style="background: #fdfdfc; border: 1px solid #eceee8"
                 >
-                  <strong>StudyPilot AI:</strong> "Per Prof. Smith's previous
-                  response, late submissions incur a 10% penalty per day, capped
-                  at 3 days. Check Page 4 of the Syllabus."
+                  <div
+                    class="h-3 rounded w-28 mb-4"
+                    style="background: #d6dacd"
+                  ></div>
+                  <div class="space-y-2 mb-6">
+                    <div class="h-2 rounded" style="background: #d9dce3"></div>
+                    <div
+                      class="h-2 rounded w-11/12"
+                      style="background: #d9dce3"
+                    ></div>
+                    <div
+                      class="h-2 rounded w-3/4"
+                      style="background: #d9dce3"
+                    ></div>
+                  </div>
+
+                  <div class="grid grid-cols-5 gap-3 items-center mb-6">
+                    <div
+                      class="col-span-1 h-12 rounded"
+                      style="background: #eceee8"
+                    ></div>
+                    <div class="col-span-4 space-y-2">
+                      <div
+                        class="h-2 rounded"
+                        style="background: #d9dce3"
+                      ></div>
+                      <div
+                        class="h-2 rounded w-2/3"
+                        style="background: #d9dce3"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      class="px-6 py-2 rounded-full text-xs font-bold text-white"
+                      style="background: #7c8f6d"
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
-                <span
-                  class="text-[10px] text-slate-400 text-right uppercase tracking-widest font-bold"
-                  >Handled Automatically</span
-                >
               </div>
             </div>
           </div>
@@ -403,18 +661,19 @@
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-24 bg-slate-50">
+    <section id="faq" class="py-24 section-soft">
       <div class="max-w-3xl mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12">
           Frequently Asked Questions
         </h2>
         <div class="space-y-4">
           <details
-            class="group bg-white rounded-2xl border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden"
+            class="group rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden"
+            style="background: #fffdf8; border: 1px solid var(--line)"
           >
             <summary class="flex items-center justify-between cursor-pointer">
               <h3 class="font-bold text-slate-900">
-                Is it compatible with my LMS?
+                How often do students fill out the survey?
               </h3>
               <span
                 class="ml-1.5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
@@ -422,16 +681,17 @@
               >
             </summary>
             <p class="mt-4 text-slate-600 text-sm leading-relaxed">
-              StudyPilot supports exports for Canvas, Blackboard, and Moodle.
-              Enterprise plans include direct API integration.
+              Once per week. The survey is intentionally short so completion
+              stays high, and professors can track trends across the term.
             </p>
           </details>
           <details
-            class="group bg-white rounded-2xl border border-slate-200 p-6 [&_summary::-webkit-details-marker]:hidden"
+            class="group rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden"
+            style="background: #fffdf8; border: 1px solid var(--line)"
           >
             <summary class="flex items-center justify-between cursor-pointer">
               <h3 class="font-bold text-slate-900">
-                How accurate is the STEM extraction?
+                Can professors adjust groups manually?
               </h3>
               <span
                 class="ml-1.5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
@@ -439,9 +699,26 @@
               >
             </summary>
             <p class="mt-4 text-slate-600 text-sm leading-relaxed">
-              Our AI uses specialized models for LaTeX and technical diagrams,
-              achieving a 95% accuracy rate on clear scans and digital
-              documents.
+              Yes. GroupPilot provides recommendations, but instructors always
+              stay in control and can edit teams before publishing.
+            </p>
+          </details>
+          <details
+            class="group rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden"
+            style="background: #fffdf8; border: 1px solid var(--line)"
+          >
+            <summary class="flex items-center justify-between cursor-pointer">
+              <h3 class="font-bold text-slate-900">
+                How does meeting setup work?
+              </h3>
+              <span
+                class="ml-1.5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
+                >▼</span
+              >
+            </summary>
+            <p class="mt-4 text-slate-600 text-sm leading-relaxed">
+              Students submit availability windows, GroupPilot finds overlaps by
+              team, and professors can send meeting times in a few clicks.
             </p>
           </details>
         </div>
@@ -449,30 +726,30 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-12">
+    <footer
+      class="border-t py-12"
+      style="background: #fff8ee; border-color: var(--line)"
+    >
       <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8"
       >
         <div class="flex items-center gap-2">
           <div
-            class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center"
+            class="w-6 h-6 rounded flex items-center justify-center"
+            style="background: var(--brand)"
           >
             <span class="text-white text-[10px]">✦</span>
           </div>
-          <span class="font-bold text-slate-900">StudyPilot</span>
+          <span class="font-bold" style="color: var(--ink)">GroupPilot</span>
         </div>
-        <p class="text-slate-500 text-sm">
+        <p class="text-sm" style="color: var(--muted)">
           © 2026 EECS2311X_Group-3. All rights reserved.
         </p>
         <div class="flex gap-6">
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-600 transition-colors"
+          <a href="#" class="transition-colors" style="color: var(--muted)"
             >Twitter</a
           >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-600 transition-colors"
+          <a href="#" class="transition-colors" style="color: var(--muted)"
             >GitHub</a
           >
         </div>

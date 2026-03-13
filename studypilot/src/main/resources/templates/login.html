@@ -3,206 +3,198 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In | StudyPilot</title>
+    <title>Sign In | GroupPilot</title>
     <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap");
+
+      :root {
+        --bg-cream: #f8f2e8;
+        --bg-soft: #fffaf3;
+        --ink: #1f2a37;
+        --muted: #4b5563;
+        --line: #dfd2be;
+        --brand: #c85a39;
+        --brand-deep: #a2462b;
+        --mint: #2d6a62;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 90% -10%, #ffd8c8 0, transparent 35%),
+          radial-gradient(circle at 5% 30%, #d6ece2 0, transparent 30%),
+          var(--bg-cream);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", serif;
+        letter-spacing: -0.02em;
+      }
+
+      .panel {
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .field {
+        background: #fffaf2;
+        border: 1px solid var(--line);
+      }
+
+      .field:focus {
+        outline: none;
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgb(200 90 57 / 0.12);
+      }
+
+      .btn-primary {
+        background: var(--brand);
+      }
+
+      .btn-primary:hover {
+        background: var(--brand-deep);
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        background: color-mix(in oklab, var(--bg-soft) 92%, white 8%);
+      }
+    </style>
   </head>
-  <body class="bg-white text-slate-900 min-h-screen">
-    <div class="flex min-h-screen">
-      <div
-        class="hidden lg:flex lg:w-1/2 bg-slate-50 relative overflow-hidden items-center justify-center p-12"
-      >
-        <div class="absolute inset-0 overflow-hidden">
-          <div
-            class="absolute top-20 left-20 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl animate-pulse"
-          ></div>
-          <div
-            class="absolute bottom-20 right-20 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse delay-1000"
-          ></div>
-        </div>
+  <body class="min-h-screen">
+    <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <section class="hidden lg:flex items-center justify-center p-10 xl:p-14">
+        <div class="panel rounded-3xl p-10 w-full max-w-2xl shadow-xl">
+          <a href="/" class="inline-flex items-center gap-2 mb-8">
+            <div
+              class="w-10 h-10 rounded-xl flex items-center justify-center text-white"
+              style="background: var(--brand)"
+            >
+              ✦
+            </div>
+            <span class="text-xl font-bold" style="color: var(--ink)">GroupPilot</span>
+          </a>
 
-        <div class="absolute top-32 left-24 animate-float">
-          <div
-            class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center text-blue-600 text-2xl"
-          >
-            🧠
-          </div>
-        </div>
-        <div class="absolute top-48 right-32 animate-float delay-700">
-          <div
-            class="w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center text-blue-500 text-xl"
-          >
-            ✦
-          </div>
-        </div>
-        <div class="absolute bottom-40 left-32 animate-float delay-1000">
-          <div
-            class="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-amber-500 text-lg"
-          >
-            ⚡
-          </div>
-        </div>
-
-        <div class="relative z-10 text-center max-w-md animate-fade-in-up">
-          <div
-            class="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-2xl shadow-xl mb-8"
-          >
-            <span class="text-white text-4xl">📚</span>
-          </div>
-          <h1 class="text-4xl font-bold text-slate-900 mb-4">
-            Welcome back to StudyPilot
+          <h1 class="text-4xl font-bold mb-4 leading-tight">
+            Good to see you again.
           </h1>
-          <p class="text-lg text-slate-600 leading-relaxed">
-            Your AI-powered academic force multiplier is ready to help you
-            optimize your workflow.
+          <p class="text-lg mb-8" style="color: var(--muted)">
+            Sign in to check weekly team health, update group matchups, and book
+            check-in meetings from real availability windows.
           </p>
 
-          <div class="grid grid-cols-3 gap-4 mt-10">
-            <div
-              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
-            >
-              <div class="text-2xl font-bold text-blue-600">1K+</div>
-              <div class="text-xs text-slate-500 uppercase tracking-wider">
-                Professors
-              </div>
+          <div class="space-y-3 mb-10">
+            <div class="flex items-start gap-3">
+              <span class="mt-1">✓</span>
+              <p>Track team momentum week by week</p>
             </div>
-            <div
-              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
-            >
-              <div class="text-2xl font-bold text-blue-600">50K+</div>
-              <div class="text-xs text-slate-500 uppercase tracking-wider">
-                Flashcards
-              </div>
+            <div class="flex items-start gap-3">
+              <span class="mt-1">✓</span>
+              <p>Adjust groups before project friction grows</p>
             </div>
-            <div
-              class="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200"
-            >
-              <div class="text-2xl font-bold text-blue-600">98%</div>
-              <div class="text-xs text-slate-500 uppercase tracking-wider">
-                Success
-              </div>
+            <div class="flex items-start gap-3">
+              <span class="mt-1">✓</span>
+              <p>Schedule support meetings in minutes</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl p-5" style="background: #f0f1ec; border: 1px solid #e1e3da">
+            <div class="h-2.5 rounded w-32 mb-3" style="background: #d6dacd"></div>
+            <div class="space-y-2">
+              <div class="h-2 rounded" style="background: #d9dce3"></div>
+              <div class="h-2 rounded w-10/12" style="background: #d9dce3"></div>
+              <div class="h-2 rounded w-8/12" style="background: #d9dce3"></div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div
-        class="flex-1 flex items-center justify-center p-6 sm:p-12 order-2 lg:order-1 bg-white"
-      >
-        <div class="w-full max-w-md">
-          <div class="lg:hidden text-center mb-8">
+      <section class="flex items-center justify-center p-6 sm:p-10">
+        <div class="w-full max-w-md panel rounded-3xl p-7 sm:p-9 shadow-xl">
+          <div class="lg:hidden text-center mb-7">
             <a href="/" class="inline-flex items-center gap-2">
               <div
-                class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white"
+                class="w-10 h-10 rounded-xl flex items-center justify-center text-white"
+                style="background: var(--brand)"
               >
                 ✦
               </div>
-              <span class="text-xl font-bold">StudyPilot</span>
+              <span class="text-xl font-bold">GroupPilot</span>
             </a>
           </div>
 
-          <div class="animate-scale-in">
-            <div class="text-center mb-8">
-              <h2 class="text-2xl font-bold">Sign in</h2>
-              <p class="text-slate-500 text-sm mt-2">
-                Enter your credentials to access your course tools.
-              </p>
+          <div class="text-center mb-7">
+            <h2 class="text-3xl font-bold">Sign in</h2>
+            <p class="text-sm mt-2" style="color: var(--muted)">
+              Access your team formation workspace.
+            </p>
+          </div>
+
+          <div
+            th:if="${error}"
+            class="mb-5 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl"
+          >
+            <p th:text="${error}"></p>
+          </div>
+
+          <form method="post" action="/login" class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="text-sm font-medium">Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@university.ca"
+                required
+                class="w-full px-4 py-3 rounded-xl field"
+              />
             </div>
 
-            <div
-              th:if="${error}"
-              class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2"
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium">Password</label>
+                <a href="#" class="text-xs" style="color: var(--mint)">Forgot password?</a>
+              </div>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                required
+                class="w-full px-4 py-3 rounded-xl field"
+              />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="remember"
+                class="w-4 h-4 rounded"
+                style="accent-color: var(--brand)"
+              />
+              <label for="remember" class="text-sm" style="color: var(--muted)">
+                Remember me for 30 days
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3 text-white font-bold rounded-xl transition-colors btn-primary"
             >
-              <span>✕</span>
-              <p th:text="${error}"></p>
-            </div>
+              Sign In
+            </button>
+          </form>
 
-            <form method="post" action="/login" class="space-y-4">
-              <div class="space-y-1.5">
-                <label class="text-sm font-medium text-slate-700">Email</label>
-                <div class="relative group">
-                  <span
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
-                    >✉</span
-                  >
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="you@university.ca"
-                    required
-                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              <div class="space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <label class="text-sm font-medium text-slate-700"
-                    >Password</label
-                  >
-                  <a href="#" class="text-xs text-blue-600 hover:underline"
-                    >Forgot password?</a
-                  >
-                </div>
-                <div class="relative group">
-                  <span
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"
-                    >🔒</span
-                  >
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="••••••••"
-                    required
-                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
-                />
-                <label
-                  for="remember"
-                  class="text-sm text-slate-500 cursor-pointer"
-                  >Remember me for 30 days</label
-                >
-              </div>
-
-              <button
-                type="submit"
-                class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-200 active:scale-95 mt-4"
-              >
-                Sign In
-              </button>
-            </form>
-
-            <div class="relative my-8">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-slate-200"></div>
-              </div>
-              <div class="relative flex justify-center text-xs uppercase">
-                <span class="bg-white px-2 text-slate-500 tracking-wider"
-                  >Or continue with</span
-                >
-              </div>
-            </div>
-
-            <div class="mt-8 text-center">
-              <p class="text-sm text-slate-500">
-                Don't have an account?
-                <a
-                  href="/register"
-                  class="text-blue-600 font-bold hover:underline"
-                  >Sign up for free</a
-                >
-              </p>
-            </div>
+          <div class="mt-7 text-center">
+            <p class="text-sm" style="color: var(--muted)">
+              Do not have an account?
+              <a href="/register" class="font-bold" style="color: var(--brand)">Sign up</a>
+            </p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </body>
 </html>
