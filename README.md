@@ -9,13 +9,13 @@ Customer Meeting video: https://drive.google.com/file/d/12tvFfuYCM1BgyzKO5wU000l
 ### ITR1
 [log.md](docs/log.md) is in the `docs` folder.
 
-No changes in Planning Docuement.
+No changes in the Planning Document.
 
 ### Delivery 1
 [Peer evaluation from](docs/EECS2311Z_Delivery1_PeerReview_Group3.pdf) is in the `docs` folder
 
-# StudyPilot
-An AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. StudyPilot helps reduce the administrative burden on university professors by automating redundant tasks and generating teaching materials.
+# studypilot
+StudyPilot is an AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. It introduces a smart student grouping system that forms balanced teams using survey data, taking into account students’ skills, interests, and preferences. By automating this process, StudyPilot helps professors save time while creating more effective and compatible student groups.
 
 ## How to run
 To run the Spring Boot application locally:
@@ -37,13 +37,12 @@ To run the automated test suite using Gradle:
 ```
 
 ## Features
-* **Lecture Note Transformation - The AI analyzes uploaded lecture notes to automatically generate practical teaching tools like quizzes, assignments, and exam prep sheets.**
 
-* **Automated Student Support - The system learns from a professor's previous answers and automatically replies to students asking common or repeated questions to reduce email fatigue.**
-
-* **Professor Dashboard - A centralized hub to manage generated materials, view student queries, and approve automated responses.**
+* **Professor Dashboard - A centralized hub to manage student groups, regrouping, view students' surveys, and view group submissions**
 
 * Automated Grouping - Uses student survey responses to intelligently create balanced project groups, optimizing collaboration and compatibility.**
+
+* Group and individual skill options - view student skill, interests, preferences, and progress.
 
 ## Tech Stack
 * **Languages: Java**
@@ -62,7 +61,7 @@ studypilot-group-repo/
 └── README.md                   # Project overview
 ```
 
-# StudyPilot Java Tests
+# studypilot Java Tests
 
 This project contains:
 
