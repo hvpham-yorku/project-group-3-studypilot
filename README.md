@@ -40,9 +40,9 @@ To run the automated test suite using Gradle:
 
 * **Professor Dashboard - A centralized hub to manage student groups, regrouping, view students' surveys, and view group submissions.**
 
-* Automated Grouping - Uses student survey responses to intelligently create balanced project groups, optimizing collaboration and compatibility.**
+*  **Automated Grouping - Uses student survey responses to intelligently create balanced project groups, optimizing collaboration and compatibility.**
 
-* Group and individual skill options - view student skill, interests, preferences, and progress.
+* **Group and individual skill options - view student skill, interests, preferences, and progress.**
 
 ## Tech Stack
 * **Languages: Java**
