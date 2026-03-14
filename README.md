@@ -42,7 +42,7 @@ To run the automated test suite using Gradle:
 
 *  **Automated Grouping - Uses student survey responses to intelligently create balanced project groups, optimizing collaboration and compatibility.**
 
-* **Group and individual skill options - view student skill, interests, preferences, and progress.**
+* **Group and individual skill options - view student skills, interests, preferences, and progress.**
 
 ## Tech Stack
 * **Languages: Java**
