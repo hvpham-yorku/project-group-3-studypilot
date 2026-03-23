@@ -1,15 +1,16 @@
-package com.studypilot.studypilot.DataAccessLayer;
+package com.studypilot.studypilot;
 
 import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest  // Spins up an in-memory database for testing JPA repositories
+@DataJpaTest
 class CourseRepoTest {
 
     @Autowired

@@ -1,9 +1,10 @@
-package com.studypilot.studypilot.DataAccessLayer;
+package com.studypilot.studypilot;
 
 import com.studypilot.studypilot.DomainModel.User;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import java.util.Optional;
 
@@ -18,10 +19,7 @@ class UserRepoTest {
     @Test
     void saveAndFindByEmail_returnsUser() {
         // Arrange
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("test@example.com");
-        user.setName("Test User");
+        User user = new User("test@example.com", "hash123", "STUDENT", "Test User");
         userRepo.save(user);
 
         // Act
@@ -29,7 +27,7 @@ class UserRepoTest {
 
         // Assert
         assertTrue(found.isPresent());
-        assertEquals("Test User", found.get().getName());
+        assertEquals("Test User", found.get().getFullName());
     }
 
     @Test
@@ -40,9 +38,7 @@ class UserRepoTest {
 
     @Test
     void existsByEmail_returnsTrueOrFalse() {
-        User user = new User();
-        user.setId(2L);
-        user.setEmail("exists@example.com");
+        User user = new User("exists@example.com", "hash123", "PROFESSOR", "Exists User");
         userRepo.save(user);
 
         assertTrue(userRepo.existsByEmail("exists@example.com"));

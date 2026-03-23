@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
+import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 import com.studypilot.studypilot.DomainModel.QuizTest;
+import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -30,10 +35,14 @@ public class StudentHomeController {
 
     private final StudentPortalService studentPortalService;
     private final QuizService quizService;
+    private final TeamHealthService teamHealthService;
 
-    public StudentHomeController(StudentPortalService studentPortalService, QuizService quizService) {
+    public StudentHomeController(StudentPortalService studentPortalService,
+            QuizService quizService,
+            TeamHealthService teamHealthService) {
         this.studentPortalService = studentPortalService;
         this.quizService = quizService;
+        this.teamHealthService = teamHealthService;
     }
 
     @GetMapping("/student/home")
@@ -62,9 +71,51 @@ public class StudentHomeController {
         }
 
         Long studentId = (Long) session.getAttribute("userId");
+        LocalDate weekStart = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        List<Course> studentCourses = studentPortalService.getStudentCourses(studentId);
+        List<String> courseIds = studentCourses.stream().map(Course::getId).toList();
+        Map<String, TeamHealthCheckin> checkinsByCourseId = new HashMap<>();
+
+        for (TeamHealthCheckin checkin : teamHealthService.getStudentCourseCheckinsForWeek(studentId, courseIds, weekStart)) {
+            checkinsByCourseId.put(checkin.getCourseId(), checkin);
+        }
+
         model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courses", toStudentCourseCards(studentPortalService.getStudentCourses(studentId)));
+        model.addAttribute("weekStart", weekStart);
+        model.addAttribute("courses", toStudentCourseCards(studentCourses));
+        model.addAttribute("healthStatus", teamHealthService.getStudentWeeklyStatus(studentId, weekStart));
+        model.addAttribute("checkinsByCourseId", checkinsByCourseId);
         return "student_surveys";
+    }
+
+    @PostMapping("/student/surveys/checkin")
+    public String submitHealthSurvey(@RequestParam("courseId") String courseId,
+            @RequestParam("healthScore") Integer healthScore,
+            @RequestParam("workloadScore") Integer workloadScore,
+            @RequestParam("collaborationScore") Integer collaborationScore,
+            @RequestParam(name = "statusText", required = false) String statusText,
+            HttpSession session,
+            Model model) {
+        if (!isStudent(session)) {
+            return "redirect:/login";
+        }
+
+        Long studentId = (Long) session.getAttribute("userId");
+        try {
+            teamHealthService.saveWeeklyCheckin(
+                    studentId,
+                    courseId,
+                    healthScore,
+                    workloadScore,
+                    collaborationScore,
+                    statusText,
+                    LocalDate.now());
+            model.addAttribute("success", "Weekly health survey saved.");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+
+        return studentSurveys(session, model);
     }
 
     @PostMapping("/student/course/join")

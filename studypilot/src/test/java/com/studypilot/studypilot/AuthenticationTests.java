@@ -25,8 +25,8 @@ public class AuthenticationTests {
     @BeforeEach
     public void setUp() {
         mockRepo = mock(UserRepo.class);
-        auth = new Authentication(mockRepo, encoder);
         encoder = new BCryptPasswordEncoder();
+        auth = new Authentication(mockRepo, encoder);
     }
 
     // ----- REGISTER TESTS -----

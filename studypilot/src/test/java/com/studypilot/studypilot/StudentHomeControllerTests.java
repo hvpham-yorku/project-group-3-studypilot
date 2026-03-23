@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 
 import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
+import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.GUILayer.StudentHomeController;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,7 @@ class StudentHomeControllerTests {
     private StudentHomeController controller;
     private StudentPortalService mockStudentPortalService;
     private QuizService mockQuizService;
+    private TeamHealthService mockTeamHealthService;
     private HttpSession mockSession;
     private Model mockModel;
 
@@ -31,7 +33,8 @@ class StudentHomeControllerTests {
     void setup() {
         mockStudentPortalService = mock(StudentPortalService.class);
         mockQuizService = mock(QuizService.class);
-        controller = new StudentHomeController(mockStudentPortalService, mockQuizService);
+        mockTeamHealthService = mock(TeamHealthService.class);
+        controller = new StudentHomeController(mockStudentPortalService, mockQuizService, mockTeamHealthService);
         mockSession = mock(HttpSession.class);
         mockModel = mock(Model.class);
     }

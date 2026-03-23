@@ -1,8 +1,15 @@
 package com.studypilot.studypilot.GUILayer;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Controller;
@@ -16,10 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
+import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
+import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
+import com.studypilot.studypilot.DomainModel.User;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -30,13 +40,17 @@ public class ProfessorHomeController {
 
     private final CourseService courseService;
     private final QuizService quizService;
+    private final TeamHealthService teamHealthService;
     private final CourseEnrollmentRepo courseEnrollmentRepo;
     private final UserRepo userRepo;
 
-    public ProfessorHomeController(CourseService courseService, QuizService quizService,
+    public ProfessorHomeController(CourseService courseService,
+            QuizService quizService,
+            TeamHealthService teamHealthService,
             CourseEnrollmentRepo courseEnrollmentRepo, UserRepo userRepo) {
         this.courseService = courseService;
         this.quizService = quizService;
+        this.teamHealthService = teamHealthService;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.userRepo = userRepo;
     }
@@ -49,10 +63,23 @@ public class ProfessorHomeController {
         }
 
         Long professorId = (Long) session.getAttribute("userId");
+        List<Course> professorCourses = courseService.getCoursesForProfessor(professorId);
+        TeamHealthService.ProfessorHealthSummary healthSummary = teamHealthService
+                .getProfessorWeeklySummary(professorId, LocalDate.now());
+        TeamHealthService.ProfessorHealthTrend healthTrend = teamHealthService
+                .getProfessorHealthTrend(professorId, LocalDate.now(), 6);
+        LocalDate weekStart = teamHealthService.getWeekStart(LocalDate.now());
+        List<AtRiskRow> atRiskRows = buildAtRiskRows(professorCourses, weekStart);
+        List<ParticipationRow> participationRows = buildParticipationRows(professorCourses, weekStart);
 
         model.addAttribute("fullName", session.getAttribute("fullName"));
         model.addAttribute("form", new CreateCourseForm());
-        model.addAttribute("courses", toCourseCards(courseService.getCoursesForProfessor(professorId)));
+        model.addAttribute("courses", toCourseCards(professorCourses));
+        model.addAttribute("healthSummary", healthSummary);
+        model.addAttribute("healthTrend", healthTrend);
+        model.addAttribute("weekStart", weekStart);
+        model.addAttribute("atRiskRows", atRiskRows);
+        model.addAttribute("participationRows", participationRows);
         return "professor_home";
     }
 
@@ -203,7 +230,116 @@ public class ProfessorHomeController {
         return slug.isBlank() ? "course" : slug;
     }
 
+    private List<AtRiskRow> buildAtRiskRows(List<Course> courses, LocalDate weekStart) {
+        if (courses.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, Course> courseById = new HashMap<>();
+        List<String> courseIds = new ArrayList<>();
+        for (Course course : courses) {
+            courseById.put(course.getId(), course);
+            courseIds.add(course.getId());
+        }
+
+        Map<Long, User> userCache = new HashMap<>();
+
+        return teamHealthService.getCourseCheckinsForWeek(courseIds, weekStart).stream()
+                .filter(this::isAtRisk)
+                .sorted(Comparator
+                        .comparingInt(this::riskSeverity)
+                        .thenComparing(TeamHealthCheckin::getUpdatedAt).reversed())
+                .limit(3)
+                .map(checkin -> {
+                    Course course = courseById.get(checkin.getCourseId());
+                    User student = findUser(userCache, checkin.getStudentId());
+                    String studentName = student == null ? "Unknown Student" : student.getFullName();
+                    return new AtRiskRow(studentName, course == null ? "" : course.getCourseCode(), riskLabel(checkin));
+                })
+                .toList();
+    }
+
+    private List<ParticipationRow> buildParticipationRows(List<Course> courses, LocalDate weekStart) {
+        if (courses.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> courseIds = courses.stream().map(Course::getId).toList();
+        Map<String, Course> courseById = new HashMap<>();
+        for (Course course : courses) {
+            courseById.put(course.getId(), course);
+        }
+
+        Set<String> submitted = new HashSet<>();
+        for (TeamHealthCheckin checkin : teamHealthService.getCourseCheckinsForWeek(courseIds, weekStart)) {
+            submitted.add(participationKey(checkin.getCourseId(), checkin.getStudentId()));
+        }
+
+        Map<Long, User> userCache = new HashMap<>();
+
+        return courseEnrollmentRepo.findByCourseIdIn(courseIds).stream()
+                .filter(enrollment -> !submitted.contains(participationKey(enrollment.getCourseId(), enrollment.getStudentId())))
+                .limit(3)
+                .map(enrollment -> {
+                    User student = findUser(userCache, enrollment.getStudentId());
+                    Course course = courseById.get(enrollment.getCourseId());
+                    return new ParticipationRow(
+                            student == null ? "Unknown Student" : student.getFullName(),
+                            course == null ? "Unknown Course" : course.getCourseCode(),
+                            false);
+                })
+                .toList();
+    }
+
+    private User findUser(Map<Long, User> userCache, Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        if (userCache.containsKey(userId)) {
+            return userCache.get(userId);
+        }
+
+        User user = userRepo.findById(userId).orElse(null);
+        userCache.put(userId, user);
+        return user;
+    }
+
+    private boolean isAtRisk(TeamHealthCheckin checkin) {
+        return checkin.getHealthScore() <= 2
+                || checkin.getWorkloadScore() <= 2
+                || checkin.getCollaborationScore() <= 2;
+    }
+
+    private int riskSeverity(TeamHealthCheckin checkin) {
+        return Math.min(checkin.getHealthScore(), Math.min(checkin.getWorkloadScore(), checkin.getCollaborationScore()));
+    }
+
+    private String riskLabel(TeamHealthCheckin checkin) {
+        if (checkin.getCollaborationScore() <= 2) {
+            return "Collaboration: Low";
+        }
+        if (checkin.getHealthScore() <= 2) {
+            return "Health: " + ((int) Math.round((checkin.getHealthScore() / 5.0) * 100.0)) + "%";
+        }
+        if (checkin.getWorkloadScore() <= 2) {
+            return "Workload: High";
+        }
+        return "Needs Attention";
+    }
+
+    private String participationKey(String courseId, Long studentId) {
+        return courseId + "::" + studentId;
+    }
+
     public record MemberView(String fullName, String email) {
+
+    }
+
+    public record AtRiskRow(String studentName, String courseCode, String reason) {
+
+    }
+
+    public record ParticipationRow(String studentName, String courseCode, boolean submitted) {
 
     }
 

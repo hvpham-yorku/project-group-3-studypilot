@@ -68,19 +68,19 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="paper rounded-2xl p-5">
             <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">At-Risk Teams</p>
-            <p class="text-3xl font-bold mt-1" style="color: #b91c1c">6</p>
+            <p class="text-3xl font-bold mt-1" style="color: #b91c1c" th:text="${healthSummary.atRiskResponses}">0</p>
           </div>
           <div class="paper rounded-2xl p-5">
             <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Missing Surveys</p>
-            <p class="text-3xl font-bold mt-1" style="color: #9a3412">14</p>
+            <p class="text-3xl font-bold mt-1" style="color: #9a3412" th:text="${healthSummary.missingSurveys}">0</p>
           </div>
           <div class="paper rounded-2xl p-5">
-            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Meetings This Week</p>
-            <p class="text-3xl font-bold mt-1" style="color: var(--mint)">9</p>
+            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Submissions This Week</p>
+            <p class="text-3xl font-bold mt-1" style="color: var(--mint)" th:text="${healthSummary.totalSubmissions}">0</p>
           </div>
           <div class="paper rounded-2xl p-5">
             <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Avg Team Health</p>
-            <p class="text-3xl font-bold mt-1">72%</p>
+            <p class="text-3xl font-bold mt-1" th:text="${healthSummary.avgHealthPercent} + '%'">0%</p>
           </div>
         </div>
 
@@ -95,17 +95,12 @@
               <div class="rounded-xl p-4" style="background: #fff5ef; border: 1px solid #f8d3bf">
                 <h3 class="font-semibold mb-3">The At-Risk List</h3>
                 <div class="space-y-2 text-sm">
-                  <div class="flex items-center justify-between">
-                    <span>Team 4 - API Integrators</span>
-                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Conflict: High</span>
+                  <div th:if="${#lists.isEmpty(atRiskRows)}" class="text-slate-500">
+                    No at-risk responses this week.
                   </div>
-                  <div class="flex items-center justify-between">
-                    <span>Team 9 - UX Sprint</span>
-                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Health: 41%</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span>Team 12 - Data Layer</span>
-                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold">Trend: Down</span>
+                  <div th:each="row : ${atRiskRows}" class="flex items-center justify-between">
+                    <span th:text="${row.studentName + ' (' + row.courseCode + ')'}">Student (EECS2311)</span>
+                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold" th:text="${row.reason}">Needs Attention</span>
                   </div>
                 </div>
               </div>
@@ -113,17 +108,12 @@
               <div class="rounded-xl p-4" style="background: #f7fbf8; border: 1px solid #cfe7dc">
                 <h3 class="font-semibold mb-3">Participation Tracking</h3>
                 <div class="space-y-2 text-sm">
-                  <div class="flex items-center justify-between">
-                    <span>Samantha (Team 4)</span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full" style="background: #fee2e2; color: #b91c1c">Missing</span>
+                  <div th:if="${#lists.isEmpty(participationRows)}" class="text-slate-500">
+                    Everyone submitted for this week.
                   </div>
-                  <div class="flex items-center justify-between">
-                    <span>Yusuf (Team 9)</span>
+                  <div th:each="row : ${participationRows}" class="flex items-center justify-between">
+                    <span th:text="${row.studentName + ' (' + row.courseCode + ')'}">Student (EECS2311)</span>
                     <span class="text-[11px] px-2 py-0.5 rounded-full" style="background: #fee2e2; color: #b91c1c">Missing</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span>Priya (Team 12)</span>
-                    <span class="chip-safe text-[11px] px-2 py-0.5 rounded-full font-semibold">Submitted</span>
                   </div>
                 </div>
               </div>
@@ -198,18 +188,19 @@
             <h2 class="text-lg font-bold mb-4">Survey Analytics</h2>
 
             <div class="mb-5">
-              <p class="text-sm font-semibold mb-2">Trend Lines (Team A)</p>
+              <p class="text-sm font-semibold mb-2">Trend Lines (Last 6 Weeks)</p>
               <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
                 <svg viewBox="0 0 260 80" class="w-full h-20" role="img" aria-label="Team health trend">
                   <polyline
                     fill="none"
                     stroke="#2d6a62"
                     stroke-width="3"
-                    points="0,60 40,54 80,52 120,46 160,38 200,32 240,24"
+                    th:attr="points=${healthTrend.svgPoints}"
+                    points="10,70 58,62 106,58 154,52 202,44 250,36"
                   />
                   <line x1="0" y1="70" x2="260" y2="70" stroke="#d1d5db" stroke-width="1" />
                 </svg>
-                <p class="text-xs" style="color: var(--muted)">Health trending upward over the last 6 weeks.</p>
+                <p class="text-xs" style="color: var(--muted)" th:text="${healthTrend.summaryText}">Health trend is stable over the last 6 weeks.</p>
               </div>
             </div>
 

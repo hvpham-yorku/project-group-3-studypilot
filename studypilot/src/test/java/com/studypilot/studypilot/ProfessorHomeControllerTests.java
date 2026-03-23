@@ -17,6 +17,9 @@ import org.springframework.ui.Model;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
+import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
+import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.GUILayer.ProfessorHomeController;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +29,7 @@ class ProfessorHomeControllerTests {
     private ProfessorHomeController controller;
     private CourseService mockCourseService;
     private QuizService mockQuizService;
+    private TeamHealthService mockTeamHealthService;
     private HttpSession mockSession;
     private Model mockModel;
 
@@ -33,7 +37,15 @@ class ProfessorHomeControllerTests {
     void setup() {
         mockCourseService = mock(CourseService.class);
         mockQuizService = mock(QuizService.class);
-        controller = new ProfessorHomeController(mockCourseService, mockQuizService);
+        mockTeamHealthService = mock(TeamHealthService.class);
+        CourseEnrollmentRepo mockEnrollmentRepo = mock(CourseEnrollmentRepo.class);
+        UserRepo mockUserRepo = mock(UserRepo.class);
+        controller = new ProfessorHomeController(
+                mockCourseService,
+                mockQuizService,
+                mockTeamHealthService,
+                mockEnrollmentRepo,
+                mockUserRepo);
         mockSession = mock(HttpSession.class);
         mockModel = mock(Model.class);
     }
@@ -44,6 +56,11 @@ class ProfessorHomeControllerTests {
         when(mockSession.getAttribute("role")).thenReturn("PROFESSOR");
         when(mockSession.getAttribute("userId")).thenReturn(1L);
         when(mockSession.getAttribute("fullName")).thenReturn("Dr. Smith");
+        when(mockTeamHealthService.getProfessorWeeklySummary(eq(1L), any())).thenReturn(
+                new TeamHealthService.ProfessorHealthSummary(java.time.LocalDate.now(), 0, 0, 0, 0));
+        when(mockTeamHealthService.getProfessorHealthTrend(eq(1L), any(), eq(6))).thenReturn(
+                new TeamHealthService.ProfessorHealthTrend(java.util.List.of(), "", "No survey submissions yet."));
+        when(mockTeamHealthService.getWeekStart(any())).thenReturn(java.time.LocalDate.now());
         when(mockCourseService.getCoursesForProfessor(1L)).thenReturn(Collections.emptyList());
 
         // Act
