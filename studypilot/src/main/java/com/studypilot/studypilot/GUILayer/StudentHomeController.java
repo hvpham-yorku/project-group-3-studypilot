@@ -64,6 +64,18 @@ public class StudentHomeController {
         return "student_home";
     }
 
+    @GetMapping("/student/courses")
+    public String studentCourses(HttpSession session, Model model) {
+        if (!isStudent(session)) {
+            return "redirect:/login";
+        }
+
+        Long studentId = (Long) session.getAttribute("userId");
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courses", toStudentCourseCards(studentPortalService.getStudentCourses(studentId)));
+        return "student_my_courses";
+    }
+
     @GetMapping("/student/surveys")
     public String studentSurveys(HttpSession session, Model model) {
         if (!isStudent(session)) {

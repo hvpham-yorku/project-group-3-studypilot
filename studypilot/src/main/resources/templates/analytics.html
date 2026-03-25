@@ -19,20 +19,31 @@
           <div
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
-            <p class="text-xs text-slate-500">Weekly Questions Answered</p>
-            <p class="text-2xl font-bold mt-1 text-blue-600">412</p>
+            <p class="text-xs text-slate-500" th:text="${metric1Label}">
+              Weekly Survey Submissions
+            </p>
+            <p
+              class="text-2xl font-bold mt-1 text-blue-600"
+              th:text="${metric1Value}"
+            >
+              0
+            </p>
           </div>
           <div
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
-            <p class="text-xs text-slate-500">Auto-Resolution Rate</p>
-            <p class="text-2xl font-bold mt-1">81%</p>
+            <p class="text-xs text-slate-500" th:text="${metric2Label}">
+              Average Team Health
+            </p>
+            <p class="text-2xl font-bold mt-1" th:text="${metric2Value}">0%</p>
           </div>
           <div
             class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm"
           >
-            <p class="text-xs text-slate-500">Avg Response Time</p>
-            <p class="text-2xl font-bold mt-1">22s</p>
+            <p class="text-xs text-slate-500" th:text="${metric3Label}">
+              At-Risk Responses
+            </p>
+            <p class="text-2xl font-bold mt-1" th:text="${metric3Value}">0</p>
           </div>
         </div>
 
@@ -40,7 +51,10 @@
           class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
         >
           <h2 class="text-lg font-bold mb-4">Weekly Trend</h2>
-          <div class="grid grid-cols-5 gap-3 items-end h-52">
+          <div
+            th:if="${hasTrendData}"
+            class="grid grid-cols-5 gap-3 items-end h-52"
+          >
             <div
               th:each="trend : ${weeklyTrends}"
               class="flex flex-col items-center gap-2"
@@ -52,13 +66,19 @@
               <p class="text-xs text-slate-500" th:text="${trend.day}">Mon</p>
             </div>
           </div>
+          <div
+            th:if="${!hasTrendData}"
+            class="h-52 rounded-xl border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center text-sm text-slate-500"
+          >
+            No weekly trend yet. Submit surveys to start tracking progress.
+          </div>
         </section>
 
         <section
           class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
         >
           <h2 class="text-lg font-bold mb-4">Key Insights</h2>
-          <ul class="space-y-3">
+          <ul th:if="${!#lists.isEmpty(insights)}" class="space-y-3">
             <li
               th:each="insight : ${insights}"
               class="text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-lg p-3"
@@ -67,6 +87,13 @@
               ><span th:text="${insight}">Insight text</span>
             </li>
           </ul>
+          <div
+            th:if="${#lists.isEmpty(insights)}"
+            class="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500"
+            th:text="${insightEmptyMessage}"
+          >
+            No insights yet.
+          </div>
         </section>
       </div>
     </main>

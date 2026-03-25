@@ -42,7 +42,7 @@
         <!-- Student only: My Courses -->
         <a
           th:if="${session.role == 'STUDENT'}"
-          href="/student/home"
+          href="/student/courses"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'courses'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
