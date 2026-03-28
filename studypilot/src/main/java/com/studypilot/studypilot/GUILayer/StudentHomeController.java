@@ -165,6 +165,12 @@ public class StudentHomeController {
             model.addAttribute("courseSlug", toSlug(course.getCourseName()));
             model.addAttribute("hasQuiz", quizService.getLatestQuizForCourse(courseId).isPresent());
             model.addAttribute("hasGroupActivity", studentPortalService.getLatestGroupActivityForCourse(courseId).isPresent());
+
+            // Check if student is in a formed group for this course
+            studentPortalService.getStudentGroupForCourse(studentId, courseId).ifPresent(groupInfo -> {
+                model.addAttribute("studentGroup", groupInfo);
+            });
+
             return "student_course_page";
         } catch (IllegalArgumentException ex) {
             return "redirect:/student/home";
@@ -197,6 +203,15 @@ public class StudentHomeController {
 
             GroupFormationActivity activity = maybeActivity.get();
             model.addAttribute("activity", activity);
+            model.addAttribute("activityStatus", activity.getStatus());
+
+            if ("SORTED".equals(activity.getStatus())) {
+                // Show group assignment
+                studentPortalService.getStudentGroupForCourse(studentId, courseId).ifPresent(groupInfo -> {
+                    model.addAttribute("studentGroup", groupInfo);
+                });
+            }
+
             model.addAttribute("topicOptions", studentPortalService.getTopicOptions(activity.getId()));
             model.addAttribute("skillOptions", studentPortalService.getSkillOptions(activity.getId()));
 
@@ -205,7 +220,9 @@ public class StudentHomeController {
                 form.setTopicChoice(pref.getTopicChoice());
                 form.setSkillChoice(pref.getSkillChoice());
                 form.setNotes(pref.getNotes());
+                form.setAvailabilitySlots(pref.getAvailabilitySlots());
                 model.addAttribute("savedPreference", true);
+                model.addAttribute("savedAvailability", pref.getAvailabilitySlots() != null ? pref.getAvailabilitySlots() : "");
             });
 
             model.addAttribute("form", form);
@@ -235,13 +252,41 @@ public class StudentHomeController {
                     activityId,
                     form.getTopicChoice(),
                     form.getSkillChoice(),
-                    form.getNotes()
+                    form.getNotes(),
+                    form.getAvailabilitySlots()
             );
             model.addAttribute("success", "Your group preferences have been saved.");
             return groupFormationPage(courseId, courseSlug, session, model);
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
             return groupFormationPage(courseId, courseSlug, session, model);
+        }
+    }
+
+    @GetMapping("/student/{courseId}/{courseSlug}/group-space")
+    public String groupSpacePage(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
+        if (!isStudent(session)) {
+            return "redirect:/login";
+        }
+
+        Long studentId = (Long) session.getAttribute("userId");
+
+        try {
+            Course course = studentPortalService.requireStudentEnrollment(studentId, courseId);
+            model.addAttribute("fullName", session.getAttribute("fullName"));
+            model.addAttribute("course", course);
+            model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+
+            studentPortalService.getStudentGroupForCourse(studentId, courseId).ifPresent(groupInfo -> {
+                model.addAttribute("studentGroup", groupInfo);
+            });
+
+            return "student_group_space_page";
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/student/home";
         }
     }
 

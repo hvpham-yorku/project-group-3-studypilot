@@ -5,6 +5,7 @@ public class StudentGroupPreferenceForm {
     private String topicChoice;
     private String skillChoice;
     private String notes;
+    private String availabilitySlots;
 
     public String getTopicChoice() {
         return topicChoice;
@@ -28,5 +29,13 @@ public class StudentGroupPreferenceForm {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getAvailabilitySlots() {
+        return availabilitySlots;
+    }
+
+    public void setAvailabilitySlots(String availabilitySlots) {
+        this.availabilitySlots = availabilitySlots;
     }
 }
