@@ -36,6 +36,12 @@ public class GroupFormationActivity {
     @Column(name = "group_skills_similarly", nullable = false)
     private boolean groupSkillsSimilarly;
 
+    @Column(name = "status", length = 20, columnDefinition = "varchar(20) default 'OPEN'")
+    private String status = "OPEN";
+
+    @Column(name = "deadline")
+    private OffsetDateTime deadline;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -65,6 +71,9 @@ public class GroupFormationActivity {
     public void prePersist() {
         if (createdAt == null) {
             createdAt = OffsetDateTime.now();
+        }
+        if (status == null) {
+            status = "OPEN";
         }
     }
 
@@ -130,5 +139,21 @@ public class GroupFormationActivity {
 
     public void setGroupSkillsSimilarly(boolean groupSkillsSimilarly) {
         this.groupSkillsSimilarly = groupSkillsSimilarly;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public OffsetDateTime getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(OffsetDateTime deadline) {
+        this.deadline = deadline;
     }
 }

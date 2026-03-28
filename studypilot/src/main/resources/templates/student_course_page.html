@@ -33,6 +33,33 @@
             </a>
           </div>
 
+          <!-- Group Space Card (only when student is in a group) -->
+          <section
+            th:if="${studentGroup != null}"
+            class="bg-white border-2 border-blue-200 rounded-2xl shadow-sm p-6"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+                  Your Team
+                </p>
+                <h2 class="text-xl font-bold mt-1" th:text="${studentGroup.groupName}">
+                  Team Name
+                </h2>
+                <p class="text-sm text-slate-500 mt-1"
+                   th:text="${#lists.size(studentGroup.members) + ' team members'}">
+                  0 members
+                </p>
+              </div>
+              <a
+                th:href="@{/student/{courseId}/{courseSlug}/group-space(courseId=${course.id},courseSlug=${courseSlug})}"
+                class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+              >
+                Enter Group Space
+              </a>
+            </div>
+          </section>
+
           <section
             class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
           >

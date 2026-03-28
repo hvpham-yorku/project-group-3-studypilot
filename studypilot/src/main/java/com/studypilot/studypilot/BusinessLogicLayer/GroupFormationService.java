@@ -1,21 +1,39 @@
 package com.studypilot.studypilot.BusinessLogicLayer;
 
+import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupMemberRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.CourseEnrollment;
+import com.studypilot.studypilot.DomainModel.FormedGroup;
+import com.studypilot.studypilot.DomainModel.FormedGroupMember;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
 import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
+import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
+import com.studypilot.studypilot.DomainModel.User;
 import com.studypilot.studypilot.GUILayer.CreateGroupFormationForm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupFormationService {
@@ -24,15 +42,33 @@ public class GroupFormationService {
     private final GroupFormationActivityRepo activityRepo;
     private final GroupFormationTopicOptionRepo topicRepo;
     private final GroupFormationSkillOptionRepo skillRepo;
+    private final StudentGroupPreferenceRepo preferenceRepo;
+    private final CourseEnrollmentRepo enrollmentRepo;
+    private final UserRepo userRepo;
+    private final FormedGroupRepo formedGroupRepo;
+    private final FormedGroupMemberRepo formedGroupMemberRepo;
+    private final OpenAiGroupSortingService openAiSortingService;
 
     public GroupFormationService(CourseRepo courseRepo,
                                  GroupFormationActivityRepo activityRepo,
                                  GroupFormationTopicOptionRepo topicRepo,
-                                 GroupFormationSkillOptionRepo skillRepo) {
+                                 GroupFormationSkillOptionRepo skillRepo,
+                                 StudentGroupPreferenceRepo preferenceRepo,
+                                 CourseEnrollmentRepo enrollmentRepo,
+                                 UserRepo userRepo,
+                                 FormedGroupRepo formedGroupRepo,
+                                 FormedGroupMemberRepo formedGroupMemberRepo,
+                                 OpenAiGroupSortingService openAiSortingService) {
         this.courseRepo = courseRepo;
         this.activityRepo = activityRepo;
         this.topicRepo = topicRepo;
         this.skillRepo = skillRepo;
+        this.preferenceRepo = preferenceRepo;
+        this.enrollmentRepo = enrollmentRepo;
+        this.userRepo = userRepo;
+        this.formedGroupRepo = formedGroupRepo;
+        this.formedGroupMemberRepo = formedGroupMemberRepo;
+        this.openAiSortingService = openAiSortingService;
     }
 
     @Transactional
@@ -46,15 +82,8 @@ public class GroupFormationService {
 
         validateSizes(preferred, min, max);
 
-        List<String> topics = normalizeFiveOptions(
-                form.getTopic1(), form.getTopic2(), form.getTopic3(), form.getTopic4(), form.getTopic5(),
-                "You must enter exactly 5 non-empty topic options."
-        );
-
-        List<String> skills = normalizeFiveOptions(
-                form.getSkill1(), form.getSkill2(), form.getSkill3(), form.getSkill4(), form.getSkill5(),
-                "You must enter exactly 5 non-empty skill options."
-        );
+        List<String> topics = normalizeOptions(form.getTopics(), "You must enter at least 2 non-empty topic options.");
+        List<String> skills = normalizeOptions(form.getSkills(), "You must enter at least 2 non-empty skill options.");
 
         GroupFormationActivity activity = new GroupFormationActivity(
                 course.getId(),
@@ -66,6 +95,10 @@ public class GroupFormationService {
                 form.isGroupTopicsSimilarly(),
                 form.isGroupSkillsSimilarly()
         );
+
+        if (form.getDeadline() != null && !form.getDeadline().isBlank()) {
+            activity.setDeadline(parseDeadline(form.getDeadline()));
+        }
 
         GroupFormationActivity saved = activityRepo.save(activity);
 
@@ -92,30 +125,30 @@ public class GroupFormationService {
         List<GroupFormationTopicOption> topics = topicRepo.findByActivityIdOrderByOptionOrderAsc(activityId);
         List<GroupFormationSkillOption> skills = skillRepo.findByActivityIdOrderByOptionOrderAsc(activityId);
 
-        if (topics.size() != 5 || skills.size() != 5) {
-            throw new IllegalArgumentException("Saved activity data is incomplete.");
-        }
-
         CreateGroupFormationForm form = new CreateGroupFormationForm();
         form.setActivityName(activity.getActivityName());
         form.setPreferredGroupSize(activity.getPreferredGroupSize());
         form.setMinTeamSize(activity.getMinTeamSize());
         form.setMaxTeamSize(activity.getMaxTeamSize());
 
-        form.setTopic1(topics.get(0).getTopicText());
-        form.setTopic2(topics.get(1).getTopicText());
-        form.setTopic3(topics.get(2).getTopicText());
-        form.setTopic4(topics.get(3).getTopicText());
-        form.setTopic5(topics.get(4).getTopicText());
+        List<String> topicTexts = new ArrayList<>();
+        for (GroupFormationTopicOption t : topics) {
+            topicTexts.add(t.getTopicText());
+        }
+        form.setTopics(topicTexts);
 
-        form.setSkill1(skills.get(0).getSkillText());
-        form.setSkill2(skills.get(1).getSkillText());
-        form.setSkill3(skills.get(2).getSkillText());
-        form.setSkill4(skills.get(3).getSkillText());
-        form.setSkill5(skills.get(4).getSkillText());
+        List<String> skillTexts = new ArrayList<>();
+        for (GroupFormationSkillOption s : skills) {
+            skillTexts.add(s.getSkillText());
+        }
+        form.setSkills(skillTexts);
 
         form.setGroupTopicsSimilarly(activity.isGroupTopicsSimilarly());
         form.setGroupSkillsSimilarly(activity.isGroupSkillsSimilarly());
+
+        if (activity.getDeadline() != null) {
+            form.setDeadline(activity.getDeadline().toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        }
 
         return form;
     }
@@ -138,15 +171,8 @@ public class GroupFormationService {
 
         validateSizes(preferred, min, max);
 
-        List<String> topics = normalizeFiveOptions(
-                form.getTopic1(), form.getTopic2(), form.getTopic3(), form.getTopic4(), form.getTopic5(),
-                "You must enter exactly 5 non-empty topic options."
-        );
-
-        List<String> skills = normalizeFiveOptions(
-                form.getSkill1(), form.getSkill2(), form.getSkill3(), form.getSkill4(), form.getSkill5(),
-                "You must enter exactly 5 non-empty skill options."
-        );
+        List<String> topics = normalizeOptions(form.getTopics(), "You must enter at least 2 non-empty topic options.");
+        List<String> skills = normalizeOptions(form.getSkills(), "You must enter at least 2 non-empty skill options.");
 
         activity.setActivityName(activityName);
         activity.setPreferredGroupSize(preferred);
@@ -154,6 +180,12 @@ public class GroupFormationService {
         activity.setMaxTeamSize(max);
         activity.setGroupTopicsSimilarly(form.isGroupTopicsSimilarly());
         activity.setGroupSkillsSimilarly(form.isGroupSkillsSimilarly());
+
+        if (form.getDeadline() != null && !form.getDeadline().isBlank()) {
+            activity.setDeadline(parseDeadline(form.getDeadline()));
+        } else {
+            activity.setDeadline(null);
+        }
 
         activityRepo.save(activity);
         activityRepo.flush();
@@ -181,6 +213,241 @@ public class GroupFormationService {
         }
 
         activityRepo.delete(activity);
+    }
+
+    @Transactional
+    public void closeActivity(Long professorId, String courseId, Long activityId) {
+        validateProfessorOwnsCourse(professorId, courseId);
+
+        GroupFormationActivity activity = activityRepo.findByIdAndCourseId(activityId, courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found."));
+
+        if (!activity.getProfessorId().equals(professorId)) {
+            throw new IllegalArgumentException("You cannot modify this activity.");
+        }
+
+        if ("SORTED".equals(activity.getStatus())) {
+            throw new IllegalArgumentException("Activity has already been sorted.");
+        }
+
+        activity.setStatus("CLOSED");
+        activityRepo.save(activity);
+    }
+
+    @Transactional
+    public void reopenActivity(Long professorId, String courseId, Long activityId) {
+        validateProfessorOwnsCourse(professorId, courseId);
+
+        GroupFormationActivity activity = activityRepo.findByIdAndCourseId(activityId, courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found."));
+
+        if (!activity.getProfessorId().equals(professorId)) {
+            throw new IllegalArgumentException("You cannot modify this activity.");
+        }
+
+        if ("SORTED".equals(activity.getStatus())) {
+            throw new IllegalArgumentException("Cannot reopen a sorted activity.");
+        }
+
+        activity.setStatus("OPEN");
+        activityRepo.save(activity);
+    }
+
+    @Transactional
+    public void autoSortActivity(Long professorId, String courseId, Long activityId) {
+        validateProfessorOwnsCourse(professorId, courseId);
+
+        GroupFormationActivity activity = activityRepo.findByIdAndCourseId(activityId, courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found."));
+
+        if (!activity.getProfessorId().equals(professorId)) {
+            throw new IllegalArgumentException("You cannot sort this activity.");
+        }
+
+        if (!"CLOSED".equals(activity.getStatus())) {
+            throw new IllegalArgumentException("Activity must be closed before sorting.");
+        }
+
+        List<CourseEnrollment> enrollments = enrollmentRepo.findByCourseId(courseId);
+        if (enrollments.isEmpty()) {
+            throw new IllegalArgumentException("No students enrolled in this course.");
+        }
+
+        List<User> enrolledStudents = new ArrayList<>();
+        for (CourseEnrollment enrollment : enrollments) {
+            userRepo.findById(enrollment.getStudentId()).ifPresent(enrolledStudents::add);
+        }
+
+        if (enrolledStudents.size() < activity.getMinTeamSize()) {
+            throw new IllegalArgumentException("Not enough students to form groups (need at least " + activity.getMinTeamSize() + ").");
+        }
+
+        List<StudentGroupPreference> preferences = preferenceRepo.findByActivityId(activityId);
+        List<GroupFormationTopicOption> topics = topicRepo.findByActivityIdOrderByOptionOrderAsc(activityId);
+        List<GroupFormationSkillOption> skills = skillRepo.findByActivityIdOrderByOptionOrderAsc(activityId);
+
+        List<OpenAiGroupSortingService.GroupAssignment> assignments =
+                openAiSortingService.sortStudents(activity, topics, skills, preferences, enrolledStudents);
+
+        // Clear any previous groups for this activity
+        List<FormedGroup> existingGroups = formedGroupRepo.findByActivityIdOrderByGroupNumberAsc(activityId);
+        if (!existingGroups.isEmpty()) {
+            List<Long> groupIds = existingGroups.stream().map(FormedGroup::getId).toList();
+            formedGroupMemberRepo.deleteByFormedGroupIdIn(groupIds);
+            formedGroupRepo.deleteByActivityId(activityId);
+            formedGroupRepo.flush();
+        }
+
+        // Save new groups
+        for (OpenAiGroupSortingService.GroupAssignment assignment : assignments) {
+            FormedGroup group = new FormedGroup(
+                    activityId,
+                    courseId,
+                    assignment.groupNumber(),
+                    "Group " + assignment.groupNumber()
+            );
+            FormedGroup savedGroup = formedGroupRepo.save(group);
+
+            for (Long studentId : assignment.studentIds()) {
+                formedGroupMemberRepo.save(new FormedGroupMember(savedGroup.getId(), studentId));
+            }
+        }
+
+        activity.setStatus("SORTED");
+        activityRepo.save(activity);
+    }
+
+    public List<FormedGroupView> getFormedGroups(Long activityId) {
+        List<FormedGroup> groups = formedGroupRepo.findByActivityIdOrderByGroupNumberAsc(activityId);
+        if (groups.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> groupIds = groups.stream().map(FormedGroup::getId).toList();
+        List<FormedGroupMember> allMembers = formedGroupMemberRepo.findByFormedGroupIdIn(groupIds);
+
+        Map<Long, List<FormedGroupMember>> membersByGroupId = allMembers.stream()
+                .collect(Collectors.groupingBy(FormedGroupMember::getFormedGroupId));
+
+        Map<Long, User> userCache = new HashMap<>();
+
+        List<FormedGroupView> views = new ArrayList<>();
+        for (FormedGroup group : groups) {
+            List<FormedGroupMember> members = membersByGroupId.getOrDefault(group.getId(), List.of());
+            List<GroupMemberView> memberViews = new ArrayList<>();
+
+            for (FormedGroupMember member : members) {
+                User user = userCache.computeIfAbsent(member.getStudentId(),
+                        id -> userRepo.findById(id).orElse(null));
+
+                if (user != null) {
+                    memberViews.add(new GroupMemberView(user.getId(), user.getFullName(), user.getEmail()));
+                }
+            }
+
+            views.add(new FormedGroupView(group.getId(), group.getGroupNumber(), group.getGroupName(), memberViews));
+        }
+
+        return views;
+    }
+
+    public ActivityResponseStatus getResponseStatus(Long activityId, String courseId) {
+        List<CourseEnrollment> enrollments = enrollmentRepo.findByCourseId(courseId);
+        int totalEnrolled = enrollments.size();
+
+        List<StudentGroupPreference> preferences = preferenceRepo.findByActivityId(activityId);
+        Set<Long> respondedIds = preferences.stream()
+                .map(StudentGroupPreference::getStudentId)
+                .collect(Collectors.toSet());
+
+        Map<Long, User> userCache = new HashMap<>();
+        List<GroupMemberView> responded = new ArrayList<>();
+        List<GroupMemberView> notResponded = new ArrayList<>();
+
+        for (CourseEnrollment enrollment : enrollments) {
+            User user = userCache.computeIfAbsent(enrollment.getStudentId(),
+                    id -> userRepo.findById(id).orElse(null));
+
+            if (user == null) {
+                continue;
+            }
+
+            GroupMemberView view = new GroupMemberView(user.getId(), user.getFullName(), user.getEmail());
+            if (respondedIds.contains(user.getId())) {
+                responded.add(view);
+            } else {
+                notResponded.add(view);
+            }
+        }
+
+        return new ActivityResponseStatus(totalEnrolled, responded.size(), responded, notResponded);
+    }
+
+    @Transactional
+    public void moveStudentBetweenGroups(Long professorId, String courseId, Long activityId,
+                                          Long studentId, Long fromGroupId, Long toGroupId) {
+        validateProfessorOwnsCourse(professorId, courseId);
+
+        GroupFormationActivity activity = activityRepo.findByIdAndCourseId(activityId, courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found."));
+
+        if (!activity.getProfessorId().equals(professorId)) {
+            throw new IllegalArgumentException("You cannot modify this activity.");
+        }
+
+        FormedGroup fromGroup = formedGroupRepo.findById(fromGroupId)
+                .orElseThrow(() -> new IllegalArgumentException("Source group not found."));
+        FormedGroup toGroup = formedGroupRepo.findById(toGroupId)
+                .orElseThrow(() -> new IllegalArgumentException("Target group not found."));
+
+        if (!fromGroup.getActivityId().equals(activityId) || !toGroup.getActivityId().equals(activityId)) {
+            throw new IllegalArgumentException("Groups do not belong to this activity.");
+        }
+
+        formedGroupMemberRepo.deleteByFormedGroupIdAndStudentId(fromGroupId, studentId);
+        formedGroupMemberRepo.save(new FormedGroupMember(toGroupId, studentId));
+    }
+
+    public void checkAndCloseExpiredActivities(String courseId) {
+        List<GroupFormationActivity> activities = activityRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+        OffsetDateTime now = OffsetDateTime.now();
+
+        for (GroupFormationActivity activity : activities) {
+            if ("OPEN".equals(activity.getStatus()) && activity.getDeadline() != null
+                    && now.isAfter(activity.getDeadline())) {
+                activity.setStatus("CLOSED");
+                activityRepo.save(activity);
+            }
+        }
+    }
+
+    private OffsetDateTime parseDeadline(String deadlineStr) {
+        try {
+            LocalDateTime ldt = LocalDateTime.parse(deadlineStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            return ldt.atOffset(ZoneOffset.UTC);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid deadline format. Use the date/time picker.");
+        }
+    }
+
+    public record FormedGroupView(
+            Long groupId,
+            int groupNumber,
+            String groupName,
+            List<GroupMemberView> members) {
+    }
+
+    public record GroupMemberView(
+            Long studentId,
+            String fullName,
+            String email) {
+    }
+
+    public record ActivityResponseStatus(
+            int totalEnrolled,
+            int respondedCount,
+            List<GroupMemberView> responded,
+            List<GroupMemberView> notResponded) {
     }
 
     private Course validateProfessorOwnsCourse(Long professorId, String courseId) {
@@ -229,23 +496,33 @@ public class GroupFormationService {
         skillRepo.saveAll(rows);
     }
 
-    private List<String> normalizeFiveOptions(String a, String b, String c, String d, String e, String errorMessage) {
-        List<String> raw = List.of(clean(a), clean(b), clean(c), clean(d), clean(e));
+    private List<String> normalizeOptions(List<String> options, String errorMessage) {
+        if (options == null || options.isEmpty()) {
+            throw new IllegalArgumentException(errorMessage);
+        }
 
-        if (raw.stream().anyMatch(String::isBlank)) {
+        List<String> cleaned = new ArrayList<>();
+        for (String option : options) {
+            String trimmed = clean(option);
+            if (!trimmed.isBlank()) {
+                cleaned.add(trimmed);
+            }
+        }
+
+        if (cleaned.size() < 2) {
             throw new IllegalArgumentException(errorMessage);
         }
 
         Set<String> unique = new LinkedHashSet<>();
-        for (String value : raw) {
+        for (String value : cleaned) {
             unique.add(value.toLowerCase());
         }
 
-        if (unique.size() != 5) {
-            throw new IllegalArgumentException("All 5 options must be different.");
+        if (unique.size() != cleaned.size()) {
+            throw new IllegalArgumentException("All options must be different.");
         }
 
-        return raw;
+        return cleaned;
     }
 
     private int requiredPositive(Integer value, String message) {

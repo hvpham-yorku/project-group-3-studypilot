@@ -37,6 +37,7 @@
             </a>
           </div>
 
+          <!-- Flash messages -->
           <div
             th:if="${error}"
             class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
@@ -45,7 +46,16 @@
             Error
           </div>
 
+          <div
+            th:if="${success}"
+            class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+            th:text="${success}"
+          >
+            Success
+          </div>
+
           <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <!-- CREATE ACTIVITY FORM -->
             <section
               class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
             >
@@ -120,66 +130,48 @@
                   </div>
                 </div>
 
+                <!-- Deadline -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >Survey Deadline (optional)</label
+                  >
+                  <input
+                    type="datetime-local"
+                    th:field="*{deadline}"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                  <p class="text-xs text-slate-400 mt-1">
+                    Activity will auto-close at this time. Leave empty for
+                    manual close only.
+                  </p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div class="space-y-3">
                     <div>
                       <h3 class="font-semibold">Topic Options</h3>
                       <p class="text-sm text-slate-500">
-                        Enter exactly 5 different topic choices.
+                        Enter at least 2 different topic choices.
                       </p>
                     </div>
 
-                    <input
-                      type="text"
-                      th:field="*{topic1}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Topic 1"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{topic2}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Topic 2"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{topic3}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Topic 3"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{topic4}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Topic 4"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{topic5}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Topic 5"
-                      required
-                    />
+                    <div id="topicContainer" class="space-y-2">
+                      <div class="flex gap-2">
+                        <input type="text" name="topics[0]" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 1" required />
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" name="topics[1]" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Topic 2" required />
+                      </div>
+                    </div>
+                    <button type="button" onclick="addOption('topicContainer', 'topics', 'Topic')" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+                      + Add Topic
+                    </button>
 
                     <div>
-                      <label
-                        class="block text-sm font-medium text-slate-700 mb-1"
-                        >Topic Matching Style</label
-                      >
-                      <select
-                        th:field="*{groupTopicsSimilarly}"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      >
-                        <option th:value="true">
-                          Group students with similar topic interests
-                        </option>
-                        <option th:value="false">
-                          Group students with mixed topic interests
-                        </option>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Topic Matching Style</label>
+                      <select th:field="*{groupTopicsSimilarly}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <option th:value="true">Group students with similar topic interests</option>
+                        <option th:value="false">Group students with mixed topic interests</option>
                       </select>
                     </div>
                   </div>
@@ -188,61 +180,27 @@
                     <div>
                       <h3 class="font-semibold">Skill Options</h3>
                       <p class="text-sm text-slate-500">
-                        Enter exactly 5 different skill choices.
+                        Enter at least 2 different skill choices.
                       </p>
                     </div>
 
-                    <input
-                      type="text"
-                      th:field="*{skill1}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Skill 1"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{skill2}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Skill 2"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{skill3}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Skill 3"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{skill4}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Skill 4"
-                      required
-                    />
-                    <input
-                      type="text"
-                      th:field="*{skill5}"
-                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      placeholder="Skill 5"
-                      required
-                    />
+                    <div id="skillContainer" class="space-y-2">
+                      <div class="flex gap-2">
+                        <input type="text" name="skills[0]" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 1" required />
+                      </div>
+                      <div class="flex gap-2">
+                        <input type="text" name="skills[1]" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Skill 2" required />
+                      </div>
+                    </div>
+                    <button type="button" onclick="addOption('skillContainer', 'skills', 'Skill')" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+                      + Add Skill
+                    </button>
 
                     <div>
-                      <label
-                        class="block text-sm font-medium text-slate-700 mb-1"
-                        >Skill Matching Style</label
-                      >
-                      <select
-                        th:field="*{groupSkillsSimilarly}"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                      >
-                        <option th:value="true">
-                          Group students with similar skill profiles
-                        </option>
-                        <option th:value="false">
-                          Group students with mixed skill profiles
-                        </option>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Skill Matching Style</label>
+                      <select th:field="*{groupSkillsSimilarly}" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                        <option th:value="true">Group students with similar skill profiles</option>
+                        <option th:value="false">Group students with mixed skill profiles</option>
                       </select>
                     </div>
                   </div>
@@ -259,13 +217,14 @@
               </form>
             </section>
 
+            <!-- SAVED ACTIVITIES -->
             <section
               class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
             >
               <div class="mb-6">
                 <h2 class="text-xl font-bold">Saved Activities</h2>
                 <p class="text-sm text-slate-500 mt-1">
-                  View, edit, or delete group formation setups for this course.
+                  View, manage, and sort group formation activities.
                 </p>
               </div>
 
@@ -276,21 +235,43 @@
                 No group formation activities have been created yet.
               </div>
 
-              <div th:if="${!#lists.isEmpty(activities)}" class="space-y-4">
+              <div th:if="${!#lists.isEmpty(activities)}" class="space-y-6">
                 <div
                   th:each="activity : ${activities}"
-                  class="rounded-2xl border border-slate-200 p-5"
+                  class="rounded-2xl border border-slate-200 p-5 space-y-4"
                 >
+                  <!-- Activity Header -->
                   <div
                     class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4"
                   >
                     <div class="space-y-2">
-                      <h3
-                        class="text-lg font-bold"
-                        th:text="${activity.activityName}"
-                      >
-                        Activity Name
-                      </h3>
+                      <div class="flex items-center gap-3">
+                        <h3
+                          class="text-lg font-bold"
+                          th:text="${activity.activityName}"
+                        >
+                          Activity Name
+                        </h3>
+                        <!-- Status Badge -->
+                        <span
+                          th:if="${activity.status == 'OPEN'}"
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+                        >
+                          OPEN
+                        </span>
+                        <span
+                          th:if="${activity.status == 'CLOSED'}"
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"
+                        >
+                          CLOSED
+                        </span>
+                        <span
+                          th:if="${activity.status == 'SORTED'}"
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"
+                        >
+                          SORTED
+                        </span>
+                      </div>
 
                       <div
                         class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-slate-600"
@@ -320,7 +301,7 @@
                           >
                           <span
                             th:text="${activity.groupTopicsSimilarly} ? 'Similar students together' : 'Mixed topic groups'"
-                            >Similar students together</span
+                            >Similar</span
                           >
                         </p>
                         <p>
@@ -329,32 +310,249 @@
                           >
                           <span
                             th:text="${activity.groupSkillsSimilarly} ? 'Similar students together' : 'Mixed skill groups'"
-                            >Mixed skill groups</span
+                            >Mixed</span
                           >
                         </p>
                       </div>
+
+                      <!-- Deadline -->
+                      <p
+                        th:if="${activity.deadline != null}"
+                        class="text-xs text-slate-500"
+                      >
+                        Deadline:
+                        <span
+                          th:text="${#temporals.format(activity.deadline, 'MMM d, yyyy h:mm a')}"
+                          class="font-medium"
+                        ></span>
+                      </p>
                     </div>
 
-                    <div class="flex gap-2">
-                      <a
-                        th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/edit'}"
-                        class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
-                      >
-                        Edit
-                      </a>
-
-                      <form
-                        th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/delete'}"
-                        method="post"
-                        onsubmit="return confirm('Delete this activity?');"
-                      >
-                        <button
-                          type="submit"
-                          class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-2">
+                      <!-- OPEN status actions -->
+                      <th:block th:if="${activity.status == 'OPEN'}">
+                        <a
+                          th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/edit'}"
+                          class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
                         >
-                          Delete
-                        </button>
-                      </form>
+                          Edit
+                        </a>
+                        <form
+                          th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/close'}"
+                          method="post"
+                          class="inline"
+                        >
+                          <button
+                            type="submit"
+                            class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600"
+                          >
+                            Close Activity
+                          </button>
+                        </form>
+                        <form
+                          th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/delete'}"
+                          method="post"
+                          class="inline"
+                          onsubmit="return confirm('Delete this activity?');"
+                        >
+                          <button
+                            type="submit"
+                            class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
+                          >
+                            Delete
+                          </button>
+                        </form>
+                      </th:block>
+
+                      <!-- CLOSED status actions -->
+                      <th:block th:if="${activity.status == 'CLOSED'}">
+                        <form
+                          th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/auto-sort'}"
+                          method="post"
+                          class="inline"
+                        >
+                          <button
+                            type="submit"
+                            class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+                          >
+                            Auto Sort
+                          </button>
+                        </form>
+                        <form
+                          th:action="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/reopen'}"
+                          method="post"
+                          class="inline"
+                        >
+                          <button
+                            type="submit"
+                            class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+                          >
+                            Reopen
+                          </button>
+                        </form>
+                      </th:block>
+
+                      <!-- SORTED status actions -->
+                      <th:block th:if="${activity.status == 'SORTED'}">
+                        <a
+                          th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation/' + ${activity.id} + '/groups'}"
+                          class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+                        >
+                          View Groups
+                        </a>
+                      </th:block>
+                    </div>
+                  </div>
+
+                  <!-- Response Tracker -->
+                  <div
+                    th:if="${responseStatusMap.containsKey(activity.id)}"
+                    class="border-t border-slate-100 pt-4"
+                  >
+                    <div
+                      th:with="status=${responseStatusMap.get(activity.id)}"
+                      class="space-y-3"
+                    >
+                      <div class="flex items-center justify-between">
+                        <p class="text-sm font-semibold text-slate-700">
+                          Survey Responses
+                        </p>
+                        <span
+                          class="text-sm font-bold"
+                          th:classappend="${status.respondedCount == status.totalEnrolled} ? 'text-green-600' : 'text-amber-600'"
+                          th:text="${status.respondedCount + ' / ' + status.totalEnrolled + ' students'}"
+                        >
+                          0 / 0
+                        </span>
+                      </div>
+
+                      <!-- Progress bar -->
+                      <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div
+                          class="h-2 rounded-full transition-all"
+                          th:classappend="${status.respondedCount == status.totalEnrolled} ? 'bg-green-500' : 'bg-amber-500'"
+                          th:style="${'width: ' + (status.totalEnrolled > 0 ? (status.respondedCount * 100 / status.totalEnrolled) : 0) + '%'}"
+                        ></div>
+                      </div>
+
+                      <!-- Expandable student lists -->
+                      <details class="text-sm">
+                        <summary
+                          class="cursor-pointer text-slate-500 hover:text-slate-700 font-medium"
+                        >
+                          Show student details
+                        </summary>
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <!-- Responded -->
+                          <div>
+                            <p
+                              class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2"
+                            >
+                              Responded
+                              (<span
+                                th:text="${status.respondedCount}"
+                              ></span
+                              >)
+                            </p>
+                            <div
+                              th:if="${#lists.isEmpty(status.responded)}"
+                              class="text-xs text-slate-400"
+                            >
+                              No responses yet.
+                            </div>
+                            <div
+                              th:each="student : ${status.responded}"
+                              class="flex items-center gap-2 py-1"
+                            >
+                              <div
+                                class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[10px] font-bold flex-shrink-0"
+                                th:text="${#strings.substring(student.fullName, 0, 1).toUpperCase()}"
+                              >
+                                S
+                              </div>
+                              <span
+                                class="text-xs truncate"
+                                th:text="${student.fullName}"
+                                >Name</span
+                              >
+                            </div>
+                          </div>
+
+                          <!-- Not Responded -->
+                          <div>
+                            <p
+                              class="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2"
+                            >
+                              Not Responded
+                              (<span
+                                th:text="${#lists.size(status.notResponded)}"
+                              ></span
+                              >)
+                            </p>
+                            <div
+                              th:if="${#lists.isEmpty(status.notResponded)}"
+                              class="text-xs text-slate-400"
+                            >
+                              All students responded!
+                            </div>
+                            <div
+                              th:each="student : ${status.notResponded}"
+                              class="flex items-center gap-2 py-1"
+                            >
+                              <div
+                                class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-700 text-[10px] font-bold flex-shrink-0"
+                                th:text="${#strings.substring(student.fullName, 0, 1).toUpperCase()}"
+                              >
+                                S
+                              </div>
+                              <span
+                                class="text-xs truncate"
+                                th:text="${student.fullName}"
+                                >Name</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </details>
+                    </div>
+                  </div>
+
+                  <!-- Formed Groups Preview (when SORTED) -->
+                  <div
+                    th:if="${activity.status == 'SORTED' and formedGroupsMap.containsKey(activity.id)}"
+                    class="border-t border-slate-100 pt-4"
+                  >
+                    <p class="text-sm font-semibold text-slate-700 mb-3">
+                      Formed Groups
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div
+                        th:each="group : ${formedGroupsMap.get(activity.id)}"
+                        class="rounded-xl border border-blue-100 bg-blue-50 p-3"
+                      >
+                        <p
+                          class="text-sm font-bold text-blue-900"
+                          th:text="${group.groupName}"
+                        >
+                          Team
+                        </p>
+                        <p
+                          class="text-xs text-blue-700 mt-1"
+                          th:text="${#lists.size(group.members) + ' members'}"
+                        >
+                          0 members
+                        </p>
+                        <div class="mt-2 space-y-1">
+                          <p
+                            th:each="member : ${group.members}"
+                            class="text-xs text-blue-800"
+                            th:text="${member.fullName}"
+                          >
+                            Name
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -364,5 +562,33 @@
         </div>
       </div>
     </main>
+
+    <script>
+      function addOption(containerId, fieldName, label) {
+        var container = document.getElementById(containerId);
+        var count = container.querySelectorAll('input').length;
+        var div = document.createElement('div');
+        div.className = 'flex gap-2';
+        div.innerHTML = '<input type="text" name="' + fieldName + '[' + count + ']" class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="' + label + ' ' + (count + 1) + '" required />'
+          + '<button type="button" onclick="removeOption(this)" class="px-3 py-2 rounded-lg border border-red-300 text-red-600 text-sm hover:bg-red-50">Remove</button>';
+        container.appendChild(div);
+      }
+
+      function removeOption(btn) {
+        var container = btn.parentElement.parentElement;
+        if (container.querySelectorAll('input').length > 2) {
+          btn.parentElement.remove();
+          reindexInputs(container);
+        }
+      }
+
+      function reindexInputs(container) {
+        var inputs = container.querySelectorAll('input');
+        for (var i = 0; i < inputs.length; i++) {
+          var name = inputs[i].name;
+          inputs[i].name = name.replace(/\[\d+\]/, '[' + i + ']');
+        }
+      }
+    </script>
   </body>
 </html>

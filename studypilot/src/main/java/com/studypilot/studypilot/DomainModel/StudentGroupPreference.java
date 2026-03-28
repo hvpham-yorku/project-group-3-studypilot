@@ -41,6 +41,9 @@ public class StudentGroupPreference {
     @Column(name = "notes", length = 600)
     private String notes;
 
+    @Column(name = "availability_slots", length = 1000)
+    private String availabilitySlots;
+
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
@@ -109,5 +112,13 @@ public class StudentGroupPreference {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getAvailabilitySlots() {
+        return availabilitySlots;
+    }
+
+    public void setAvailabilitySlots(String availabilitySlots) {
+        this.availabilitySlots = availabilitySlots;
     }
 }

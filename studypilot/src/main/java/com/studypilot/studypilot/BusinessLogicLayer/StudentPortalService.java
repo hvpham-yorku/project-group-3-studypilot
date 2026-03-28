@@ -5,22 +5,29 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupMemberRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
 import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
+import com.studypilot.studypilot.DomainModel.FormedGroup;
+import com.studypilot.studypilot.DomainModel.FormedGroupMember;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
 import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
 import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
+import com.studypilot.studypilot.DomainModel.User;
 
 @Service
 public class StudentPortalService {
@@ -31,19 +38,28 @@ public class StudentPortalService {
     private final GroupFormationTopicOptionRepo groupFormationTopicOptionRepo;
     private final GroupFormationSkillOptionRepo groupFormationSkillOptionRepo;
     private final StudentGroupPreferenceRepo studentGroupPreferenceRepo;
+    private final FormedGroupRepo formedGroupRepo;
+    private final FormedGroupMemberRepo formedGroupMemberRepo;
+    private final UserRepo userRepo;
 
     public StudentPortalService(CourseRepo courseRepo,
             CourseEnrollmentRepo courseEnrollmentRepo,
             GroupFormationActivityRepo groupFormationActivityRepo,
             GroupFormationTopicOptionRepo groupFormationTopicOptionRepo,
             GroupFormationSkillOptionRepo groupFormationSkillOptionRepo,
-            StudentGroupPreferenceRepo studentGroupPreferenceRepo) {
+            StudentGroupPreferenceRepo studentGroupPreferenceRepo,
+            FormedGroupRepo formedGroupRepo,
+            FormedGroupMemberRepo formedGroupMemberRepo,
+            UserRepo userRepo) {
         this.courseRepo = courseRepo;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.groupFormationActivityRepo = groupFormationActivityRepo;
         this.groupFormationTopicOptionRepo = groupFormationTopicOptionRepo;
         this.groupFormationSkillOptionRepo = groupFormationSkillOptionRepo;
         this.studentGroupPreferenceRepo = studentGroupPreferenceRepo;
+        this.formedGroupRepo = formedGroupRepo;
+        this.formedGroupMemberRepo = formedGroupMemberRepo;
+        this.userRepo = userRepo;
     }
 
     public List<Course> getStudentCourses(Long studentId) {
@@ -151,12 +167,17 @@ public class StudentPortalService {
             Long activityId,
             String topicChoice,
             String skillChoice,
-            String notes) {
+            String notes,
+            String availabilitySlots) {
         requireStudent(studentId);
         Course course = requireStudentEnrollment(studentId, courseId);
 
         GroupFormationActivity activity = groupFormationActivityRepo.findByIdAndCourseId(activityId, course.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Group formation activity not found."));
+
+        if (!"OPEN".equals(activity.getStatus())) {
+            throw new IllegalArgumentException("This survey is no longer accepting responses.");
+        }
 
         List<GroupFormationTopicOption> topics = getTopicOptions(activity.getId());
         List<GroupFormationSkillOption> skills = getSkillOptions(activity.getId());
@@ -164,6 +185,7 @@ public class StudentPortalService {
         String cleanTopic = clean(topicChoice);
         String cleanSkill = clean(skillChoice);
         String cleanNotes = notes == null ? "" : notes.trim();
+        String cleanAvailability = availabilitySlots == null ? "" : availabilitySlots.trim();
 
         boolean topicExists = topics.stream().anyMatch(t -> t.getTopicText().equals(cleanTopic));
         boolean skillExists = skills.stream().anyMatch(s -> s.getSkillText().equals(cleanSkill));
@@ -181,6 +203,7 @@ public class StudentPortalService {
             preference.setTopicChoice(cleanTopic);
             preference.setSkillChoice(cleanSkill);
             preference.setNotes(cleanNotes);
+            preference.setAvailabilitySlots(cleanAvailability);
             return studentGroupPreferenceRepo.save(preference);
         }
 
@@ -192,7 +215,60 @@ public class StudentPortalService {
                 cleanSkill,
                 cleanNotes
         );
+        preference.setAvailabilitySlots(cleanAvailability);
         return studentGroupPreferenceRepo.save(preference);
+    }
+
+    public Optional<StudentGroupInfo> getStudentGroupForCourse(Long studentId, String courseId) {
+        List<FormedGroup> courseGroups = formedGroupRepo.findByCourseId(courseId);
+        if (courseGroups.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<FormedGroupMember> studentMemberships = formedGroupMemberRepo.findByStudentId(studentId);
+        Set<Long> courseGroupIds = courseGroups.stream().map(FormedGroup::getId).collect(Collectors.toSet());
+
+        for (FormedGroupMember membership : studentMemberships) {
+            if (courseGroupIds.contains(membership.getFormedGroupId())) {
+                FormedGroup group = courseGroups.stream()
+                        .filter(g -> g.getId().equals(membership.getFormedGroupId()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (group != null) {
+                    List<FormedGroupMember> groupMembers = formedGroupMemberRepo.findByFormedGroupId(group.getId());
+                    List<GroupMemberInfo> memberInfos = new ArrayList<>();
+
+                    for (FormedGroupMember member : groupMembers) {
+                        userRepo.findById(member.getStudentId()).ifPresent(user ->
+                                memberInfos.add(new GroupMemberInfo(user.getId(), user.getFullName(), user.getEmail())));
+                    }
+
+                    return Optional.of(new StudentGroupInfo(
+                            group.getId(),
+                            group.getGroupName(),
+                            group.getGroupNumber(),
+                            group.getActivityId(),
+                            memberInfos));
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public record StudentGroupInfo(
+            Long groupId,
+            String groupName,
+            int groupNumber,
+            Long activityId,
+            List<GroupMemberInfo> members) {
+    }
+
+    public record GroupMemberInfo(
+            Long studentId,
+            String fullName,
+            String email) {
     }
 
     private void requireStudent(Long studentId) {
