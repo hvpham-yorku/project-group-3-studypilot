@@ -294,7 +294,7 @@ public class StudentHomeController {
                     Long questionId = Long.parseLong(idPart);
                     selectedByQuestionId.put(questionId, entry.getValue());
                 } catch (NumberFormatException ignored) {
-                    // Skip malformed question keys.
+                    
                 }
             }
 

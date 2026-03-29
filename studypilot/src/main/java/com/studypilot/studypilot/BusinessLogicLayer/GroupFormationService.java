@@ -2,20 +2,29 @@ package com.studypilot.studypilot.BusinessLogicLayer;
 
 import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.TeamRepo;
+import com.studypilot.studypilot.DataAccessLayer.TeamMemberRepo;
+
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
-import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
 import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
+import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
+import com.studypilot.studypilot.DomainModel.Team;
+import com.studypilot.studypilot.DomainModel.TeamMember;
+
 import com.studypilot.studypilot.GUILayer.CreateGroupFormationForm;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupFormationService {
@@ -24,15 +33,29 @@ public class GroupFormationService {
     private final GroupFormationActivityRepo activityRepo;
     private final GroupFormationTopicOptionRepo topicRepo;
     private final GroupFormationSkillOptionRepo skillRepo;
+    private final TeamRepo teamRepo;
+    private final TeamMemberRepo teamMemberRepo;
+    private final AvailabilityService availabilityService;
+    private final GroupFormationAlgorithmService algorithmService;
 
-    public GroupFormationService(CourseRepo courseRepo,
-                                 GroupFormationActivityRepo activityRepo,
-                                 GroupFormationTopicOptionRepo topicRepo,
-                                 GroupFormationSkillOptionRepo skillRepo) {
+    public GroupFormationService(
+            CourseRepo courseRepo,
+            GroupFormationActivityRepo activityRepo,
+            GroupFormationTopicOptionRepo topicRepo,
+            GroupFormationSkillOptionRepo skillRepo,
+            TeamRepo teamRepo,
+            TeamMemberRepo teamMemberRepo,
+            AvailabilityService availabilityService,
+            GroupFormationAlgorithmService algorithmService) {
+
         this.courseRepo = courseRepo;
         this.activityRepo = activityRepo;
         this.topicRepo = topicRepo;
         this.skillRepo = skillRepo;
+        this.teamRepo = teamRepo;
+        this.teamMemberRepo = teamMemberRepo;
+        this.availabilityService = availabilityService;
+        this.algorithmService = algorithmService;
     }
 
     @Transactional
@@ -68,7 +91,6 @@ public class GroupFormationService {
         );
 
         GroupFormationActivity saved = activityRepo.save(activity);
-
         saveTopics(saved.getId(), topics);
         saveSkills(saved.getId(), skills);
 
@@ -77,6 +99,10 @@ public class GroupFormationService {
 
     public List<GroupFormationActivity> getActivitiesForCourse(String courseId) {
         return activityRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
+    }
+
+    public List<Team> getTeamsForCourse(String courseId) {
+        return teamRepo.findByCourseIdOrderByIdAsc(courseId);
     }
 
     public CreateGroupFormationForm getEditForm(String courseId, Long activityId, Long professorId) {
@@ -183,6 +209,68 @@ public class GroupFormationService {
         activityRepo.delete(activity);
     }
 
+    @Transactional
+    public void saveSurveyGroups(Long activityId, String courseId, List<Long> studentIds) {
+
+        List<GroupFormationAlgorithmService.StudentSurveyProfile> students = studentIds.stream()
+                .map(id -> new GroupFormationAlgorithmService.StudentSurveyProfile(
+                        id,
+                        true,
+                        availabilityService.getStudentAvailabilitySet(id, courseId),
+                        new HashSet<>(),
+                        new HashSet<>(),
+                        2
+                ))
+                .collect(Collectors.toList());
+
+        GroupFormationAlgorithmService.GroupingRequest request =
+                new GroupFormationAlgorithmService.GroupingRequest(
+                        3,
+                        2,
+                        5,
+                        true,
+                        true,
+                        new HashSet<>(studentIds),
+                        students
+                );
+
+        GroupFormationAlgorithmService.GroupingResult result =
+                algorithmService.generateGroups(request, courseId);
+
+        List<List<Long>> groups = result.teams().stream()
+                .map(GroupFormationAlgorithmService.GroupTeam::memberIds)
+                .collect(Collectors.toList());
+
+        saveSurveyGroups(activityId, courseId, groups, null);
+    }
+
+    @Transactional
+    public void saveSurveyGroups(Long activityId, String courseId, List<List<Long>> groups, List<String> groupNames) {
+
+        for (int i = 0; i < groups.size(); i++) {
+            List<Long> studentIds = groups.get(i);
+
+            String teamName = (groupNames != null && i < groupNames.size() && groupNames.get(i) != null
+                    && !groupNames.get(i).trim().isBlank())
+                    ? groupNames.get(i).trim()
+                    : "Team " + (i + 1);
+
+            Team team = new Team();
+            team.setActivityId(activityId);
+            team.setCourseId(courseId);
+            team.setTeamName(teamName);
+
+            team = teamRepo.save(team);
+            final Long teamId = team.getId();
+
+            List<TeamMember> members = studentIds.stream()
+                    .map(studentId -> new TeamMember(teamId, studentId))
+                    .collect(Collectors.toList());
+
+            teamMemberRepo.saveAll(members);
+        }
+    }
+
     private Course validateProfessorOwnsCourse(Long professorId, String courseId) {
         if (professorId == null) {
             throw new IllegalArgumentException("Professor must be logged in.");
@@ -199,10 +287,10 @@ public class GroupFormationService {
     }
 
     private void validateSizes(int preferred, int min, int max) {
-        if (cleanInt(preferred) < 2) {
+        if (preferred < 2) {
             throw new IllegalArgumentException("Preferred group size must be at least 2.");
         }
-        if (cleanInt(min) < 2) {
+        if (min < 2) {
             throw new IllegalArgumentException("Minimum team size must be at least 2.");
         }
         if (min > preferred) {
@@ -252,10 +340,6 @@ public class GroupFormationService {
         if (value == null || value <= 0) {
             throw new IllegalArgumentException(message);
         }
-        return value;
-    }
-
-    private int cleanInt(int value) {
         return value;
     }
 

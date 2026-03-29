@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Availability</title>
+</head>
+<body>
+    <h2>Select Availability</h2>
+
+    <form method="post" action="/student/availability">
+
+        <input type="hidden" name="courseId" th:value="${courseId}" />
+
+        <div th:each="slot : ${slots}">
+            <label>
+                <input type="checkbox" name="slots" th:value="${slot}">
+                <span th:text="${slot}"></span>
+            </label>
+        </div>
+
+        <button type="submit">Save</button>
+
+    </form>
+</body>
+</html>

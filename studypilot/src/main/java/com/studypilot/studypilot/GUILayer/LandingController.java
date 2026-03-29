@@ -8,6 +8,6 @@ public class LandingController {
 
     @GetMapping("/")
     public String showLandingPage() {
-        return "landing-page"; // This should correspond to the Thymeleaf template file "landing.html"
+        return "landing-page"; 
     }
 }

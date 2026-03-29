@@ -56,7 +56,7 @@ public class SidebarPagesController {
         if (!isAuthenticated(session)) {
             return "redirect:/login";
         }
-        // FAQ page removed; redirect students to the new weekly surveys page
+        
         Object role = session.getAttribute("role");
         if ("STUDENT".equals(role)) {
             return "redirect:/student/surveys";

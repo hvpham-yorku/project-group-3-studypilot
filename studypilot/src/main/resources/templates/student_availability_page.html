@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Availability | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader('My Availability', false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up space-y-8">
+        <div class="max-w-5xl mx-auto w-full space-y-8">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          >
+            <div>
+              <p class="text-sm text-slate-500">Course Space</p>
+              <h1 class="text-3xl font-bold">My Availability</h1>
+              <p class="text-slate-600 mt-2">
+                <span th:text="${course.courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${course.courseName}">Software Design</span>
+              </p>
+            </div>
+
+            <a
+              th:href="@{'/student/' + ${course.id}}"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+            >
+              Back to Course Space
+            </a>
+          </div>
+
+          <div
+            th:if="${success}"
+            class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+            th:text="${success}"
+          >
+            Saved
+          </div>
+
+          <div
+            th:if="${error}"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            th:text="${error}"
+          >
+            Error
+          </div>
+
+          <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+            <div class="mb-6">
+              <h2 class="text-xl font-bold">Select Your Available Time Slots</h2>
+              <p class="text-sm text-slate-500 mt-1">
+                Choose all times when you are available for group meetings.
+              </p>
+            </div>
+
+            <div
+              th:if="${courseSlots == null || #lists.isEmpty(courseSlots)}"
+              class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500"
+            >
+              No time slots have been created for this course yet.
+            </div>
+
+            <form
+              th:if="${courseSlots != null && !#lists.isEmpty(courseSlots)}"
+              th:action="@{'/student/' + ${course.id} + '/availability'}"
+              th:object="${form}"
+              method="post"
+              class="space-y-6"
+            >
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <label
+                  th:each="slot : ${courseSlots}"
+                  class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    th:field="*{selectedSlots}"
+                    th:value="${slot.slotLabel}"
+                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="text-sm font-medium text-slate-800"
+                        th:text="${slot.slotLabel}">
+                    MON_2PM
+                  </span>
+                </label>
+              </div>
+
+              <div class="flex justify-end">
+                <button
+                  type="submit"
+                  class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
+                >
+                  Save Availability
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
