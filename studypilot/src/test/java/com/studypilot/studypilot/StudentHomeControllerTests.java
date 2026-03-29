@@ -20,6 +20,9 @@ import com.studypilot.studypilot.GUILayer.StudentHomeController;
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * StudentHomeControllerTests component.
+ */
 class StudentHomeControllerTests {
 
     private StudentHomeController controller;

@@ -23,6 +23,9 @@ import com.studypilot.studypilot.GUILayer.ProfessorHomeController;
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * ProfessorHomeControllerTests component.
+ */
 class ProfessorHomeControllerTests {
 
     private ProfessorHomeController controller;

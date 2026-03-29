@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.studypilot.studypilot.GUILayer.LoginForm;
 
+/**
+ * LoginFormTests component.
+ */
 public class LoginFormTests {
 
     @Test

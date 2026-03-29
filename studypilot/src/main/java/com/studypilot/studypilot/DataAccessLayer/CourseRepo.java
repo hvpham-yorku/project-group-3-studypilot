@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.Course;
 
+/**
+ * CourseRepo component.
+ */
 public interface CourseRepo extends JpaRepository<Course, String> {
 
     List<Course> findByProfessorIdOrderByCreatedAtDesc(Long professorId);

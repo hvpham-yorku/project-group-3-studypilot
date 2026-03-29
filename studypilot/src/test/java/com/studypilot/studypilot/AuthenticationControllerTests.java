@@ -19,6 +19,9 @@ import com.studypilot.studypilot.GUILayer.RegisterForm;
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * AuthenticationControllerTests component.
+ */
 class AuthenticationControllerTests {
 
     private Authentication authService;

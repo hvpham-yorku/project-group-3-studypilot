@@ -18,6 +18,9 @@ import jakarta.persistence.UniqueConstraint;
         name = "weekly_surveys",
         uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "week_start"})
 )
+/**
+ * WeeklySurvey component.
+ */
 public class WeeklySurvey {
 
     @Id

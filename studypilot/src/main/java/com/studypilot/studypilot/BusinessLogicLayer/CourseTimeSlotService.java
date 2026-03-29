@@ -13,6 +13,9 @@ import com.studypilot.studypilot.DataAccessLayer.CourseTimeSlotRepo;
 import com.studypilot.studypilot.DomainModel.CourseTimeSlot;
 
 @Service
+/**
+ * Manages course-level meeting slot options configured by professors.
+ */
 public class CourseTimeSlotService {
 
     private final CourseTimeSlotRepo repository;
@@ -21,6 +24,9 @@ public class CourseTimeSlotService {
         this.repository = repository;
     }
 
+    /**
+     * Returns saved slot labels for a course in database order.
+     */
     public List<String> getSlotsForCourse(String courseId) {
         return repository.findByCourseId(courseId)
                 .stream()
@@ -28,6 +34,9 @@ public class CourseTimeSlotService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Canonical list of selectable meeting slots shown in the professor UI.
+     */
     public List<String> getPresetSlotOptions() {
         return List.of(
                 "Mon 09:00-10:00", "Mon 10:00-11:00", "Mon 14:00-15:00", "Mon 16:00-17:00",
@@ -38,6 +47,10 @@ public class CourseTimeSlotService {
     }
 
     @Transactional
+    /**
+     * Replaces all published slots for a course with the provided valid
+     * selections.
+     */
     public void replaceSlotsForCourse(String courseId, List<String> selectedSlots) {
         repository.deleteByCourseId(courseId);
 

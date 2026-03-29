@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * RegisterForm component.
+ */
 public class RegisterForm {
 
     private String fullName;

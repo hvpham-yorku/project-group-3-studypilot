@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * StudentJoinCourseForm component.
+ */
 public class StudentJoinCourseForm {
 
     private String joinCode;

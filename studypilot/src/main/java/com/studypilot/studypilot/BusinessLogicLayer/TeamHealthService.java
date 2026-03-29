@@ -25,6 +25,9 @@ import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 
 @Service
+/**
+ * TeamHealthService component.
+ */
 public class TeamHealthService {
 
     private final CourseRepo courseRepo;

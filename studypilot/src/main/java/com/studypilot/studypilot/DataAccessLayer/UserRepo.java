@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.User;
 
+/**
+ * UserRepo component.
+ */
 public interface UserRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);

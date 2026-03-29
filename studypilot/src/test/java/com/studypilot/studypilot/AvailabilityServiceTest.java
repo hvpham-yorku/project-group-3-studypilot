@@ -24,6 +24,9 @@ import com.studypilot.studypilot.DomainModel.Availability;
 import com.studypilot.studypilot.DomainModel.CourseTimeSlot;
 import com.studypilot.studypilot.DomainModel.TeamMember;
 
+/**
+ * AvailabilityServiceTest component.
+ */
 class AvailabilityServiceTest {
 
     private AvailabilityRepo availabilityRepo;

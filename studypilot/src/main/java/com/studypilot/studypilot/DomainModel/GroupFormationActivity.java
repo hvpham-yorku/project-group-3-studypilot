@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "group_formation_activities")
+/**
+ * GroupFormationActivity component.
+ */
 public class GroupFormationActivity {
 
     @Id

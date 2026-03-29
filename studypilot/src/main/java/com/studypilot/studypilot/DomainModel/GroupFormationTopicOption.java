@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "group_formation_topic_options")
+/**
+ * GroupFormationTopicOption component.
+ */
 public class GroupFormationTopicOption {
 
     @Id

@@ -21,6 +21,13 @@ import com.studypilot.studypilot.DomainModel.TeamMember;
 import com.studypilot.studypilot.DomainModel.User;
 
 @Service
+/**
+ * Encapsulates availability persistence and aggregation logic.
+ *
+ * Service responsibilities: 1) store a student's selected slots for a course,
+ * 2) build team-level overlap summaries, 3) build per-student submission
+ * details for professor review.
+ */
 public class AvailabilityService {
 
     private final AvailabilityRepo availabilityRepo;
@@ -40,6 +47,9 @@ public class AvailabilityService {
     }
 
     @Transactional
+    /**
+     * Replaces a student's availability rows for the specified course.
+     */
     public void saveAvailability(Long studentId, String courseId, List<String> timeSlots) {
         availabilityRepo.deleteByStudentIdAndCourseId(studentId, courseId);
 
@@ -54,6 +64,9 @@ public class AvailabilityService {
         }
     }
 
+    /**
+     * Returns the student's availability as a set for quick membership checks.
+     */
     public Set<String> getStudentAvailabilitySet(Long studentId, String courseId) {
         List<Availability> rows = availabilityRepo.findByStudentIdAndCourseId(studentId, courseId);
         Set<String> result = new HashSet<>();
@@ -65,6 +78,9 @@ public class AvailabilityService {
         return result;
     }
 
+    /**
+     * Aggregates team overlap counts per published course slot.
+     */
     public TeamAvailabilitySummary getTeamAvailabilitySummary(Long teamId, String courseId) {
         List<TeamMember> members = teamMemberRepo.findByTeamId(teamId);
         int teamSize = members.size();
@@ -105,6 +121,10 @@ public class AvailabilityService {
         return new TeamAvailabilitySummary(orderedCounts, bestCount, teamSize);
     }
 
+    /**
+     * Returns one row per team member including submission status and selected
+     * slots.
+     */
     public List<TeamStudentAvailabilityRow> getTeamStudentAvailability(Long teamId, String courseId) {
         List<TeamMember> members = teamMemberRepo.findByTeamId(teamId);
         List<Long> studentIds = members.stream()
@@ -157,6 +177,9 @@ public class AvailabilityService {
 
     }
 
+    /**
+     * View model row for professor-facing student submission details.
+     */
     public record TeamStudentAvailabilityRow(
             Long studentId,
             String fullName,

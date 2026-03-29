@@ -7,6 +7,9 @@ import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.User;
 
 @Service
+/**
+ * Authentication component.
+ */
 public class Authentication {
 
     private final UserRepo userRepository;

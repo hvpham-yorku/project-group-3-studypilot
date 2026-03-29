@@ -10,6 +10,9 @@ import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 
 @Service
+/**
+ * CourseService component.
+ */
 public class CourseService {
 
     private static final String JOIN_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

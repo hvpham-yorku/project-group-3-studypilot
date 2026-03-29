@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import com.studypilot.studypilot.GUILayer.LandingController;
 
+/**
+ * LandingControllerTests component.
+ */
 class LandingControllerTests {
 
     @Test

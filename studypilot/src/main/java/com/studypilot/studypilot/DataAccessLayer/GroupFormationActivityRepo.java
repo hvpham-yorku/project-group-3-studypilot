@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 
+/**
+ * GroupFormationActivityRepo component.
+ */
 public interface GroupFormationActivityRepo extends JpaRepository<GroupFormationActivity, Long> {
 
     List<GroupFormationActivity> findByCourseIdOrderByCreatedAtDesc(String courseId);

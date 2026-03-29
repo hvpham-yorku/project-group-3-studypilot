@@ -5,6 +5,9 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "teams")
+/**
+ * Team component.
+ */
 public class Team {
 
     @Id

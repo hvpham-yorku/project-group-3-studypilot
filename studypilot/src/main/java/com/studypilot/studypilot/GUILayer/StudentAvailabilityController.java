@@ -22,6 +22,12 @@ import com.studypilot.studypilot.DomainModel.CourseTimeSlot;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * Student-facing availability endpoints.
+ *
+ * Students view professor-published course slots and submit selections that are
+ * later summarized on professor team availability pages.
+ */
 public class StudentAvailabilityController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
@@ -40,6 +46,9 @@ public class StudentAvailabilityController {
     }
 
     @GetMapping("/student/{courseId}/availability")
+    /**
+     * Renders the availability page with all published course slots.
+     */
     public String showAvailabilityPage(@PathVariable("courseId") String courseId,
             HttpSession session,
             Model model) {
@@ -68,6 +77,9 @@ public class StudentAvailabilityController {
     }
 
     @PostMapping("/student/{courseId}/availability")
+    /**
+     * Saves student selections and returns the same page with confirmation.
+     */
     public String saveAvailability(@PathVariable("courseId") String courseId,
             @ModelAttribute("form") AvailabilityForm form,
             HttpSession session,

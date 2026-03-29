@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "course_enrollments")
+/**
+ * CourseEnrollment component.
+ */
 public class CourseEnrollment {
 
     @Id

@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * CreateGroupFormationForm component.
+ */
 public class CreateGroupFormationForm {
 
     private String activityName;

@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.studypilot.studypilot.BusinessLogicLayer.CourseTimeSlotService;
 
 @Controller
+/**
+ * StudentController component.
+ */
 public class StudentController {
 
     private final CourseTimeSlotService slotService;

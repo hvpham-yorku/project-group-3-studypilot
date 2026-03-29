@@ -16,6 +16,9 @@ import com.studypilot.studypilot.BusinessLogicLayer.Authentication;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.User;
 
+/**
+ * AuthenticationTests component.
+ */
 public class AuthenticationTests {
 
     private Authentication auth;

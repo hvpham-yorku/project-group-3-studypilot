@@ -25,6 +25,9 @@ import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
 import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
 
 @Service
+/**
+ * StudentPortalService component.
+ */
 public class StudentPortalService {
 
     private final CourseRepo courseRepo;

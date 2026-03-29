@@ -31,6 +31,12 @@ import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * Student portal controller.
+ *
+ * Handles student dashboard, enrolled courses, weekly surveys, and
+ * group-formation preference submission flows.
+ */
 public class StudentHomeController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
@@ -50,6 +56,9 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/home")
+    /**
+     * Renders the student home page with enrolled and joinable courses.
+     */
     public String studentHome(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -69,6 +78,9 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/courses")
+    /**
+     * Renders the student's course list page.
+     */
     public String studentCourses(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -81,6 +93,9 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/surveys")
+    /**
+     * Renders weekly survey hub and submission status per active course.
+     */
     public String studentSurveys(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -117,6 +132,9 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/surveys/checkin")
+    /**
+     * Saves the student's weekly check-in for a specific course.
+     */
     public String submitHealthSurvey(@RequestParam("courseId") String courseId,
             @RequestParam("healthScore") Integer healthScore,
             @RequestParam("workloadScore") Integer workloadScore,
@@ -147,6 +165,9 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/course/join")
+    /**
+     * Enrolls a student into a course using a join code.
+     */
     public String joinCourse(@ModelAttribute("joinForm") StudentJoinCourseForm form,
             HttpSession session,
             Model model) {
@@ -165,6 +186,9 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/{courseId}/{courseSlug}")
+    /**
+     * Renders the student course workspace including survey and team context.
+     */
     public String studentCoursePage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -215,6 +239,9 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/{courseId}/{courseSlug}/group-formation")
+    /**
+     * Displays group formation preference form for the latest activity.
+     */
     public String groupFormationPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -259,6 +286,9 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/{courseId}/{courseSlug}/group-formation")
+    /**
+     * Persists student topic/skill preferences for group formation.
+     */
     public String submitGroupFormation(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             @RequestParam("activityId") Long activityId,

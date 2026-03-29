@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
 
+/**
+ * StudentGroupPreferenceRepo component.
+ */
 public interface StudentGroupPreferenceRepo extends JpaRepository<StudentGroupPreference, Long> {
 
     Optional<StudentGroupPreference> findByActivityIdAndStudentId(Long activityId, Long studentId);

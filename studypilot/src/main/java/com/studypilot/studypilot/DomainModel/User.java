@@ -12,6 +12,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
+/**
+ * User component.
+ */
 public class User {
 
     @Id

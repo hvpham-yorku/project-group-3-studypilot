@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * CreateCourseForm component.
+ */
 public class CreateCourseForm {
 
     private String courseCode;

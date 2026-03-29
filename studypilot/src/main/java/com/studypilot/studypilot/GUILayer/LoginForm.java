@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * LoginForm component.
+ */
 public class LoginForm {
 
     private String email;

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.studypilot.studypilot.DomainModel.TeamMember;
 
 @Repository
+/**
+ * TeamMemberRepo component.
+ */
 public interface TeamMemberRepo extends JpaRepository<TeamMember, Long> {
 
     List<TeamMember> findByTeamId(Long teamId);

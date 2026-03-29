@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
+/**
+ * GroupFormationAlgorithmService component.
+ */
 public class GroupFormationAlgorithmService {
 
     private final AvailabilityService availabilityService;

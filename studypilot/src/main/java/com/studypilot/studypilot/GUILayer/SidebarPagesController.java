@@ -21,6 +21,9 @@ import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * SidebarPagesController component.
+ */
 public class SidebarPagesController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");

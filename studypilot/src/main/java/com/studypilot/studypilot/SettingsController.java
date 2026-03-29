@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * SettingsController component.
+ */
 public class SettingsController {
 
     @GetMapping("/settings")

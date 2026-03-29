@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 
+/**
+ * WeeklySurveyRepo component.
+ */
 public interface WeeklySurveyRepo extends JpaRepository<WeeklySurvey, Long> {
 
     Optional<WeeklySurvey> findByCourseIdAndWeekStart(String courseId, LocalDate weekStart);

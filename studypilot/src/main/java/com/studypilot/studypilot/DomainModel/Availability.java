@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "student_availability")
+/**
+ * Availability component.
+ */
 public class Availability {
 
     @Id

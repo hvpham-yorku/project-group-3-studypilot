@@ -19,6 +19,13 @@ import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * Handles professor-facing group formation and team availability pages.
+ *
+ * This controller owns the flow where professors: 1) create/edit group
+ * formation activities, 2) publish course-level time slot options, 3) inspect
+ * team-level availability summaries and student submissions.
+ */
 public class GroupFormationController {
 
     private final CourseService courseService;
@@ -37,6 +44,10 @@ public class GroupFormationController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/group-formation")
+    /**
+     * Displays group formation configuration and generated teams for one
+     * course.
+     */
     public String showGroupFormationPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -69,6 +80,10 @@ public class GroupFormationController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/team-availability")
+    /**
+     * Displays the page where professors publish course time slot options that
+     * students can select from when submitting availability.
+     */
     public String showTeamAvailabilityOverview(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -95,6 +110,10 @@ public class GroupFormationController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/team-availability")
+    /**
+     * Saves professor-selected course time slot options and re-renders the
+     * overview.
+     */
     public String saveTeamAvailabilitySlots(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             @ModelAttribute("slotForm") CourseTimeSlotForm slotForm,
@@ -249,6 +268,10 @@ public class GroupFormationController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/group-formation/teams/{teamId}/availability")
+    /**
+     * Shows team-level availability analytics including per-student
+     * submissions.
+     */
     public String showTeamAvailabilityPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             @PathVariable("teamId") Long teamId,
@@ -299,6 +322,7 @@ public class GroupFormationController {
             String courseSlug,
             CourseTimeSlotForm slotForm,
             List<String> selectedSlots) {
+        // Keep the form in sync with saved values so checkboxes stay selected after save.
         CourseTimeSlotForm formToRender = slotForm == null ? new CourseTimeSlotForm() : slotForm;
         formToRender.setSelectedSlots(selectedSlots);
 

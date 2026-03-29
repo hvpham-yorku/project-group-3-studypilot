@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "course_time_slots")
+/**
+ * CourseTimeSlot component.
+ */
 public class CourseTimeSlot {
 
     @Id

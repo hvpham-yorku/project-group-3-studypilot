@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "courses")
+/**
+ * Course component.
+ */
 public class Course {
 
     @Id

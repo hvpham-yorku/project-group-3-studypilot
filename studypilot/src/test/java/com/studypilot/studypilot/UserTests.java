@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import com.studypilot.studypilot.DomainModel.User;
 
+/**
+ * UserTests component.
+ */
 class UserTests {
 
     @Test

@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 
+/**
+ * TeamHealthCheckinRepo component.
+ */
 public interface TeamHealthCheckinRepo extends JpaRepository<TeamHealthCheckin, Long> {
 
     Optional<TeamHealthCheckin> findByCourseIdAndStudentIdAndWeekStart(String courseId, Long studentId, LocalDate weekStart);

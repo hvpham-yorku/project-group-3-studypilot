@@ -13,6 +13,9 @@ import com.studypilot.studypilot.DomainModel.User;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * AuthenticationController component.
+ */
 public class AuthenticationController {
 
     private final Authentication authService;

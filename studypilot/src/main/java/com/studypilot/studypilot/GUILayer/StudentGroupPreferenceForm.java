@@ -1,5 +1,8 @@
 package com.studypilot.studypilot.GUILayer;
 
+/**
+ * StudentGroupPreferenceForm component.
+ */
 public class StudentGroupPreferenceForm {
 
     private String topicChoice;

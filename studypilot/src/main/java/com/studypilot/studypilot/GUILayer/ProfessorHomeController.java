@@ -33,6 +33,12 @@ import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+/**
+ * Professor dashboard and course-space controller.
+ *
+ * Responsibilities: 1) render professor home analytics, 2) create courses, 3)
+ * render course pages, 4) publish and review weekly surveys.
+ */
 public class ProfessorHomeController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
@@ -54,6 +60,9 @@ public class ProfessorHomeController {
     }
 
     @GetMapping("/prof/home")
+    /**
+     * Renders the professor home page with health metrics and active courses.
+     */
     public String profHome(HttpSession session, Model model) {
         Object role = session.getAttribute("role");
         if (!"PROFESSOR".equals(role)) {
@@ -82,6 +91,9 @@ public class ProfessorHomeController {
     }
 
     @PostMapping("/prof/course/create")
+    /**
+     * Creates a new course owned by the logged-in professor.
+     */
     public String createCourse(@ModelAttribute("form") CreateCourseForm form, HttpSession session, Model model) {
         Object role = session.getAttribute("role");
         if (!"PROFESSOR".equals(role)) {
@@ -104,6 +116,9 @@ public class ProfessorHomeController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}")
+    /**
+     * Renders one professor course page including enrolled student list.
+     */
     public String coursePage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -141,6 +156,9 @@ public class ProfessorHomeController {
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/surveys")
+    /**
+     * Shows weekly survey management for a specific course.
+     */
     public String weeklySurveyPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -164,6 +182,9 @@ public class ProfessorHomeController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/surveys")
+    /**
+     * Publishes or updates the current week's survey for a course.
+     */
     public String publishWeeklySurvey(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             @RequestParam("title") String title,
@@ -200,6 +221,7 @@ public class ProfessorHomeController {
     }
 
     private void populateCourseSurveyModel(Course course, Long professorId, HttpSession session, Model model) {
+        // Computes submission and missing-student data used by the survey management UI.
         LocalDate weekStart = teamHealthService.getWeekStart(LocalDate.now());
         WeeklySurvey survey = teamHealthService.getWeeklySurveyForCourseAndWeek(professorId, course.getId(), weekStart);
 

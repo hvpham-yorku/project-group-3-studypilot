@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.studypilot.studypilot.DomainModel.Team;
 
 @Repository
+/**
+ * TeamRepo component.
+ */
 public interface TeamRepo extends JpaRepository<Team, Long> {
 
     List<Team> findByCourseIdOrderByIdAsc(String courseId);

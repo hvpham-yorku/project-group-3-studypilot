@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.studypilot.studypilot.DomainModel.Availability;
 
 @Repository
+/**
+ * AvailabilityRepo component.
+ */
 public interface AvailabilityRepo extends JpaRepository<Availability, Long> {
 
     List<Availability> findByStudentIdAndCourseId(Long studentId, String courseId);

@@ -17,6 +17,9 @@ import jakarta.persistence.UniqueConstraint;
         name = "student_group_preferences",
         uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id", "student_id"})
 )
+/**
+ * StudentGroupPreference component.
+ */
 public class StudentGroupPreference {
 
     @Id

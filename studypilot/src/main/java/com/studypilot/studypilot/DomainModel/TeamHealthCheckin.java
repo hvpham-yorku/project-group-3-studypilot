@@ -18,6 +18,9 @@ import jakarta.persistence.UniqueConstraint;
         name = "team_health_checkins",
         uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "student_id", "week_start"})
 )
+/**
+ * TeamHealthCheckin component.
+ */
 public class TeamHealthCheckin {
 
     @Id

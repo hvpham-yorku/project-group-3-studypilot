@@ -28,6 +28,9 @@ import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 
+/**
+ * StudentPortalServiceTest component.
+ */
 public class StudentPortalServiceTest {
 
     private CourseRepo courseRepo;

@@ -3,6 +3,9 @@ package com.studypilot.studypilot.GUILayer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AvailabilityForm component.
+ */
 public class AvailabilityForm {
 
     private List<String> selectedSlots = new ArrayList<>();

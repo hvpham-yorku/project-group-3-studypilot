@@ -1,24 +1,5 @@
 package com.studypilot.studypilot.BusinessLogicLayer;
 
-import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
-import com.studypilot.studypilot.DataAccessLayer.TeamRepo;
-import com.studypilot.studypilot.DataAccessLayer.TeamMemberRepo;
-
-import com.studypilot.studypilot.DomainModel.Course;
-import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
-import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
-import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
-import com.studypilot.studypilot.DomainModel.Team;
-import com.studypilot.studypilot.DomainModel.TeamMember;
-
-import com.studypilot.studypilot.GUILayer.CreateGroupFormationForm;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -26,7 +7,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.TeamMemberRepo;
+import com.studypilot.studypilot.DataAccessLayer.TeamRepo;
+import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
+import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
+import com.studypilot.studypilot.DomainModel.Team;
+import com.studypilot.studypilot.DomainModel.TeamMember;
+import com.studypilot.studypilot.GUILayer.CreateGroupFormationForm;
+
 @Service
+/**
+ * Domain service for managing group formation activities and generated teams.
+ *
+ * Includes CRUD for activities/options and team-generation persistence helpers.
+ */
 public class GroupFormationService {
 
     private final CourseRepo courseRepo;
@@ -59,6 +62,9 @@ public class GroupFormationService {
     }
 
     @Transactional
+    /**
+     * Creates a group formation activity with validated topic/skill options.
+     */
     public GroupFormationActivity createActivity(Long professorId, String courseId, CreateGroupFormationForm form) {
         Course course = validateProfessorOwnsCourse(professorId, courseId);
 
@@ -97,14 +103,23 @@ public class GroupFormationService {
         return saved;
     }
 
+    /**
+     * Returns activities for one course, newest first.
+     */
     public List<GroupFormationActivity> getActivitiesForCourse(String courseId) {
         return activityRepo.findByCourseIdOrderByCreatedAtDesc(courseId);
     }
 
+    /**
+     * Returns generated teams for one course.
+     */
     public List<Team> getTeamsForCourse(String courseId) {
         return teamRepo.findByCourseIdOrderByIdAsc(courseId);
     }
 
+    /**
+     * Loads an existing activity into an editable form object.
+     */
     public CreateGroupFormationForm getEditForm(String courseId, Long activityId, Long professorId) {
         validateProfessorOwnsCourse(professorId, courseId);
 
@@ -147,6 +162,9 @@ public class GroupFormationService {
     }
 
     @Transactional
+    /**
+     * Updates an existing activity and replaces its topic/skill option sets.
+     */
     public void updateActivity(Long professorId, String courseId, Long activityId, CreateGroupFormationForm form) {
         validateProfessorOwnsCourse(professorId, courseId);
 
@@ -196,6 +214,9 @@ public class GroupFormationService {
     }
 
     @Transactional
+    /**
+     * Deletes an activity owned by the requesting professor.
+     */
     public void deleteActivity(Long professorId, String courseId, Long activityId) {
         validateProfessorOwnsCourse(professorId, courseId);
 
@@ -210,21 +231,25 @@ public class GroupFormationService {
     }
 
     @Transactional
+    /**
+     * Generates teams from survey profiles and saves them to persistent team
+     * tables.
+     */
     public void saveSurveyGroups(Long activityId, String courseId, List<Long> studentIds) {
 
         List<GroupFormationAlgorithmService.StudentSurveyProfile> students = studentIds.stream()
                 .map(id -> new GroupFormationAlgorithmService.StudentSurveyProfile(
-                        id,
-                        true,
-                        availabilityService.getStudentAvailabilitySet(id, courseId),
-                        new HashSet<>(),
-                        new HashSet<>(),
-                        2
-                ))
+                id,
+                true,
+                availabilityService.getStudentAvailabilitySet(id, courseId),
+                new HashSet<>(),
+                new HashSet<>(),
+                2
+        ))
                 .collect(Collectors.toList());
 
-        GroupFormationAlgorithmService.GroupingRequest request =
-                new GroupFormationAlgorithmService.GroupingRequest(
+        GroupFormationAlgorithmService.GroupingRequest request
+                = new GroupFormationAlgorithmService.GroupingRequest(
                         3,
                         2,
                         5,
@@ -234,8 +259,8 @@ public class GroupFormationService {
                         students
                 );
 
-        GroupFormationAlgorithmService.GroupingResult result =
-                algorithmService.generateGroups(request, courseId);
+        GroupFormationAlgorithmService.GroupingResult result
+                = algorithmService.generateGroups(request, courseId);
 
         List<List<Long>> groups = result.teams().stream()
                 .map(GroupFormationAlgorithmService.GroupTeam::memberIds)
@@ -245,6 +270,9 @@ public class GroupFormationService {
     }
 
     @Transactional
+    /**
+     * Persists already computed groups with optional custom team names.
+     */
     public void saveSurveyGroups(Long activityId, String courseId, List<List<Long>> groups, List<String> groupNames) {
 
         for (int i = 0; i < groups.size(); i++) {
