@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Availability</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+        <div th:replace="~{fragments/header :: authHeader('Team Availability', false)}"></div>
+
+        <div class="p-8 animate-fade-in-up">
+            <div class="max-w-5xl mx-auto w-full space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-slate-500">Course Space</p>
+                        <h1 class="text-3xl font-bold">Team Availability</h1>
+                        <p class="text-slate-600 mt-2">
+                            <span th:text="${course.courseCode}">EECS2311</span>
+                            <span> - </span>
+                            <span th:text="${course.courseName}">Software Design</span>
+                        </p>
+                    </div>
+
+                    <a
+                        th:href="@{'/prof/' + ${course.id} + '/' + ${courseSlug} + '/group-formation'}"
+                        class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+                    >
+                        Back to Group Formation
+                    </a>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold">
+                            <span>Team </span><span th:text="${teamId}">1</span>
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Team size: <span th:text="${teamSize}">0</span>
+                        </p>
+                    </div>
+
+                    <div th:if="${slotCounts == null || #maps.isEmpty(slotCounts)}"
+                         class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+                        No course time slots or availability data found yet.
+                    </div>
+
+                    <div th:if="${slotCounts != null && !#maps.isEmpty(slotCounts)}" class="overflow-x-auto">
+                        <table class="min-w-full border border-slate-200 rounded-xl overflow-hidden">
+                            <thead class="bg-slate-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">Time Slot</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">Available Students</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">Best Slot</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="entry : ${slotCounts}"
+                                    th:classappend="${entry.value == bestCount and bestCount > 0} ? 'bg-green-50' : 'bg-white'"
+                                    class="border-t border-slate-200">
+                                    <td class="px-4 py-3 text-sm text-slate-800" th:text="${entry.key}">MON_2PM</td>
+                                    <td class="px-4 py-3 text-sm text-slate-800" th:text="${entry.value} + ' / ' + ${teamSize}">0 / 0</td>
+                                    <td class="px-4 py-3 text-sm font-semibold text-slate-800">
+                                        <span th:if="${entry.value == bestCount and bestCount > 0}">⭐ Best</span>
+                                        <span th:unless="${entry.value == bestCount and bestCount > 0}">—</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
