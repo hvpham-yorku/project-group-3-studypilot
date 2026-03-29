@@ -439,4 +439,9 @@ public class TeamHealthService {
             String summaryText) {
 
     }
+    public List<TeamHealthCheckin> getStudentCheckinHistory(Long studentId) {
+        requireStudent(studentId);
+        return teamHealthCheckinRepo.findByStudentIdOrderByWeekStartDesc(studentId);
+    }
+    
 }

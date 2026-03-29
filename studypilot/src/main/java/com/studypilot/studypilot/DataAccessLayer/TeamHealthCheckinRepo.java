@@ -19,4 +19,6 @@ public interface TeamHealthCheckinRepo extends JpaRepository<TeamHealthCheckin, 
     List<TeamHealthCheckin> findByStudentIdAndWeekStart(Long studentId, LocalDate weekStart);
 
     List<TeamHealthCheckin> findByStudentIdAndCourseIdInAndWeekStart(Long studentId, List<String> courseIds, LocalDate weekStart);
+    
+    List<TeamHealthCheckin> findByStudentIdOrderByWeekStartDesc(Long studentId);
 }
