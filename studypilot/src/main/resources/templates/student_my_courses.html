@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Courses | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader('My Courses', false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up space-y-6">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <p class="text-xs text-slate-500">Enrolled Courses</p>
+          <p class="text-2xl font-bold mt-1" th:text="${#lists.size(courses)}">
+            0
+          </p>
+        </div>
+
+        <div
+          th:if="${#lists.isEmpty(courses)}"
+          class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 text-sm text-slate-500"
+        >
+          You are not enrolled in any courses yet. Join one from
+          <a href="/student/home" class="text-blue-600 hover:underline"
+            >dashboard</a
+          >.
+        </div>
+
+        <div
+          th:if="${!#lists.isEmpty(courses)}"
+          class="grid grid-cols-1 lg:grid-cols-2 gap-5"
+        >
+          <a
+            th:each="course : ${courses}"
+            th:href="@{/student/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${course.courseSlug})}"
+            class="block bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all"
+          >
+            <p
+              class="text-xs font-semibold text-blue-600"
+              th:text="${course.courseCode}"
+            >
+              EECS2311
+            </p>
+            <h2 class="text-lg font-bold mt-1" th:text="${course.courseName}">
+              Software Design
+            </h2>
+            <p class="text-sm text-slate-500 mt-2">Open course space</p>
+          </a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

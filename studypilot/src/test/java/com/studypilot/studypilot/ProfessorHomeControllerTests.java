@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 import org.springframework.ui.Model;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
-import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
@@ -28,7 +27,6 @@ class ProfessorHomeControllerTests {
 
     private ProfessorHomeController controller;
     private CourseService mockCourseService;
-    private QuizService mockQuizService;
     private TeamHealthService mockTeamHealthService;
     private HttpSession mockSession;
     private Model mockModel;
@@ -36,13 +34,11 @@ class ProfessorHomeControllerTests {
     @BeforeEach
     void setup() {
         mockCourseService = mock(CourseService.class);
-        mockQuizService = mock(QuizService.class);
         mockTeamHealthService = mock(TeamHealthService.class);
         CourseEnrollmentRepo mockEnrollmentRepo = mock(CourseEnrollmentRepo.class);
         UserRepo mockUserRepo = mock(UserRepo.class);
         controller = new ProfessorHomeController(
                 mockCourseService,
-                mockQuizService,
                 mockTeamHealthService,
                 mockEnrollmentRepo,
                 mockUserRepo);

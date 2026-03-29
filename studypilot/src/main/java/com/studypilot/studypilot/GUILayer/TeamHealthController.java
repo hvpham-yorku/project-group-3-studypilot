@@ -16,6 +16,12 @@ import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.servlet.ModelAndView;
+import java.util.List;
+
 @RestController
 public class TeamHealthController {
 
@@ -91,6 +97,21 @@ public class TeamHealthController {
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new ErrorResponse(ex.getMessage()));
         }
+    }
+    
+    @GetMapping("/student/health/history")
+    public ModelAndView getStudentCheckinHistory(HttpSession session) {
+        if (!"STUDENT".equals(session.getAttribute("role"))) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        Long studentId = (Long) session.getAttribute("userId");
+        List<TeamHealthCheckin> history = teamHealthService.getStudentCheckinHistory(studentId);
+
+        ModelAndView mav = new ModelAndView("student_checkin_history");
+        mav.addObject("history", history);
+        mav.addObject("fullName", session.getAttribute("fullName"));
+        return mav;
     }
 
     public record SubmitHealthCheckinRequest(String courseId,

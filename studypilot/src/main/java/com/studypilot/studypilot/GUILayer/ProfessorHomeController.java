@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
-import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
@@ -30,6 +28,7 @@ import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 import com.studypilot.studypilot.DomainModel.User;
+import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,17 +38,16 @@ public class ProfessorHomeController {
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
 
     private final CourseService courseService;
-    private final QuizService quizService;
+
     private final TeamHealthService teamHealthService;
     private final CourseEnrollmentRepo courseEnrollmentRepo;
     private final UserRepo userRepo;
 
     public ProfessorHomeController(CourseService courseService,
-            QuizService quizService,
             TeamHealthService teamHealthService,
             CourseEnrollmentRepo courseEnrollmentRepo, UserRepo userRepo) {
         this.courseService = courseService;
-        this.quizService = quizService;
+
         this.teamHealthService = teamHealthService;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.userRepo = userRepo;
@@ -142,8 +140,8 @@ public class ProfessorHomeController {
         return "professor_course_page";
     }
 
-    @GetMapping("/prof/{courseId}/{courseSlug}/quiz-generator")
-    public String quizGeneratorPage(@PathVariable("courseId") String courseId,
+    @GetMapping("/prof/{courseId}/{courseSlug}/surveys")
+    public String weeklySurveyPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
             Model model) {
@@ -161,18 +159,15 @@ public class ProfessorHomeController {
             return "redirect:/prof/home";
         }
 
-        model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courseId", course.getId());
-        model.addAttribute("courseCode", course.getCourseCode());
-        model.addAttribute("courseName", course.getCourseName());
-        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
-        return "quiz_generator_page";
+        populateCourseSurveyModel(course, professorId, session, model);
+        return "professor_surveys";
     }
 
-    @PostMapping("/prof/{courseId}/{courseSlug}/quiz-generator/upload")
-    public String handleQuizUpload(@PathVariable("courseId") String courseId,
+    @PostMapping("/prof/{courseId}/{courseSlug}/surveys")
+    public String publishWeeklySurvey(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
-            @RequestParam("document") MultipartFile document,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
             HttpSession session,
             Model model) {
         if (!isProfessor(session)) {
@@ -189,25 +184,55 @@ public class ProfessorHomeController {
             return "redirect:/prof/home";
         }
 
-        model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courseId", course.getId());
-        model.addAttribute("courseCode", course.getCourseCode());
-        model.addAttribute("courseName", course.getCourseName());
-        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
-
-        if (document == null || document.isEmpty()) {
-            model.addAttribute("error", "Please upload a PDF or document file.");
-            return "quiz_generator_page";
+        try {
+            teamHealthService.publishWeeklySurvey(professorId, courseId, title, description, LocalDate.now());
+            model.addAttribute("success", "Weekly survey published for this course.");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
         }
 
-        quizService.createQuizFromUpload(professorId, courseId, document.getOriginalFilename());
-        model.addAttribute("success", "Quiz generated from: " + document.getOriginalFilename());
-        model.addAttribute("uploadedFileName", document.getOriginalFilename());
-        return "quiz_generator_page";
+        populateCourseSurveyModel(course, professorId, session, model);
+        return "professor_surveys";
     }
 
     private boolean isProfessor(HttpSession session) {
         return "PROFESSOR".equals(session.getAttribute("role"));
+    }
+
+    private void populateCourseSurveyModel(Course course, Long professorId, HttpSession session, Model model) {
+        LocalDate weekStart = teamHealthService.getWeekStart(LocalDate.now());
+        WeeklySurvey survey = teamHealthService.getWeeklySurveyForCourseAndWeek(professorId, course.getId(), weekStart);
+
+        List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseId(course.getId());
+        int enrolledCount = enrollments.size();
+
+        Set<Long> submittedStudentIds = new HashSet<>();
+        for (TeamHealthCheckin checkin : teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart)) {
+            submittedStudentIds.add(checkin.getStudentId());
+        }
+
+        int submissionsCount = submittedStudentIds.size();
+
+        Map<Long, User> userCache = new HashMap<>();
+        List<String> missingStudentNames = enrollments.stream()
+                .filter(e -> !submittedStudentIds.contains(e.getStudentId()))
+                .map(e -> {
+                    User u = findUser(userCache, e.getStudentId());
+                    return u == null ? "Unknown Student" : u.getFullName();
+                })
+                .sorted()
+                .toList();
+
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseCode", course.getCourseCode());
+        model.addAttribute("courseName", course.getCourseName());
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+        model.addAttribute("weekStart", weekStart);
+        model.addAttribute("weeklySurvey", survey);
+        model.addAttribute("submissionsCount", submissionsCount);
+        model.addAttribute("enrolledCount", enrolledCount);
+        model.addAttribute("missingStudentNames", missingStudentNames);
     }
 
     private List<CourseCardView> toCourseCards(List<Course> courses) {

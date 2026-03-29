@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly Surveys | StudyPilot</title>
+    <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('courses')}"></div>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+      <div
+        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
+      ></div>
+
+      <div class="p-8 animate-fade-in-up">
+        <div class="max-w-4xl mx-auto w-full space-y-6">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm text-slate-500">
+                Course Space / Weekly Surveys
+              </p>
+              <h1 class="text-3xl font-bold mt-1">
+                <span th:text="${courseCode}">EECS2311</span>
+                <span> - </span>
+                <span th:text="${courseName}">Software Design</span>
+              </h1>
+              <p
+                class="text-sm text-slate-500 mt-1"
+                th:text="'Week of ' + ${weekStart}"
+              >
+                Week of 2026-03-23
+              </p>
+            </div>
+            <a
+              th:href="@{'/prof/' + ${courseId} + '/' + ${courseSlug}}"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
+            >
+              ← Back to Course
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white border border-slate-200 rounded-xl p-4">
+              <p class="text-xs uppercase tracking-wider text-slate-500">
+                Student Submissions
+              </p>
+              <p class="text-2xl font-bold mt-1 text-blue-700">
+                <span th:text="${submissionsCount}">0</span>
+                <span class="text-slate-400">/</span>
+                <span th:text="${enrolledCount}">0</span>
+              </p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-4">
+              <p class="text-xs uppercase tracking-wider text-slate-500">
+                Survey Status
+              </p>
+              <p
+                class="text-2xl font-bold mt-1"
+                th:classappend="${weeklySurvey != null} ? ' text-emerald-700' : ' text-amber-700'"
+                th:text="${weeklySurvey != null} ? 'Published' : 'Not Published'"
+              >
+                Not Published
+              </p>
+            </div>
+          </div>
+
+          <p
+            th:if="${success}"
+            class="text-sm text-green-700 bg-green-50 border border-green-200 px-3 py-2 rounded-lg"
+            th:text="${success}"
+          >
+            Saved
+          </p>
+
+          <p
+            th:if="${error}"
+            class="text-sm text-red-700 bg-red-50 border border-red-200 px-3 py-2 rounded-lg"
+            th:text="${error}"
+          >
+            Error
+          </p>
+
+          <section
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4"
+          >
+            <div>
+              <h2 class="text-xl font-bold">Publish Weekly Survey</h2>
+              <p class="text-sm text-slate-500 mt-1">
+                Create or update the survey that students must submit this week.
+              </p>
+            </div>
+
+            <form
+              th:action="@{'/prof/' + ${courseId} + '/' + ${courseSlug} + '/surveys'}"
+              method="post"
+              class="space-y-4"
+            >
+              <label class="text-sm font-medium text-slate-700 block">
+                Survey Title
+                <input
+                  type="text"
+                  name="title"
+                  maxlength="120"
+                  required
+                  class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                  placeholder="e.g., Week 6 Team Pulse"
+                  th:value="${weeklySurvey != null ? weeklySurvey.title : ''}"
+                />
+              </label>
+
+              <label class="text-sm font-medium text-slate-700 block">
+                Survey Instructions
+                <textarea
+                  name="description"
+                  rows="5"
+                  maxlength="1000"
+                  required
+                  class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                  placeholder="Tell students what to reflect on this week."
+                  th:text="${weeklySurvey != null ? weeklySurvey.description : ''}"
+                ></textarea>
+              </label>
+
+              <div class="flex justify-end">
+                <button
+                  type="submit"
+                  class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
+                  th:text="${weeklySurvey != null} ? 'Update Weekly Survey' : 'Publish Weekly Survey'"
+                >
+                  Publish Weekly Survey
+                </button>
+              </div>
+            </form>
+          </section>
+		  <!-- Missing Submissions Section -->
+		  <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4">
+		    <div>
+		      <h2 class="text-xl font-bold">Missing Submissions</h2>
+		      <p class="text-sm text-slate-500 mt-1">
+		        Students who have not submitted their check-in this week.
+		      </p>
+		    </div>
+
+			<div th:if="${#lists.isEmpty(missingStudentNames) and enrolledCount > 0}"
+			     class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+			  🎉 All enrolled students have submitted their check-in this week!
+			</div>
+
+			<div th:if="${enrolledCount == 0}"
+			     class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+			  No students are enrolled in this course yet.
+			</div>
+
+		    <ul th:if="${!#lists.isEmpty(missingStudentNames)}" class="divide-y divide-slate-100">
+		      <li th:each="name : ${missingStudentNames}"
+		          class="flex items-center gap-3 py-3">
+		        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">!</span>
+		        <span class="text-sm font-medium text-slate-700" th:text="${name}">Student Name</span>
+		        <span class="ml-auto text-xs text-amber-600 font-semibold">Not Submitted</span>
+		      </li>
+		    </ul>
+		  </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

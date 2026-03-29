@@ -18,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
 import com.studypilot.studypilot.DataAccessLayer.TeamHealthCheckinRepo;
+import com.studypilot.studypilot.DataAccessLayer.WeeklySurveyRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
+import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 
 @Service
 public class TeamHealthService {
@@ -28,13 +30,16 @@ public class TeamHealthService {
     private final CourseRepo courseRepo;
     private final CourseEnrollmentRepo courseEnrollmentRepo;
     private final TeamHealthCheckinRepo teamHealthCheckinRepo;
+    private final WeeklySurveyRepo weeklySurveyRepo;
 
     public TeamHealthService(CourseRepo courseRepo,
             CourseEnrollmentRepo courseEnrollmentRepo,
-            TeamHealthCheckinRepo teamHealthCheckinRepo) {
+            TeamHealthCheckinRepo teamHealthCheckinRepo,
+            WeeklySurveyRepo weeklySurveyRepo) {
         this.courseRepo = courseRepo;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.teamHealthCheckinRepo = teamHealthCheckinRepo;
+        this.weeklySurveyRepo = weeklySurveyRepo;
     }
 
     @Transactional
@@ -59,6 +64,9 @@ public class TeamHealthService {
         int normalizedCollaboration = validateScore(collaborationScore, "Collaboration score must be between 1 and 5.");
 
         LocalDate weekStart = normalizeWeekStart(weekDate);
+        if (!weeklySurveyRepo.existsByCourseIdAndWeekStart(course.getId(), weekStart)) {
+            throw new IllegalArgumentException("No weekly survey has been published for this course yet.");
+        }
         String normalizedStatus = normalizeStatus(statusText);
 
         Optional<TeamHealthCheckin> existing = teamHealthCheckinRepo
@@ -102,12 +110,26 @@ public class TeamHealthService {
                 .toList();
 
         List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseIdIn(courseIds);
-        List<TeamHealthCheckin> weekCheckins = teamHealthCheckinRepo.findByCourseIdInAndWeekStart(courseIds, weekStart);
+        Set<String> coursesWithSurvey = getCourseIdsWithSurveyForWeek(courseIds, weekStart);
+        List<String> scorableCourseIds = enrollments.stream()
+                .map(CourseEnrollment::getCourseId)
+                .filter(coursesWithSurvey::contains)
+                .distinct()
+                .toList();
+
+        if (scorableCourseIds.isEmpty()) {
+            return new ProfessorHealthSummary(weekStart, 0, 0, 0, 0);
+        }
+
+        List<TeamHealthCheckin> weekCheckins = teamHealthCheckinRepo.findByCourseIdInAndWeekStart(scorableCourseIds, weekStart);
+        int enrollmentCount = (int) enrollments.stream()
+                .filter(enrollment -> coursesWithSurvey.contains(enrollment.getCourseId()))
+                .count();
 
         int totalSubmissions = weekCheckins.size();
         int avgHealthPercent = averageHealthPercent(weekCheckins);
         int atRiskResponses = (int) weekCheckins.stream().filter(this::isAtRisk).count();
-        int missingSurveys = Math.max(enrollments.size() - totalSubmissions, 0);
+        int missingSurveys = Math.max(enrollmentCount - totalSubmissions, 0);
 
         return new ProfessorHealthSummary(weekStart, totalSubmissions, avgHealthPercent, atRiskResponses, missingSurveys);
     }
@@ -154,12 +176,21 @@ public class TeamHealthService {
         LocalDate weekStart = normalizeWeekStart(weekDate);
 
         List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByStudentIdOrderByCreatedAtDesc(studentId);
+        Set<String> coursesWithSurvey = getCourseIdsWithSurveyForWeek(
+                enrollments.stream().map(CourseEnrollment::getCourseId).distinct().toList(),
+                weekStart);
         Set<String> submittedCourseIds = new HashSet<>();
         for (TeamHealthCheckin checkin : teamHealthCheckinRepo.findByStudentIdAndWeekStart(studentId, weekStart)) {
-            submittedCourseIds.add(checkin.getCourseId());
+            if (coursesWithSurvey.contains(checkin.getCourseId())) {
+                submittedCourseIds.add(checkin.getCourseId());
+            }
         }
 
-        int enrolledCourses = enrollments.size();
+        int enrolledCourses = (int) enrollments.stream()
+                .map(CourseEnrollment::getCourseId)
+                .filter(coursesWithSurvey::contains)
+                .distinct()
+                .count();
         int submitted = submittedCourseIds.size();
         int missing = Math.max(enrolledCourses - submitted, 0);
 
@@ -187,6 +218,70 @@ public class TeamHealthService {
 
     public LocalDate getWeekStart(LocalDate weekDate) {
         return normalizeWeekStart(weekDate);
+    }
+
+    @Transactional
+    public WeeklySurvey publishWeeklySurvey(Long professorId,
+            String courseId,
+            String title,
+            String description,
+            LocalDate weekDate) {
+        if (professorId == null) {
+            throw new IllegalArgumentException("Professor must be logged in.");
+        }
+
+        String cleanCourseId = clean(courseId);
+        Course course = courseRepo.findById(cleanCourseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found."));
+
+        if (!professorId.equals(course.getProfessorId())) {
+            throw new IllegalArgumentException("You can only publish surveys for your own course.");
+        }
+
+        String normalizedTitle = normalizeRequiredText(title, 120, "Survey title is required.");
+        String normalizedDescription = normalizeRequiredText(description, 1000, "Survey description is required.");
+        LocalDate weekStart = normalizeWeekStart(weekDate);
+
+        Optional<WeeklySurvey> existing = weeklySurveyRepo.findByCourseIdAndWeekStart(course.getId(), weekStart);
+        if (existing.isPresent()) {
+            WeeklySurvey survey = existing.get();
+            survey.setTitle(normalizedTitle);
+            survey.setDescription(normalizedDescription);
+            return weeklySurveyRepo.save(survey);
+        }
+
+        WeeklySurvey survey = new WeeklySurvey(course.getId(), professorId, weekStart, normalizedTitle, normalizedDescription);
+        return weeklySurveyRepo.save(survey);
+    }
+
+    public WeeklySurvey getWeeklySurveyForCourseAndWeek(Long professorId, String courseId, LocalDate weekDate) {
+        if (professorId == null) {
+            throw new IllegalArgumentException("Professor must be logged in.");
+        }
+
+        String cleanCourseId = clean(courseId);
+        Course course = courseRepo.findById(cleanCourseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found."));
+
+        if (!professorId.equals(course.getProfessorId())) {
+            throw new IllegalArgumentException("You can only view surveys for your own course.");
+        }
+
+        LocalDate weekStart = normalizeWeekStart(weekDate);
+        return weeklySurveyRepo.findByCourseIdAndWeekStart(course.getId(), weekStart).orElse(null);
+    }
+
+    public Map<String, WeeklySurvey> getWeeklySurveysByCourseIdForWeek(List<String> courseIds, LocalDate weekDate) {
+        if (courseIds == null || courseIds.isEmpty()) {
+            return Map.of();
+        }
+
+        LocalDate weekStart = normalizeWeekStart(weekDate);
+        Map<String, WeeklySurvey> surveysByCourse = new HashMap<>();
+        for (WeeklySurvey survey : weeklySurveyRepo.findByCourseIdInAndWeekStart(courseIds, weekStart)) {
+            surveysByCourse.put(survey.getCourseId(), survey);
+        }
+        return surveysByCourse;
     }
 
     private boolean isAtRisk(TeamHealthCheckin checkin) {
@@ -287,6 +382,33 @@ public class TeamHealthService {
         }
     }
 
+    private Set<String> getCourseIdsWithSurveyForWeek(List<String> courseIds, LocalDate weekStart) {
+        if (courseIds == null || courseIds.isEmpty()) {
+            return Set.of();
+        }
+
+        Set<String> results = new HashSet<>();
+        for (WeeklySurvey survey : weeklySurveyRepo.findByCourseIdInAndWeekStart(courseIds, weekStart)) {
+            results.add(survey.getCourseId());
+        }
+        return results;
+    }
+
+    private String normalizeRequiredText(String value, int maxLen, String requiredMessage) {
+        if (value == null) {
+            throw new IllegalArgumentException(requiredMessage);
+        }
+
+        String trimmed = value.trim();
+        if (trimmed.isBlank()) {
+            throw new IllegalArgumentException(requiredMessage);
+        }
+        if (trimmed.length() > maxLen) {
+            return trimmed.substring(0, maxLen);
+        }
+        return trimmed;
+    }
+
     private String clean(String value) {
         return value == null ? "" : value.trim();
     }
@@ -317,4 +439,9 @@ public class TeamHealthService {
             String summaryText) {
 
     }
+    public List<TeamHealthCheckin> getStudentCheckinHistory(Long studentId) {
+        requireStudent(studentId);
+        return teamHealthCheckinRepo.findByStudentIdOrderByWeekStartDesc(studentId);
+    }
+    
 }
