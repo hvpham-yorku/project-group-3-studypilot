@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
-import com.studypilot.studypilot.BusinessLogicLayer.QuizService;
 import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
@@ -40,17 +38,16 @@ public class ProfessorHomeController {
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
 
     private final CourseService courseService;
-    private final QuizService quizService;
+
     private final TeamHealthService teamHealthService;
     private final CourseEnrollmentRepo courseEnrollmentRepo;
     private final UserRepo userRepo;
 
     public ProfessorHomeController(CourseService courseService,
-            QuizService quizService,
             TeamHealthService teamHealthService,
             CourseEnrollmentRepo courseEnrollmentRepo, UserRepo userRepo) {
         this.courseService = courseService;
-        this.quizService = quizService;
+
         this.teamHealthService = teamHealthService;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.userRepo = userRepo;
@@ -141,70 +138,6 @@ public class ProfessorHomeController {
         model.addAttribute("courseSlug", toSlug(course.getCourseName()));
         model.addAttribute("enrolledStudents", enrolledStudents);
         return "professor_course_page";
-    }
-
-    @GetMapping("/prof/{courseId}/{courseSlug}/quiz-generator")
-    public String quizGeneratorPage(@PathVariable("courseId") String courseId,
-            @PathVariable("courseSlug") String courseSlug,
-            HttpSession session,
-            Model model) {
-        if (!isProfessor(session)) {
-            return "redirect:/login";
-        }
-
-        Course course = courseService.getCourseById(courseId);
-        if (course == null) {
-            return "redirect:/prof/home";
-        }
-
-        Long professorId = (Long) session.getAttribute("userId");
-        if (!course.getProfessorId().equals(professorId)) {
-            return "redirect:/prof/home";
-        }
-
-        model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courseId", course.getId());
-        model.addAttribute("courseCode", course.getCourseCode());
-        model.addAttribute("courseName", course.getCourseName());
-        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
-        return "quiz_generator_page";
-    }
-
-    @PostMapping("/prof/{courseId}/{courseSlug}/quiz-generator/upload")
-    public String handleQuizUpload(@PathVariable("courseId") String courseId,
-            @PathVariable("courseSlug") String courseSlug,
-            @RequestParam("document") MultipartFile document,
-            HttpSession session,
-            Model model) {
-        if (!isProfessor(session)) {
-            return "redirect:/login";
-        }
-
-        Course course = courseService.getCourseById(courseId);
-        if (course == null) {
-            return "redirect:/prof/home";
-        }
-
-        Long professorId = (Long) session.getAttribute("userId");
-        if (!course.getProfessorId().equals(professorId)) {
-            return "redirect:/prof/home";
-        }
-
-        model.addAttribute("fullName", session.getAttribute("fullName"));
-        model.addAttribute("courseId", course.getId());
-        model.addAttribute("courseCode", course.getCourseCode());
-        model.addAttribute("courseName", course.getCourseName());
-        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
-
-        if (document == null || document.isEmpty()) {
-            model.addAttribute("error", "Please upload a PDF or document file.");
-            return "quiz_generator_page";
-        }
-
-        quizService.createQuizFromUpload(professorId, courseId, document.getOriginalFilename());
-        model.addAttribute("success", "Quiz generated from: " + document.getOriginalFilename());
-        model.addAttribute("uploadedFileName", document.getOriginalFilename());
-        return "quiz_generator_page";
     }
 
     @GetMapping("/prof/{courseId}/{courseSlug}/surveys")
