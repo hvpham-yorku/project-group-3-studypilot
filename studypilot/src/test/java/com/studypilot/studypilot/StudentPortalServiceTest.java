@@ -1,16 +1,32 @@
 package com.studypilot.studypilot;
 
-import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
-import com.studypilot.studypilot.DataAccessLayer.*;
-import com.studypilot.studypilot.DomainModel.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import com.studypilot.studypilot.BusinessLogicLayer.GroupFormationAlgorithmService;
+import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
+import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
+import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
+import com.studypilot.studypilot.DomainModel.Course;
+import com.studypilot.studypilot.DomainModel.CourseEnrollment;
+import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
 
 public class StudentPortalServiceTest {
 
@@ -32,13 +48,15 @@ public class StudentPortalServiceTest {
         skillRepo = mock(GroupFormationSkillOptionRepo.class);
         preferenceRepo = mock(StudentGroupPreferenceRepo.class);
 
+        GroupFormationAlgorithmService algorithmService = mock(GroupFormationAlgorithmService.class);
         service = new StudentPortalService(
                 courseRepo,
                 enrollmentRepo,
                 activityRepo,
                 topicRepo,
                 skillRepo,
-                preferenceRepo
+                preferenceRepo,
+                algorithmService
         );
     }
 
@@ -133,8 +151,8 @@ public class StudentPortalServiceTest {
         when(activityRepo.findByCourseIdOrderByCreatedAtDesc("C1"))
                 .thenReturn(List.of(activity));
 
-        Optional<GroupFormationActivity> result =
-                service.getLatestGroupActivityForCourse("C1");
+        Optional<GroupFormationActivity> result
+                = service.getLatestGroupActivityForCourse("C1");
 
         assertTrue(result.isPresent());
         assertEquals(10L, result.get().getId());
@@ -146,8 +164,8 @@ public class StudentPortalServiceTest {
         when(activityRepo.findByCourseIdOrderByCreatedAtDesc("C1"))
                 .thenReturn(new ArrayList<>());
 
-        Optional<GroupFormationActivity> result =
-                service.getLatestGroupActivityForCourse("C1");
+        Optional<GroupFormationActivity> result
+                = service.getLatestGroupActivityForCourse("C1");
 
         assertTrue(result.isEmpty());
     }

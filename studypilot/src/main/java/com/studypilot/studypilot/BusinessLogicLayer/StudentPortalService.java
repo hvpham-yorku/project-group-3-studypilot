@@ -1,8 +1,10 @@
 package com.studypilot.studypilot.BusinessLogicLayer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,19 +33,22 @@ public class StudentPortalService {
     private final GroupFormationTopicOptionRepo groupFormationTopicOptionRepo;
     private final GroupFormationSkillOptionRepo groupFormationSkillOptionRepo;
     private final StudentGroupPreferenceRepo studentGroupPreferenceRepo;
+    private final GroupFormationAlgorithmService groupFormationAlgorithmService;
 
     public StudentPortalService(CourseRepo courseRepo,
             CourseEnrollmentRepo courseEnrollmentRepo,
             GroupFormationActivityRepo groupFormationActivityRepo,
             GroupFormationTopicOptionRepo groupFormationTopicOptionRepo,
             GroupFormationSkillOptionRepo groupFormationSkillOptionRepo,
-            StudentGroupPreferenceRepo studentGroupPreferenceRepo) {
+            StudentGroupPreferenceRepo studentGroupPreferenceRepo,
+            GroupFormationAlgorithmService groupFormationAlgorithmService) {
         this.courseRepo = courseRepo;
         this.courseEnrollmentRepo = courseEnrollmentRepo;
         this.groupFormationActivityRepo = groupFormationActivityRepo;
         this.groupFormationTopicOptionRepo = groupFormationTopicOptionRepo;
         this.groupFormationSkillOptionRepo = groupFormationSkillOptionRepo;
         this.studentGroupPreferenceRepo = studentGroupPreferenceRepo;
+        this.groupFormationAlgorithmService = groupFormationAlgorithmService;
     }
 
     public List<Course> getStudentCourses(Long studentId) {
@@ -145,6 +150,72 @@ public class StudentPortalService {
         return studentGroupPreferenceRepo.findByActivityIdAndStudentId(activityId, studentId);
     }
 
+    public StudentTeamSnapshot getStudentTeamForCourse(Long studentId, String courseId) {
+        requireStudent(studentId);
+        Course course = requireStudentEnrollment(studentId, courseId);
+
+        Optional<GroupFormationActivity> maybeActivity = getLatestGroupActivityForCourse(course.getId());
+        if (maybeActivity.isEmpty()) {
+            return null;
+        }
+
+        GroupFormationActivity activity = maybeActivity.get();
+        List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseId(course.getId());
+        if (enrollments.isEmpty()) {
+            return null;
+        }
+
+        Set<Long> enrolledStudentIds = enrollments.stream()
+                .map(CourseEnrollment::getStudentId)
+                .collect(HashSet::new, Set::add, Set::addAll);
+
+        Map<Long, StudentGroupPreference> preferenceByStudentId = new HashMap<>();
+        for (StudentGroupPreference preference : studentGroupPreferenceRepo.findByActivityId(activity.getId())) {
+            preferenceByStudentId.put(preference.getStudentId(), preference);
+        }
+
+        List<GroupFormationAlgorithmService.StudentSurveyProfile> profiles = new ArrayList<>();
+        for (Long enrolledStudentId : enrolledStudentIds) {
+            StudentGroupPreference preference = preferenceByStudentId.get(enrolledStudentId);
+            if (preference == null) {
+                profiles.add(new GroupFormationAlgorithmService.StudentSurveyProfile(
+                        enrolledStudentId,
+                        false,
+                        Set.of("unspecified"),
+                        Set.of(),
+                        Set.of(),
+                        3));
+                continue;
+            }
+
+            profiles.add(new GroupFormationAlgorithmService.StudentSurveyProfile(
+                    enrolledStudentId,
+                    true,
+                    Set.of("unspecified"),
+                    Set.of(preference.getTopicChoice()),
+                    Set.of(preference.getSkillChoice()),
+                    3));
+        }
+
+        GroupFormationAlgorithmService.GroupingRequest request = new GroupFormationAlgorithmService.GroupingRequest(
+                activity.getPreferredGroupSize(),
+                activity.getMinTeamSize(),
+                activity.getMaxTeamSize(),
+                activity.isGroupTopicsSimilarly(),
+                activity.isGroupSkillsSimilarly(),
+                enrolledStudentIds,
+                profiles);
+
+        GroupFormationAlgorithmService.GroupingResult result = groupFormationAlgorithmService.generateGroups(request);
+        for (GroupFormationAlgorithmService.GroupTeam team : result.teams()) {
+            if (team.memberIds().contains(studentId)) {
+                return new StudentTeamSnapshot(team.teamNumber(), team.memberIds(), activity.getActivityName());
+            }
+        }
+
+        return null;
+    }
+
     @Transactional
     public StudentGroupPreference saveGroupPreference(Long studentId,
             String courseId,
@@ -203,5 +274,9 @@ public class StudentPortalService {
 
     private String clean(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    public record StudentTeamSnapshot(int teamNumber, List<Long> memberIds, String activityName) {
+
     }
 }

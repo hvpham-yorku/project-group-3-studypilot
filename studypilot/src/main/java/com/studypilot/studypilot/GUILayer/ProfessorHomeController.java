@@ -30,6 +30,7 @@ import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 import com.studypilot.studypilot.DomainModel.User;
+import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -206,8 +207,80 @@ public class ProfessorHomeController {
         return "quiz_generator_page";
     }
 
+    @GetMapping("/prof/{courseId}/{courseSlug}/surveys")
+    public String weeklySurveyPage(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        populateCourseSurveyModel(course, professorId, session, model);
+        return "professor_surveys";
+    }
+
+    @PostMapping("/prof/{courseId}/{courseSlug}/surveys")
+    public String publishWeeklySurvey(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            HttpSession session,
+            Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        try {
+            teamHealthService.publishWeeklySurvey(professorId, courseId, title, description, LocalDate.now());
+            model.addAttribute("success", "Weekly survey published for this course.");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+
+        populateCourseSurveyModel(course, professorId, session, model);
+        return "professor_surveys";
+    }
+
     private boolean isProfessor(HttpSession session) {
         return "PROFESSOR".equals(session.getAttribute("role"));
+    }
+
+    private void populateCourseSurveyModel(Course course, Long professorId, HttpSession session, Model model) {
+        LocalDate weekStart = teamHealthService.getWeekStart(LocalDate.now());
+        WeeklySurvey survey = teamHealthService.getWeeklySurveyForCourseAndWeek(professorId, course.getId(), weekStart);
+        int submissionsCount = teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart).size();
+        int enrolledCount = courseEnrollmentRepo.findByCourseId(course.getId()).size();
+
+        model.addAttribute("fullName", session.getAttribute("fullName"));
+        model.addAttribute("courseId", course.getId());
+        model.addAttribute("courseCode", course.getCourseCode());
+        model.addAttribute("courseName", course.getCourseName());
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
+        model.addAttribute("weekStart", weekStart);
+        model.addAttribute("weeklySurvey", survey);
+        model.addAttribute("submissionsCount", submissionsCount);
+        model.addAttribute("enrolledCount", enrolledCount);
     }
 
     private List<CourseCardView> toCourseCards(List<Course> courses) {

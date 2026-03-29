@@ -120,75 +120,14 @@
             </div>
           </section>
 
-          <section class="paper rounded-2xl p-6">
-            <h2 class="text-lg font-bold mb-4">Team Management</h2>
-            <p class="text-sm mb-4" style="color: var(--muted)">
-              Manually shuffle or match students by skills, interests, and availability.
-            </p>
-            <div class="space-y-3">
-              <button
-                type="button"
-                class="w-full px-4 py-2 rounded-lg text-sm font-semibold text-white"
-                style="background: var(--brand)"
-              >
-                Shuffle Suggested Teams
-              </button>
-              <button
-                type="button"
-                class="w-full px-4 py-2 rounded-lg text-sm font-semibold"
-                style="border: 1px solid var(--line); background: #fffaf2"
-              >
-                Match by Skills/Time Zones
-              </button>
-            </div>
-
-            <div class="mt-5 rounded-xl p-4" style="background: #f0f1ec; border: 1px solid #e1e3da">
-              <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Manual Overrides</p>
-              <p class="text-sm">3 pending changes awaiting publish</p>
-            </div>
-          </section>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <section class="paper rounded-2xl p-6">
-            <h2 class="text-lg font-bold mb-4">Meeting Scheduler (The Matchmaker)</h2>
-            <p class="text-sm mb-4" style="color: var(--muted)">
-              Overlay your office hours with each team's common free time and send a one-click invite.
-            </p>
-
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-              <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
-                <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Office Hours</p>
-                <p class="text-sm">Tue 14:00-16:00</p>
-                <p class="text-sm">Thu 10:00-12:00</p>
-              </div>
-              <div class="rounded-xl p-4" style="background: #f7fbf8; border: 1px solid #cfe7dc">
-                <p class="text-xs uppercase tracking-wider mb-2" style="color: var(--muted)">Team 4 Free Time</p>
-                <p class="text-sm">Tue 14:30-15:30</p>
-                <p class="text-sm">Thu 10:15-11:00</p>
-              </div>
-            </div>
-
-            <div class="flex flex-wrap gap-2 mb-4">
-              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Tue 14:30</button>
-              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Tue 15:00</button>
-              <button class="px-3 py-1.5 rounded-full text-xs font-semibold chip-safe">Thu 10:15</button>
-            </div>
-
-            <button
-              type="button"
-              class="px-4 py-2 rounded-lg text-sm font-semibold text-white"
-              style="background: var(--mint)"
-            >
-              Send One-Click Invite
-            </button>
-          </section>
-
+        <div class="grid grid-cols-1 gap-6">
           <section class="paper rounded-2xl p-6">
             <h2 class="text-lg font-bold mb-4">Survey Analytics</h2>
 
             <div class="mb-5">
-              <p class="text-sm font-semibold mb-2">Trend Lines (Last 6 Weeks)</p>
+              <p class="text-sm font-semibold mb-2">Team Health Trend (Last 6 Weeks)</p>
               <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
                 <svg viewBox="0 0 260 80" class="w-full h-20" role="img" aria-label="Team health trend">
                   <polyline
@@ -200,17 +139,7 @@
                   />
                   <line x1="0" y1="70" x2="260" y2="70" stroke="#d1d5db" stroke-width="1" />
                 </svg>
-                <p class="text-xs" style="color: var(--muted)" th:text="${healthTrend.summaryText}">Health trend is stable over the last 6 weeks.</p>
-              </div>
-            </div>
-
-            <div>
-              <p class="text-sm font-semibold mb-2">Sentiment Analysis Keywords</p>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 rounded-full text-xs" style="background: #fee2e2; color: #991b1b">blocked</span>
-                <span class="px-2 py-1 rounded-full text-xs" style="background: #ffedd5; color: #9a3412">deadline</span>
-                <span class="px-2 py-1 rounded-full text-xs" style="background: #dcfce7; color: #166534">clear tasks</span>
-                <span class="px-2 py-1 rounded-full text-xs" style="background: #e0f2fe; color: #0c4a6e">better sync</span>
+                <p class="text-xs mt-2" style="color: var(--muted)" th:text="${healthTrend.summaryText}">Health trend is stable over the last 6 weeks.</p>
               </div>
             </div>
           </section>
