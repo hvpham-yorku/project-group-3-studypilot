@@ -202,8 +202,26 @@ public class ProfessorHomeController {
     private void populateCourseSurveyModel(Course course, Long professorId, HttpSession session, Model model) {
         LocalDate weekStart = teamHealthService.getWeekStart(LocalDate.now());
         WeeklySurvey survey = teamHealthService.getWeeklySurveyForCourseAndWeek(professorId, course.getId(), weekStart);
-        int submissionsCount = teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart).size();
-        int enrolledCount = courseEnrollmentRepo.findByCourseId(course.getId()).size();
+
+        List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseId(course.getId());
+        int enrolledCount = enrollments.size();
+
+        Set<Long> submittedStudentIds = new HashSet<>();
+        for (TeamHealthCheckin checkin : teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart)) {
+            submittedStudentIds.add(checkin.getStudentId());
+        }
+
+        int submissionsCount = submittedStudentIds.size();
+
+        Map<Long, User> userCache = new HashMap<>();
+        List<String> missingStudentNames = enrollments.stream()
+                .filter(e -> !submittedStudentIds.contains(e.getStudentId()))
+                .map(e -> {
+                    User u = findUser(userCache, e.getStudentId());
+                    return u == null ? "Unknown Student" : u.getFullName();
+                })
+                .sorted()
+                .toList();
 
         model.addAttribute("fullName", session.getAttribute("fullName"));
         model.addAttribute("courseId", course.getId());
@@ -214,6 +232,7 @@ public class ProfessorHomeController {
         model.addAttribute("weeklySurvey", survey);
         model.addAttribute("submissionsCount", submissionsCount);
         model.addAttribute("enrolledCount", enrolledCount);
+        model.addAttribute("missingStudentNames", missingStudentNames);
     }
 
     private List<CourseCardView> toCourseCards(List<Course> courses) {

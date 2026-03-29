@@ -134,6 +134,34 @@
               </div>
             </form>
           </section>
+		  <!-- Missing Submissions Section -->
+		  <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4">
+		    <div>
+		      <h2 class="text-xl font-bold">Missing Submissions</h2>
+		      <p class="text-sm text-slate-500 mt-1">
+		        Students who have not submitted their check-in this week.
+		      </p>
+		    </div>
+
+			<div th:if="${#lists.isEmpty(missingStudentNames) and enrolledCount > 0}"
+			     class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+			  🎉 All enrolled students have submitted their check-in this week!
+			</div>
+
+			<div th:if="${enrolledCount == 0}"
+			     class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+			  No students are enrolled in this course yet.
+			</div>
+
+		    <ul th:if="${!#lists.isEmpty(missingStudentNames)}" class="divide-y divide-slate-100">
+		      <li th:each="name : ${missingStudentNames}"
+		          class="flex items-center gap-3 py-3">
+		        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">!</span>
+		        <span class="text-sm font-medium text-slate-700" th:text="${name}">Student Name</span>
+		        <span class="ml-auto text-xs text-amber-600 font-semibold">Not Submitted</span>
+		      </li>
+		    </ul>
+		  </section>
         </div>
       </div>
     </main>
