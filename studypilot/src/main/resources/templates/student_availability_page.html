@@ -30,7 +30,7 @@
             </div>
 
             <a
-              th:href="@{'/student/' + ${course.id}}"
+              th:href="@{'/student/' + ${course.id} + '/' + ${courseSlug}}"
               class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
             >
               Back to Course Space
@@ -53,11 +53,15 @@
             Error
           </div>
 
-          <section class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+          <section
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+          >
             <div class="mb-6">
-              <h2 class="text-xl font-bold">Select Your Available Time Slots</h2>
+              <h2 class="text-xl font-bold">
+                Select Your Available Time Slots
+              </h2>
               <p class="text-sm text-slate-500 mt-1">
-                Choose all times when you are available for group meetings.
+                Choose all times when you are available for team collaboration.
               </p>
             </div>
 
@@ -86,8 +90,10 @@
                     th:value="${slot.slotLabel}"
                     class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <span class="text-sm font-medium text-slate-800"
-                        th:text="${slot.slotLabel}">
+                  <span
+                    class="text-sm font-medium text-slate-800"
+                    th:text="${slot.slotLabel}"
+                  >
                     MON_2PM
                   </span>
                 </label>

@@ -38,10 +38,12 @@
           >
             <h2 class="text-xl font-bold">Student Tools</h2>
             <p class="text-sm text-slate-500 mt-1">
-              Complete your group preference form.
+              Submit your preferences and availability for team collaboration.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-6">
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-6"
+            >
               <a
                 th:href="@{/student/{courseId}/{courseSlug}/group-formation(courseId=${course.id},courseSlug=${courseSlug})}"
                 class="block rounded-xl border border-slate-200 bg-slate-50 p-5 hover:bg-white hover:border-blue-300 transition-all"
@@ -62,6 +64,23 @@
                   th:text="${hasGroupActivity} ? 'Activity available now' : 'No activity published yet'"
                 >
                   Activity available now
+                </p>
+              </a>
+
+              <a
+                th:href="@{'/student/' + ${course.id} + '/availability'}"
+                class="block rounded-xl border border-slate-200 bg-slate-50 p-5 hover:bg-white hover:border-blue-300 transition-all"
+              >
+                <p class="text-xs font-semibold text-blue-600">Availability</p>
+                <h3 class="text-base font-bold mt-1">
+                  Share Available Time Slots
+                </h3>
+                <p class="text-sm text-slate-500 mt-2">
+                  Mark when you are free so your team can identify the best
+                  collaboration windows.
+                </p>
+                <p class="text-xs mt-3 text-slate-600">
+                  Used for overlap insights, not automatic meeting booking
                 </p>
               </a>
 
@@ -153,11 +172,15 @@
               th:if="${teamSnapshot == null}"
               class="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4"
             >
-              <p class="text-sm text-slate-600">You are currently in no team.</p>
+              <p class="text-sm text-slate-600">
+                You are currently in no team.
+              </p>
             </div>
 
             <div th:if="${teamSnapshot != null}" class="mt-4 space-y-4">
-              <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+              <div
+                class="rounded-xl border border-emerald-200 bg-emerald-50 p-4"
+              >
                 <p
                   class="text-xs uppercase tracking-wide text-emerald-700 font-semibold"
                   th:text="${teamSnapshot.activityName}"
@@ -182,7 +205,9 @@
                 th:if="${!#lists.isEmpty(teamMembers)}"
                 class="rounded-xl border border-slate-200 bg-white p-4"
               >
-                <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">
+                <p
+                  class="text-xs uppercase tracking-wide text-slate-500 font-semibold"
+                >
                   Team Members
                 </p>
                 <div class="mt-3 space-y-2">
@@ -190,7 +215,10 @@
                     th:each="member : ${teamMembers}"
                     class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200"
                   >
-                    <p class="text-sm font-semibold" th:text="${member.fullName}">
+                    <p
+                      class="text-sm font-semibold"
+                      th:text="${member.fullName}"
+                    >
                       Student Name
                     </p>
                     <p class="text-xs text-slate-500" th:text="${member.email}">

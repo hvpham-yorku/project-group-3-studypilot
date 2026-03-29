@@ -206,7 +206,8 @@ public class StudentPortalService {
                 enrolledStudentIds,
                 profiles);
 
-        GroupFormationAlgorithmService.GroupingResult result = groupFormationAlgorithmService.generateGroups(request);
+        GroupFormationAlgorithmService.GroupingResult result = groupFormationAlgorithmService.generateGroups(request,
+                courseId);
         for (GroupFormationAlgorithmService.GroupTeam team : result.teams()) {
             if (team.memberIds().contains(studentId)) {
                 return new StudentTeamSnapshot(team.teamNumber(), team.memberIds(), activity.getActivityName());

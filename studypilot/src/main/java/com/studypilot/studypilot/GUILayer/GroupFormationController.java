@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.studypilot.studypilot.BusinessLogicLayer.AvailabilityService;
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
+import com.studypilot.studypilot.BusinessLogicLayer.CourseTimeSlotService;
 import com.studypilot.studypilot.BusinessLogicLayer.GroupFormationService;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
@@ -21,13 +22,16 @@ import jakarta.servlet.http.HttpSession;
 public class GroupFormationController {
 
     private final CourseService courseService;
+    private final CourseTimeSlotService courseTimeSlotService;
     private final GroupFormationService groupFormationService;
     private final AvailabilityService availabilityService;
 
     public GroupFormationController(CourseService courseService,
+            CourseTimeSlotService courseTimeSlotService,
             GroupFormationService groupFormationService,
             AvailabilityService availabilityService) {
         this.courseService = courseService;
+        this.courseTimeSlotService = courseTimeSlotService;
         this.groupFormationService = groupFormationService;
         this.availabilityService = availabilityService;
     }
@@ -51,8 +55,8 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
-        List<GroupFormationActivity> activities =
-                groupFormationService.getActivitiesForCourse(courseId);
+        List<GroupFormationActivity> activities
+                = groupFormationService.getActivitiesForCourse(courseId);
 
         model.addAttribute("course", course);
         model.addAttribute("courseSlug", courseSlug);
@@ -62,6 +66,60 @@ public class GroupFormationController {
         model.addAttribute("fullName", session.getAttribute("fullName"));
 
         return "group_formation_page";
+    }
+
+    @GetMapping("/prof/{courseId}/{courseSlug}/team-availability")
+    public String showTeamAvailabilityOverview(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            HttpSession session,
+            Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        populateTeamAvailabilityOverviewModel(model, session, course, courseSlug,
+                new CourseTimeSlotForm(),
+                courseTimeSlotService.getSlotsForCourse(courseId));
+
+        return "team_availability_overview_page";
+    }
+
+    @PostMapping("/prof/{courseId}/{courseSlug}/team-availability")
+    public String saveTeamAvailabilitySlots(@PathVariable("courseId") String courseId,
+            @PathVariable("courseSlug") String courseSlug,
+            @ModelAttribute("slotForm") CourseTimeSlotForm slotForm,
+            HttpSession session,
+            Model model) {
+        if (!isProfessor(session)) {
+            return "redirect:/login";
+        }
+
+        Course course = courseService.getCourseById(courseId);
+        if (course == null) {
+            return "redirect:/prof/home";
+        }
+
+        Long professorId = (Long) session.getAttribute("userId");
+        if (!course.getProfessorId().equals(professorId)) {
+            return "redirect:/prof/home";
+        }
+
+        courseTimeSlotService.replaceSlotsForCourse(courseId, slotForm.getSelectedSlots());
+        List<String> savedSlots = courseTimeSlotService.getSlotsForCourse(courseId);
+        model.addAttribute("success", "Meeting time options updated for students.");
+
+        populateTeamAvailabilityOverviewModel(model, session, course, courseSlug, slotForm, savedSlots);
+        return "team_availability_overview_page";
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/group-formation")
@@ -119,8 +177,8 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
-        CreateGroupFormationForm form =
-                groupFormationService.getEditForm(courseId, activityId, professorId);
+        CreateGroupFormationForm form
+                = groupFormationService.getEditForm(courseId, activityId, professorId);
 
         model.addAttribute("course", course);
         model.addAttribute("courseSlug", courseSlug);
@@ -210,8 +268,13 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
-        AvailabilityService.TeamAvailabilitySummary summary =
-                availabilityService.getTeamAvailabilitySummary(teamId, courseId);
+        AvailabilityService.TeamAvailabilitySummary summary
+                = availabilityService.getTeamAvailabilitySummary(teamId, courseId);
+        List<AvailabilityService.TeamStudentAvailabilityRow> studentAvailabilityRows
+                = availabilityService.getTeamStudentAvailability(teamId, courseId);
+        long submittedCount = studentAvailabilityRows.stream()
+                .filter(AvailabilityService.TeamStudentAvailabilityRow::submitted)
+                .count();
 
         model.addAttribute("course", course);
         model.addAttribute("courseSlug", courseSlug);
@@ -219,6 +282,8 @@ public class GroupFormationController {
         model.addAttribute("slotCounts", summary.slotCounts());
         model.addAttribute("bestCount", summary.bestCount());
         model.addAttribute("teamSize", summary.teamSize());
+        model.addAttribute("studentAvailabilityRows", studentAvailabilityRows);
+        model.addAttribute("submittedCount", submittedCount);
         model.addAttribute("fullName", session.getAttribute("fullName"));
 
         return "team_availability_page";
@@ -226,5 +291,23 @@ public class GroupFormationController {
 
     private boolean isProfessor(HttpSession session) {
         return "PROFESSOR".equals(session.getAttribute("role"));
+    }
+
+    private void populateTeamAvailabilityOverviewModel(Model model,
+            HttpSession session,
+            Course course,
+            String courseSlug,
+            CourseTimeSlotForm slotForm,
+            List<String> selectedSlots) {
+        CourseTimeSlotForm formToRender = slotForm == null ? new CourseTimeSlotForm() : slotForm;
+        formToRender.setSelectedSlots(selectedSlots);
+
+        model.addAttribute("course", course);
+        model.addAttribute("courseSlug", courseSlug);
+        model.addAttribute("teams", groupFormationService.getTeamsForCourse(course.getId()));
+        model.addAttribute("slotForm", formToRender);
+        model.addAttribute("slotOptions", courseTimeSlotService.getPresetSlotOptions());
+        model.addAttribute("selectedSlotLabels", selectedSlots);
+        model.addAttribute("fullName", session.getAttribute("fullName"));
     }
 }

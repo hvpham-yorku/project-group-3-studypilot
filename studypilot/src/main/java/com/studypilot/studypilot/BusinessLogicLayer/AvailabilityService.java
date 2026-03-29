@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.studypilot.studypilot.DataAccessLayer.AvailabilityRepo;
 import com.studypilot.studypilot.DataAccessLayer.CourseTimeSlotRepo;
 import com.studypilot.studypilot.DataAccessLayer.TeamMemberRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Availability;
 import com.studypilot.studypilot.DomainModel.CourseTimeSlot;
 import com.studypilot.studypilot.DomainModel.TeamMember;
+import com.studypilot.studypilot.DomainModel.User;
 
 @Service
 public class AvailabilityService {
@@ -24,14 +26,17 @@ public class AvailabilityService {
     private final AvailabilityRepo availabilityRepo;
     private final CourseTimeSlotRepo courseTimeSlotRepo;
     private final TeamMemberRepo teamMemberRepo;
+    private final UserRepo userRepo;
 
     public AvailabilityService(
             AvailabilityRepo availabilityRepo,
             CourseTimeSlotRepo courseTimeSlotRepo,
-            TeamMemberRepo teamMemberRepo) {
+            TeamMemberRepo teamMemberRepo,
+            UserRepo userRepo) {
         this.availabilityRepo = availabilityRepo;
-        this.courseTimeSlotRepo= courseTimeSlotRepo;
+        this.courseTimeSlotRepo = courseTimeSlotRepo;
         this.teamMemberRepo = teamMemberRepo;
+        this.userRepo = userRepo;
     }
 
     @Transactional
@@ -76,8 +81,8 @@ public class AvailabilityService {
         }
 
         if (!studentIds.isEmpty()) {
-            List<Availability> savedAvailability =
-                    availabilityRepo.findByStudentIdInAndCourseId(studentIds, courseId);
+            List<Availability> savedAvailability
+                    = availabilityRepo.findByStudentIdInAndCourseId(studentIds, courseId);
 
             Map<String, Integer> slotCounts = new HashMap<>();
             for (Availability availability : savedAvailability) {
@@ -100,9 +105,64 @@ public class AvailabilityService {
         return new TeamAvailabilitySummary(orderedCounts, bestCount, teamSize);
     }
 
+    public List<TeamStudentAvailabilityRow> getTeamStudentAvailability(Long teamId, String courseId) {
+        List<TeamMember> members = teamMemberRepo.findByTeamId(teamId);
+        List<Long> studentIds = members.stream()
+                .map(TeamMember::getStudentId)
+                .collect(Collectors.toList());
+
+        Map<Long, Set<String>> slotSetByStudentId = new HashMap<>();
+        for (Long studentId : studentIds) {
+            slotSetByStudentId.put(studentId, new HashSet<>());
+        }
+
+        if (!studentIds.isEmpty()) {
+            List<Availability> availabilityRows = availabilityRepo.findByStudentIdInAndCourseId(studentIds, courseId);
+            for (Availability availability : availabilityRows) {
+                Set<String> slots = slotSetByStudentId.get(availability.getStudentId());
+                if (slots != null) {
+                    slots.add(availability.getTimeSlot());
+                }
+            }
+        }
+
+        List<CourseTimeSlot> courseSlots = courseTimeSlotRepo.findByCourseId(courseId);
+        List<String> slotOrder = courseSlots.stream().map(CourseTimeSlot::getSlotLabel).toList();
+
+        return members.stream().map(member -> {
+            Long studentId = member.getStudentId();
+            Set<String> slotSet = slotSetByStudentId.getOrDefault(studentId, Set.of());
+
+            List<String> orderedSlots = slotOrder.stream()
+                    .filter(slotSet::contains)
+                    .collect(Collectors.toList());
+
+            User user = userRepo.findById(studentId).orElse(null);
+            String fullName = user == null ? "Unknown Student" : user.getFullName();
+            String email = user == null ? "" : user.getEmail();
+
+            return new TeamStudentAvailabilityRow(
+                    studentId,
+                    fullName,
+                    email,
+                    orderedSlots,
+                    !orderedSlots.isEmpty());
+        }).toList();
+    }
+
     public record TeamAvailabilitySummary(
             Map<String, Integer> slotCounts,
             int bestCount,
             int teamSize) {
+
+    }
+
+    public record TeamStudentAvailabilityRow(
+            Long studentId,
+            String fullName,
+            String email,
+            List<String> selectedSlots,
+            boolean submitted) {
+
     }
 }

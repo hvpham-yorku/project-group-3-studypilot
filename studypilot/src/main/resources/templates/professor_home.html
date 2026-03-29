@@ -35,7 +35,10 @@
       }
     </style>
   </head>
-  <body class="text-slate-900 min-h-screen flex" style="background: var(--bg-cream)">
+  <body
+    class="text-slate-900 min-h-screen flex"
+    style="background: var(--bg-cream)"
+  >
     <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
     <main class="flex-1 flex flex-col min-h-screen animate-fade-in-up">
@@ -45,11 +48,14 @@
 
       <div class="p-8 space-y-8">
         <div class="paper rounded-2xl p-6 md:p-8">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          >
             <div>
               <h1 class="text-2xl font-bold">Professor Dashboard</h1>
               <p class="text-sm mt-1" style="color: var(--muted)">
-                Red flags first: teams at risk, missing surveys, and next meetings.
+                Red flags first: teams at risk, missing surveys, and next
+                meetings.
               </p>
             </div>
             <div class="flex gap-3">
@@ -67,20 +73,63 @@
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="paper rounded-2xl p-5">
-            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">At-Risk Teams</p>
-            <p class="text-3xl font-bold mt-1" style="color: #b91c1c" th:text="${healthSummary.atRiskResponses}">0</p>
+            <p
+              class="text-xs uppercase tracking-wider"
+              style="color: var(--muted)"
+            >
+              At-Risk Teams
+            </p>
+            <p
+              class="text-3xl font-bold mt-1"
+              style="color: #b91c1c"
+              th:text="${healthSummary.atRiskResponses}"
+            >
+              0
+            </p>
           </div>
           <div class="paper rounded-2xl p-5">
-            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Missing Surveys</p>
-            <p class="text-3xl font-bold mt-1" style="color: #9a3412" th:text="${healthSummary.missingSurveys}">0</p>
+            <p
+              class="text-xs uppercase tracking-wider"
+              style="color: var(--muted)"
+            >
+              Missing Surveys
+            </p>
+            <p
+              class="text-3xl font-bold mt-1"
+              style="color: #9a3412"
+              th:text="${healthSummary.missingSurveys}"
+            >
+              0
+            </p>
           </div>
           <div class="paper rounded-2xl p-5">
-            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Submissions This Week</p>
-            <p class="text-3xl font-bold mt-1" style="color: var(--mint)" th:text="${healthSummary.totalSubmissions}">0</p>
+            <p
+              class="text-xs uppercase tracking-wider"
+              style="color: var(--muted)"
+            >
+              Submissions This Week
+            </p>
+            <p
+              class="text-3xl font-bold mt-1"
+              style="color: var(--mint)"
+              th:text="${healthSummary.totalSubmissions}"
+            >
+              0
+            </p>
           </div>
           <div class="paper rounded-2xl p-5">
-            <p class="text-xs uppercase tracking-wider" style="color: var(--muted)">Avg Team Health</p>
-            <p class="text-3xl font-bold mt-1" th:text="${healthSummary.avgHealthPercent} + '%'">0%</p>
+            <p
+              class="text-xs uppercase tracking-wider"
+              style="color: var(--muted)"
+            >
+              Avg Team Health
+            </p>
+            <p
+              class="text-3xl font-bold mt-1"
+              th:text="${healthSummary.avgHealthPercent} + '%'"
+            >
+              0%
+            </p>
           </div>
         </div>
 
@@ -88,38 +137,72 @@
           <section class="xl:col-span-2 paper rounded-2xl p-6">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-lg font-bold">Class Overview Dashboard</h2>
-              <span class="text-xs px-2 py-1 rounded-full chip-risk font-semibold">Needs Attention Now</span>
+              <span
+                class="text-xs px-2 py-1 rounded-full chip-risk font-semibold"
+                >Needs Attention Now</span
+              >
             </div>
 
             <div class="grid md:grid-cols-2 gap-4">
-              <div class="rounded-xl p-4" style="background: #fff5ef; border: 1px solid #f8d3bf">
+              <div
+                class="rounded-xl p-4"
+                style="background: #fff5ef; border: 1px solid #f8d3bf"
+              >
                 <h3 class="font-semibold mb-3">The At-Risk List</h3>
                 <div class="space-y-2 text-sm">
-                  <div th:if="${#lists.isEmpty(atRiskRows)}" class="text-slate-500">
+                  <div
+                    th:if="${#lists.isEmpty(atRiskRows)}"
+                    class="text-slate-500"
+                  >
                     No at-risk responses this week.
                   </div>
-                  <div th:each="row : ${atRiskRows}" class="flex items-center justify-between">
-                    <span th:text="${row.studentName + ' (' + row.courseCode + ')'}">Student (EECS2311)</span>
-                    <span class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold" th:text="${row.reason}">Needs Attention</span>
+                  <div
+                    th:each="row : ${atRiskRows}"
+                    class="flex items-center justify-between"
+                  >
+                    <span
+                      th:text="${row.studentName + ' (' + row.courseCode + ')'}"
+                      >Student (EECS2311)</span
+                    >
+                    <span
+                      class="chip-risk text-[11px] px-2 py-0.5 rounded-full font-semibold"
+                      th:text="${row.reason}"
+                      >Needs Attention</span
+                    >
                   </div>
                 </div>
               </div>
 
-              <div class="rounded-xl p-4" style="background: #f7fbf8; border: 1px solid #cfe7dc">
+              <div
+                class="rounded-xl p-4"
+                style="background: #f7fbf8; border: 1px solid #cfe7dc"
+              >
                 <h3 class="font-semibold mb-3">Participation Tracking</h3>
                 <div class="space-y-2 text-sm">
-                  <div th:if="${#lists.isEmpty(participationRows)}" class="text-slate-500">
+                  <div
+                    th:if="${#lists.isEmpty(participationRows)}"
+                    class="text-slate-500"
+                  >
                     Everyone submitted for this week.
                   </div>
-                  <div th:each="row : ${participationRows}" class="flex items-center justify-between">
-                    <span th:text="${row.studentName + ' (' + row.courseCode + ')'}">Student (EECS2311)</span>
-                    <span class="text-[11px] px-2 py-0.5 rounded-full" style="background: #fee2e2; color: #b91c1c">Missing</span>
+                  <div
+                    th:each="row : ${participationRows}"
+                    class="flex items-center justify-between"
+                  >
+                    <span
+                      th:text="${row.studentName + ' (' + row.courseCode + ')'}"
+                      >Student (EECS2311)</span
+                    >
+                    <span
+                      class="text-[11px] px-2 py-0.5 rounded-full"
+                      style="background: #fee2e2; color: #b91c1c"
+                      >Missing</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
           </section>
-
         </div>
 
         <div class="grid grid-cols-1 gap-6">
@@ -127,9 +210,19 @@
             <h2 class="text-lg font-bold mb-4">Survey Analytics</h2>
 
             <div class="mb-5">
-              <p class="text-sm font-semibold mb-2">Team Health Trend (Last 6 Weeks)</p>
-              <div class="rounded-xl p-4" style="background: #fffaf2; border: 1px solid var(--line)">
-                <svg viewBox="0 0 260 80" class="w-full h-20" role="img" aria-label="Team health trend">
+              <p class="text-sm font-semibold mb-2">
+                Team Health Trend (Last 6 Weeks)
+              </p>
+              <div
+                class="rounded-xl p-4"
+                style="background: #fffaf2; border: 1px solid var(--line)"
+              >
+                <svg
+                  viewBox="0 0 260 80"
+                  class="w-full h-20"
+                  role="img"
+                  aria-label="Team health trend"
+                >
                   <polyline
                     fill="none"
                     stroke="#2d6a62"
@@ -137,9 +230,22 @@
                     th:attr="points=${healthTrend.svgPoints}"
                     points="10,70 58,62 106,58 154,52 202,44 250,36"
                   />
-                  <line x1="0" y1="70" x2="260" y2="70" stroke="#d1d5db" stroke-width="1" />
+                  <line
+                    x1="0"
+                    y1="70"
+                    x2="260"
+                    y2="70"
+                    stroke="#d1d5db"
+                    stroke-width="1"
+                  />
                 </svg>
-                <p class="text-xs mt-2" style="color: var(--muted)" th:text="${healthTrend.summaryText}">Health trend is stable over the last 6 weeks.</p>
+                <p
+                  class="text-xs mt-2"
+                  style="color: var(--muted)"
+                  th:text="${healthTrend.summaryText}"
+                >
+                  Health trend is stable over the last 6 weeks.
+                </p>
               </div>
             </div>
           </section>
@@ -163,21 +269,28 @@
               class="block p-5 rounded-xl border hover:shadow-sm transition-all"
               style="background: #fffaf2; border-color: var(--line)"
             >
-              <p class="text-sm font-semibold" th:text="${course.courseCode}">EECS2311</p>
-              <p class="text-sm" th:text="${course.courseName}">Software Design</p>
+              <p class="text-sm font-semibold" th:text="${course.courseCode}">
+                EECS2311
+              </p>
+              <p class="text-sm" th:text="${course.courseName}">
+                Software Design
+              </p>
             </a>
           </div>
           <div
             th:if="${#lists.isEmpty(courses)}"
             class="p-4 rounded-xl text-sm mt-4"
-            style="background: #fffaf2; border: 1px solid var(--line); color: var(--muted)"
+            style="
+              background: #fffaf2;
+              border: 1px solid var(--line);
+              color: var(--muted);
+            "
           >
             No courses yet. Click
             <span class="font-semibold">+ New Course</span>
             to create your first course.
           </div>
         </section>
-        </div>
       </div>
     </main>
 

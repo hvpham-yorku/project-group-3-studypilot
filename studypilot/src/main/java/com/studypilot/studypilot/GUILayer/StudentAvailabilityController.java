@@ -1,7 +1,9 @@
 package com.studypilot.studypilot.GUILayer;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class StudentAvailabilityController {
+
+    private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
 
     private final StudentPortalService studentPortalService;
     private final AvailabilityService availabilityService;
@@ -54,6 +58,7 @@ public class StudentAvailabilityController {
         form.setSelectedSlots(selectedSlots.stream().collect(Collectors.toList()));
 
         model.addAttribute("course", course);
+        model.addAttribute("courseSlug", toSlug(course.getCourseName()));
         model.addAttribute("form", form);
         model.addAttribute("courseSlots", courseSlots);
         model.addAttribute("selectedSlots", selectedSlots);
@@ -80,6 +85,7 @@ public class StudentAvailabilityController {
             availabilityService.saveAvailability(studentId, courseId, form.getSelectedSlots());
 
             model.addAttribute("course", course);
+            model.addAttribute("courseSlug", toSlug(course.getCourseName()));
             model.addAttribute("form", form);
             model.addAttribute("courseSlots", courseTimeSlotRepository.findByCourseId(courseId));
             model.addAttribute("selectedSlots", availabilityService.getStudentAvailabilitySet(studentId, courseId));
@@ -91,6 +97,7 @@ public class StudentAvailabilityController {
             Course course = studentPortalService.requireStudentEnrollment(studentId, courseId);
 
             model.addAttribute("course", course);
+            model.addAttribute("courseSlug", toSlug(course.getCourseName()));
             model.addAttribute("form", form);
             model.addAttribute("courseSlots", courseTimeSlotRepository.findByCourseId(courseId));
             model.addAttribute("selectedSlots", availabilityService.getStudentAvailabilitySet(studentId, courseId));
@@ -103,5 +110,15 @@ public class StudentAvailabilityController {
 
     private boolean isStudent(HttpSession session) {
         return "STUDENT".equals(session.getAttribute("role"));
+    }
+
+    private String toSlug(String input) {
+        if (input == null) {
+            return "course";
+        }
+        String lower = input.trim().toLowerCase(Locale.ROOT);
+        String normalized = NON_ALNUM.matcher(lower).replaceAll("-");
+        String slug = normalized.replaceAll("^-+|-+$", "");
+        return slug.isBlank() ? "course" : slug;
     }
 }
