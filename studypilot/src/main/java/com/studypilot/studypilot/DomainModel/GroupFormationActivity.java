@@ -30,11 +30,17 @@ public class GroupFormationActivity {
     @Column(name = "max_team_size", nullable = false)
     private int maxTeamSize;
 
-    @Column(name = "group_topics_similarly", nullable = false)
-    private boolean groupTopicsSimilarly;
+    @Column(name = "group_topics_similarly", columnDefinition = "boolean default true")
+    private boolean groupTopicsSimilarly = true;
 
-    @Column(name = "group_skills_similarly", nullable = false)
-    private boolean groupSkillsSimilarly;
+    @Column(name = "group_skills_similarly", columnDefinition = "boolean default false")
+    private boolean groupSkillsSimilarly = false;
+
+    @Column(name = "status", length = 20, columnDefinition = "varchar(20) default 'OPEN'")
+    private String status = "OPEN";
+
+    @Column(name = "deadline")
+    private OffsetDateTime deadline;
 
     @Column(name = "status", length = 20, columnDefinition = "varchar(20) default 'OPEN'")
     private String status = "OPEN";

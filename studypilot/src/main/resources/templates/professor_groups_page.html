@@ -159,7 +159,11 @@
 
       function onDragStart(e) {
         draggedStudent = e.currentTarget;
+<<<<<<< Updated upstream
         e.dataTransfer.setData('text/plain', '');
+=======
+        e.dataTransfer.setData('text/plain', e.currentTarget.dataset.studentId || 'student');
+>>>>>>> Stashed changes
         e.dataTransfer.effectAllowed = 'move';
         setTimeout(function() {
           draggedStudent.classList.add('opacity-50');
@@ -179,7 +183,11 @@
       function onDragOver(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
+<<<<<<< Updated upstream
         var zone = e.currentTarget;
+=======
+        var zone = e.currentTarget.closest('.group-drop-zone') || e.currentTarget;
+>>>>>>> Stashed changes
         zone.classList.add('border-blue-400', 'bg-blue-50');
       }
 
@@ -189,7 +197,11 @@
 
       function onDrop(e) {
         e.preventDefault();
+<<<<<<< Updated upstream
         var zone = e.currentTarget;
+=======
+        var zone = e.currentTarget.closest('.group-drop-zone') || e.currentTarget;
+>>>>>>> Stashed changes
         zone.classList.remove('border-blue-400', 'bg-blue-50');
 
         if (!draggedStudent) return;
@@ -202,10 +214,28 @@
 
         fetch(moveUrl, {
           method: 'POST',
+<<<<<<< Updated upstream
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: 'studentId=' + studentId + '&fromGroupId=' + fromGroupId + '&toGroupId=' + toGroupId
         })
         .then(function(r) { return r.json(); })
+=======
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept': 'application/json'
+          },
+          body: new URLSearchParams({studentId: studentId, fromGroupId: fromGroupId, toGroupId: toGroupId}).toString()
+        })
+        .then(function(r) {
+          if (!r.ok) {
+            return r.text().then(function(text) {
+              throw new Error('Server returned ' + r.status + ': ' + text.substring(0, 200));
+            });
+          }
+          return r.json();
+        })
+>>>>>>> Stashed changes
         .then(function(data) {
           if (data.success) {
             // Move DOM element to new group
@@ -217,8 +247,13 @@
             alert(data.error || 'Failed to move student.');
           }
         })
+<<<<<<< Updated upstream
         .catch(function() {
           alert('Network error. Please try again.');
+=======
+        .catch(function(err) {
+          alert('Error: ' + (err.message || 'Network error. Please try again.'));
+>>>>>>> Stashed changes
         });
       }
 

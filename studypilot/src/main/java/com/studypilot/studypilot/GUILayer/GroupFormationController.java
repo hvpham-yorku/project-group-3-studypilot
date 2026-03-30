@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+<<<<<<< Updated upstream
 import org.springframework.web.bind.annotation.ResponseBody;
+=======
+>>>>>>> Stashed changes
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.studypilot.studypilot.BusinessLogicLayer.CourseService;
 import com.studypilot.studypilot.BusinessLogicLayer.GroupFormationService;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+import com.studypilot.studypilot.DomainModel.SurveyQuestion;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -52,15 +57,24 @@ public class GroupFormationController {
             return "redirect:/prof/home";
         }
 
+<<<<<<< Updated upstream
         // Check for expired deadlines and auto-close
+=======
+>>>>>>> Stashed changes
         groupFormationService.checkAndCloseExpiredActivities(courseId);
 
         List<GroupFormationActivity> activities
                 = groupFormationService.getActivitiesForCourse(courseId);
 
+<<<<<<< Updated upstream
         // Build response status and formed groups for each activity
         Map<Long, GroupFormationService.ActivityResponseStatus> responseStatusMap = new HashMap<>();
         Map<Long, List<GroupFormationService.FormedGroupView>> formedGroupsMap = new HashMap<>();
+=======
+        Map<Long, GroupFormationService.ActivityResponseStatus> responseStatusMap = new HashMap<>();
+        Map<Long, List<GroupFormationService.FormedGroupView>> formedGroupsMap = new HashMap<>();
+        Map<Long, List<SurveyQuestion>> questionsMap = new HashMap<>();
+>>>>>>> Stashed changes
 
         for (GroupFormationActivity activity : activities) {
             responseStatusMap.put(activity.getId(),
@@ -70,6 +84,12 @@ public class GroupFormationController {
                 formedGroupsMap.put(activity.getId(),
                         groupFormationService.getFormedGroups(activity.getId()));
             }
+<<<<<<< Updated upstream
+=======
+
+            questionsMap.put(activity.getId(),
+                    groupFormationService.getQuestionsForActivity(activity.getId()));
+>>>>>>> Stashed changes
         }
 
         model.addAttribute("course", course);
@@ -78,6 +98,10 @@ public class GroupFormationController {
         model.addAttribute("activities", activities);
         model.addAttribute("responseStatusMap", responseStatusMap);
         model.addAttribute("formedGroupsMap", formedGroupsMap);
+<<<<<<< Updated upstream
+=======
+        model.addAttribute("questionsMap", questionsMap);
+>>>>>>> Stashed changes
         model.addAttribute("fullName", session.getAttribute("fullName"));
 
         return "group_formation_page";
@@ -316,8 +340,12 @@ public class GroupFormationController {
     }
 
     @PostMapping("/prof/{courseId}/{courseSlug}/group-formation/{activityId}/move-student")
+<<<<<<< Updated upstream
     @ResponseBody
     public Map<String, Object> moveStudent(@PathVariable("courseId") String courseId,
+=======
+    public ResponseEntity<Map<String, Object>> moveStudent(@PathVariable("courseId") String courseId,
+>>>>>>> Stashed changes
             @PathVariable("courseSlug") String courseSlug,
             @PathVariable("activityId") Long activityId,
             @RequestParam("studentId") Long studentId,
@@ -330,7 +358,13 @@ public class GroupFormationController {
         if (!isProfessor(session)) {
             result.put("success", false);
             result.put("error", "Not authorized.");
+<<<<<<< Updated upstream
             return result;
+=======
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(result);
+>>>>>>> Stashed changes
         }
 
         Long professorId = (Long) session.getAttribute("userId");
@@ -342,7 +376,13 @@ public class GroupFormationController {
             result.put("error", ex.getMessage());
         }
 
+<<<<<<< Updated upstream
         return result;
+=======
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/json")
+                .body(result);
+>>>>>>> Stashed changes
     }
 
     private boolean isProfessor(HttpSession session) {

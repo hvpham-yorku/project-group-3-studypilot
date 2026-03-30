@@ -6,6 +6,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
+import java.util.HashMap;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,9 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+<<<<<<< Updated upstream
 import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
 import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
 import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
+=======
+import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
+import com.studypilot.studypilot.DomainModel.SurveyQuestion;
+import com.studypilot.studypilot.DomainModel.SurveyQuestionOption;
+import com.studypilot.studypilot.DomainModel.SurveyResponse;
+>>>>>>> Stashed changes
 import com.studypilot.studypilot.DomainModel.User;
 
 @Service
@@ -37,8 +48,14 @@ public class OpenAiGroupSortingService {
 
     public List<GroupAssignment> sortStudents(
             GroupFormationActivity activity,
+<<<<<<< Updated upstream
             List<GroupFormationTopicOption> topicOptions,
             List<GroupFormationSkillOption> skillOptions,
+=======
+            List<SurveyQuestion> questions,
+            List<SurveyQuestionOption> allOptions,
+            List<SurveyResponse> responses,
+>>>>>>> Stashed changes
             List<StudentGroupPreference> preferences,
             List<User> enrolledStudents) {
 
@@ -46,7 +63,11 @@ public class OpenAiGroupSortingService {
             throw new IllegalStateException("OpenAI API key is not configured. Set openai.api.key in application.properties.");
         }
 
+<<<<<<< Updated upstream
         String prompt = buildPrompt(activity, topicOptions, skillOptions, preferences, enrolledStudents);
+=======
+        String prompt = buildPrompt(activity, questions, allOptions, responses, preferences, enrolledStudents);
+>>>>>>> Stashed changes
 
         String aiResponse = callOpenAi(prompt);
 
@@ -55,24 +76,53 @@ public class OpenAiGroupSortingService {
 
     private String buildPrompt(
             GroupFormationActivity activity,
+<<<<<<< Updated upstream
             List<GroupFormationTopicOption> topicOptions,
             List<GroupFormationSkillOption> skillOptions,
+=======
+            List<SurveyQuestion> questions,
+            List<SurveyQuestionOption> allOptions,
+            List<SurveyResponse> responses,
+>>>>>>> Stashed changes
             List<StudentGroupPreference> preferences,
             List<User> enrolledStudents) {
 
         Map<Long, User> userById = enrolledStudents.stream()
                 .collect(Collectors.toMap(User::getId, u -> u));
 
+<<<<<<< Updated upstream
         Map<Long, StudentGroupPreference> prefByStudentId = preferences.stream()
                 .collect(Collectors.toMap(StudentGroupPreference::getStudentId, p -> p));
 
         StringBuilder sb = new StringBuilder();
         sb.append("You are a group formation assistant for a university course.\n\n");
         sb.append("TASK: Sort students into balanced groups based on their survey responses.\n\n");
+=======
+        // Group options by question ID
+        Map<Long, List<SurveyQuestionOption>> optionsByQuestionId = allOptions.stream()
+                .collect(Collectors.groupingBy(SurveyQuestionOption::getQuestionId));
+
+        // Group responses by student ID
+        Map<Long, List<SurveyResponse>> responsesByStudentId = responses.stream()
+                .collect(Collectors.groupingBy(SurveyResponse::getStudentId));
+
+        // Availability from preferences
+        Map<Long, String> availabilityByStudentId = new HashMap<>();
+        for (StudentGroupPreference pref : preferences) {
+            if (pref.getAvailabilitySlots() != null && !pref.getAvailabilitySlots().isBlank()) {
+                availabilityByStudentId.put(pref.getStudentId(), pref.getAvailabilitySlots());
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("You are a group formation assistant for a university course.\n\n");
+        sb.append("TASK: Sort students into balanced groups based on survey responses and availability.\n\n");
+>>>>>>> Stashed changes
 
         sb.append("ACTIVITY: ").append(activity.getActivityName()).append("\n");
         sb.append("Preferred group size: ").append(activity.getPreferredGroupSize()).append("\n");
         sb.append("Minimum team size: ").append(activity.getMinTeamSize()).append("\n");
+<<<<<<< Updated upstream
         sb.append("Maximum team size: ").append(activity.getMaxTeamSize()).append("\n");
         sb.append("Topic matching: ").append(activity.isGroupTopicsSimilarly()
                 ? "Group students with SIMILAR topic interests together"
@@ -106,6 +156,70 @@ public class OpenAiGroupSortingService {
             } else {
                 sb.append(", (did not submit survey)");
             }
+=======
+        sb.append("Maximum team size: ").append(activity.getMaxTeamSize()).append("\n\n");
+
+        // Describe each survey question
+        sb.append("SURVEY QUESTIONS:\n");
+        for (SurveyQuestion q : questions) {
+            sb.append("\n  Question ").append(q.getQuestionOrder()).append(": \"").append(q.getQuestionTitle()).append("\"\n");
+            sb.append("    Type: ").append(q.getQuestionType()).append("\n");
+            sb.append("    Grouping strategy: ").append(q.getGroupingStrategy()).append("\n");
+
+            if ("SELECT".equals(q.getQuestionType())) {
+                sb.append("    (Students select one or more options. Group ");
+                sb.append("SIMILAR".equals(q.getGroupingStrategy())
+                        ? "students with SIMILAR selections together"
+                        : "students with DIFFERENT selections together for diversity");
+                sb.append(")\n");
+            } else if ("RATING".equals(q.getQuestionType())) {
+                sb.append("    (Students rate each option 1-5 where 1=least preferred, 5=most preferred. ");
+                sb.append("SIMILAR".equals(q.getGroupingStrategy())
+                        ? "Group students with SIMILAR rating patterns together"
+                        : "Group students with DIFFERENT rating patterns together for diversity");
+                sb.append(". Higher ratings indicate stronger preference — weigh these accordingly.)\n");
+            }
+
+            List<SurveyQuestionOption> qOpts = optionsByQuestionId.getOrDefault(q.getId(), List.of());
+            sb.append("    Options: ");
+            sb.append(qOpts.stream().map(SurveyQuestionOption::getOptionText).collect(Collectors.joining(", ")));
+            sb.append("\n");
+        }
+
+        // Map question IDs
+        Map<Long, SurveyQuestion> questionById = questions.stream()
+                .collect(Collectors.toMap(SurveyQuestion::getId, q -> q));
+
+        sb.append("\nSTUDENTS AND THEIR RESPONSES:\n");
+        for (User student : enrolledStudents) {
+            sb.append("- Student ID: ").append(student.getId());
+            sb.append(", Name: ").append(student.getFullName());
+
+            List<SurveyResponse> studentResponses = responsesByStudentId.getOrDefault(student.getId(), List.of());
+
+            if (studentResponses.isEmpty()) {
+                sb.append(", (did not submit survey)");
+            } else {
+                for (SurveyResponse resp : studentResponses) {
+                    SurveyQuestion q = questionById.get(resp.getQuestionId());
+                    if (q == null) continue;
+
+                    sb.append("\n    Q").append(q.getQuestionOrder()).append(" (").append(q.getQuestionTitle()).append("): ");
+
+                    if ("SELECT".equals(q.getQuestionType())) {
+                        sb.append("Selected: ").append(resp.getResponseValue());
+                    } else if ("RATING".equals(q.getQuestionType())) {
+                        sb.append("Ratings: ").append(resp.getResponseValue());
+                    }
+                }
+            }
+
+            String availability = availabilityByStudentId.get(student.getId());
+            if (availability != null && !availability.isBlank()) {
+                sb.append("\n    Availability: ").append(availability);
+            }
+
+>>>>>>> Stashed changes
             sb.append("\n");
         }
 
@@ -114,9 +228,17 @@ public class OpenAiGroupSortingService {
         sb.append("2. Target the preferred group size when possible.\n");
         sb.append("3. Every student must be assigned to exactly one group.\n");
         sb.append("4. Students who did not submit the survey should still be placed in groups.\n");
+<<<<<<< Updated upstream
         sb.append("5. Follow the topic and skill matching preferences specified above.\n");
         sb.append("6. Use simple group names: 'Group 1', 'Group 2', etc.\n");
         sb.append("7. Consider students' availability when forming groups. Try to group students who share common available time slots so they can meet.\n\n");
+=======
+        sb.append("5. For each question, follow the grouping strategy specified (SIMILAR or DIVERSE).\n");
+        sb.append("6. For RATING questions, use the numerical weights (1-5) to measure how strongly students prefer each option. ");
+        sb.append("Students with similar high ratings on the same options should be considered more compatible for SIMILAR strategy.\n");
+        sb.append("7. Use simple group names: 'Group 1', 'Group 2', etc.\n");
+        sb.append("8. Consider students' availability when forming groups. Try to group students who share common available time slots so they can meet.\n\n");
+>>>>>>> Stashed changes
 
         sb.append("RESPONSE FORMAT: Return ONLY a valid JSON array. No markdown, no code fences, no explanation.\n");
         sb.append("Each element must have: \"groupNumber\" (int starting at 1), \"groupName\" (string), ");
@@ -159,9 +281,15 @@ public class OpenAiGroupSortingService {
     private String buildRequestJson(String prompt) {
         String escapedPrompt = escapeJson(prompt);
         return "{" +
+<<<<<<< Updated upstream
                 "\"model\":\"gpt-4o-mini\"," +
                 "\"temperature\":0.3," +
                 "\"max_tokens\":4096," +
+=======
+                "\"model\":\"gpt-5.4-nano\"," +
+                "\"temperature\":0.3," +
+                "\"max_completion_tokens\":4096," +
+>>>>>>> Stashed changes
                 "\"messages\":[{\"role\":\"user\",\"content\":\"" + escapedPrompt + "\"}]" +
                 "}";
     }
