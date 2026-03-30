@@ -387,10 +387,16 @@ public class GroupFormationAlgorithmService {
         }
     }
 
-    private record PairScoreMatrix(Map<Long, Map<Long, Double>> scores) {
+    private static final class PairScoreMatrix {
+
+        private final java.util.function.Function<Long, Map<Long, Double>> rowProvider;
+
+        PairScoreMatrix(Map<Long, Map<Long, Double>> scores) {
+            this.rowProvider = studentId -> scores.getOrDefault(studentId, Map.of());
+        }
 
         List<Long> topMatches(Long studentId, int count) {
-            Map<Long, Double> row = scores.getOrDefault(studentId, Map.of());
+            Map<Long, Double> row = rowProvider.apply(studentId);
 
             return row.entrySet().stream()
                     .sorted((a, b) -> Double.compare(b.getValue(), a.getValue()))
@@ -408,6 +414,7 @@ public class GroupFormationAlgorithmService {
             boolean groupSkillsSimilarly,
             Set<Long> enrolledStudentIds,
             List<StudentSurveyProfile> students) {
+
     }
 
     public record StudentSurveyProfile(
@@ -417,15 +424,18 @@ public class GroupFormationAlgorithmService {
             Set<String> topicChoices,
             Set<String> skillChoices,
             int leadershipConfidence) {
+
     }
 
     public record GroupTeam(
             int teamNumber,
             List<Long> memberIds,
             int size) {
+
     }
 
     public record GroupingResult(
             List<GroupTeam> teams) {
+
     }
 }

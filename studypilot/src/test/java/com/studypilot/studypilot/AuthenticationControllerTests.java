@@ -30,6 +30,7 @@ class AuthenticationControllerTests {
     private HttpSession mockSession;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setup() {
         authService = mock(Authentication.class);
         controller = new AuthenticationController(authService);

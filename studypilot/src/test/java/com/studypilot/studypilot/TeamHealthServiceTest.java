@@ -44,6 +44,7 @@ class TeamHealthServiceTest {
     private static final LocalDate WEEK = LocalDate.of(2026, 3, 23);
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         teamHealthService = new TeamHealthService(
                 courseRepo,
@@ -53,7 +54,6 @@ class TeamHealthServiceTest {
     }
 
     // --- getStudentCheckinHistory ---
-
     @Test
     void getStudentCheckinHistory_returnsHistoryOrderedByWeek() {
         LocalDate week1 = LocalDate.of(2026, 3, 16);
@@ -115,7 +115,6 @@ class TeamHealthServiceTest {
     }
 
     // --- getWeekStart ---
-
     @Test
     void getWeekStart_returnsMonday() {
         LocalDate wednesday = LocalDate.of(2026, 3, 25);
@@ -137,7 +136,6 @@ class TeamHealthServiceTest {
     }
 
     // --- saveWeeklyCheckin ---
-
     @Test
     void saveWeeklyCheckin_nullStudentId_throwsException() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -227,7 +225,6 @@ class TeamHealthServiceTest {
     }
 
     // --- publishWeeklySurvey ---
-
     @Test
     void publishWeeklySurvey_nullProfessorId_throwsException() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -293,7 +290,6 @@ class TeamHealthServiceTest {
     }
 
     // --- getProfessorWeeklySummary ---
-
     @Test
     void getProfessorWeeklySummary_nullProfessorId_throwsException() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -305,8 +301,8 @@ class TeamHealthServiceTest {
     void getProfessorWeeklySummary_noCourses_returnsZeroSummary() {
         when(courseRepo.findByProfessorIdOrderByCreatedAtDesc(1L)).thenReturn(List.of());
 
-        TeamHealthService.ProfessorHealthSummary result =
-                teamHealthService.getProfessorWeeklySummary(1L, WEEK);
+        TeamHealthService.ProfessorHealthSummary result
+                = teamHealthService.getProfessorWeeklySummary(1L, WEEK);
 
         assertEquals(0, result.totalSubmissions());
         assertEquals(0, result.avgHealthPercent());
@@ -330,8 +326,8 @@ class TeamHealthServiceTest {
         when(teamHealthCheckinRepo.findByCourseIdInAndWeekStart(List.of("c1"), WEEK))
                 .thenReturn(List.of(checkin1, checkin2));
 
-        TeamHealthService.ProfessorHealthSummary result =
-                teamHealthService.getProfessorWeeklySummary(1L, WEEK);
+        TeamHealthService.ProfessorHealthSummary result
+                = teamHealthService.getProfessorWeeklySummary(1L, WEEK);
 
         assertEquals(2, result.totalSubmissions());
         assertEquals(1, result.atRiskResponses());
@@ -339,7 +335,6 @@ class TeamHealthServiceTest {
     }
 
     // --- getStudentWeeklyStatus ---
-
     @Test
     void getStudentWeeklyStatus_nullStudentId_throwsException() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -351,8 +346,8 @@ class TeamHealthServiceTest {
     void getStudentWeeklyStatus_noEnrollments_returnsZeros() {
         when(courseEnrollmentRepo.findByStudentIdOrderByCreatedAtDesc(1L)).thenReturn(List.of());
 
-        TeamHealthService.StudentHealthStatus result =
-                teamHealthService.getStudentWeeklyStatus(1L, WEEK);
+        TeamHealthService.StudentHealthStatus result
+                = teamHealthService.getStudentWeeklyStatus(1L, WEEK);
 
         assertEquals(0, result.enrolledCourses());
         assertEquals(0, result.submittedSurveys());
@@ -371,8 +366,8 @@ class TeamHealthServiceTest {
         when(teamHealthCheckinRepo.findByStudentIdAndWeekStart(1L, WEEK))
                 .thenReturn(List.of(checkin));
 
-        TeamHealthService.StudentHealthStatus result =
-                teamHealthService.getStudentWeeklyStatus(1L, WEEK);
+        TeamHealthService.StudentHealthStatus result
+                = teamHealthService.getStudentWeeklyStatus(1L, WEEK);
 
         assertEquals(1, result.enrolledCourses());
         assertEquals(1, result.submittedSurveys());
@@ -390,8 +385,8 @@ class TeamHealthServiceTest {
         when(teamHealthCheckinRepo.findByStudentIdAndWeekStart(1L, WEEK))
                 .thenReturn(List.of());
 
-        TeamHealthService.StudentHealthStatus result =
-                teamHealthService.getStudentWeeklyStatus(1L, WEEK);
+        TeamHealthService.StudentHealthStatus result
+                = teamHealthService.getStudentWeeklyStatus(1L, WEEK);
 
         assertEquals(1, result.enrolledCourses());
         assertEquals(0, result.submittedSurveys());

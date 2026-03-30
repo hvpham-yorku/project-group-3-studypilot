@@ -33,7 +33,8 @@ class StudentHomeControllerTests {
     private Model mockModel;
 
     @BeforeEach
-    void setup() {
+    @SuppressWarnings("unused")
+    void setUp() {
         mockStudentPortalService = mock(StudentPortalService.class);
         mockTeamHealthService = mock(TeamHealthService.class);
         mockUserRepo = mock(UserRepo.class);

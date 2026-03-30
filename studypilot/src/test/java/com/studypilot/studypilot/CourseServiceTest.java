@@ -29,12 +29,12 @@ class CourseServiceTest {
     private CourseService courseService;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp() {
         courseService = new CourseService(courseRepo);
     }
 
     // --- createCourse ---
-
     @Test
     void createCourse_validInputs_savesCourse() {
         when(courseRepo.existsByJoinCode(any())).thenReturn(false);
@@ -96,7 +96,6 @@ class CourseServiceTest {
     }
 
     // --- getCoursesForProfessor ---
-
     @Test
     void getCoursesForProfessor_returnsCourses() {
         Course c1 = new Course("c1", "CS101", "Intro to CS", 1L, "ABCD1234");
@@ -126,7 +125,6 @@ class CourseServiceTest {
     }
 
     // --- getCourseById ---
-
     @Test
     void getCourseById_validId_returnsCourse() {
         Course course = new Course("c1", "CS101", "Intro to CS", 1L, "ABCD1234");
@@ -161,7 +159,6 @@ class CourseServiceTest {
     }
 
     // --- getCourseByJoinCode ---
-
     @Test
     void getCourseByJoinCode_validCode_returnsCourse() {
         Course course = new Course("c1", "CS101", "Intro to CS", 1L, "ABCD1234");

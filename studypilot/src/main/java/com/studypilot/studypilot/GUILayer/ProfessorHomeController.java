@@ -1,6 +1,7 @@
 package com.studypilot.studypilot.GUILayer;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import jakarta.servlet.http.HttpSession;
 public class ProfessorHomeController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
+    private static final DateTimeFormatter SUBMISSION_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final CourseService courseService;
 
@@ -227,9 +229,10 @@ public class ProfessorHomeController {
 
         List<CourseEnrollment> enrollments = courseEnrollmentRepo.findByCourseId(course.getId());
         int enrolledCount = enrollments.size();
+        List<TeamHealthCheckin> courseCheckins = teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart);
 
         Set<Long> submittedStudentIds = new HashSet<>();
-        for (TeamHealthCheckin checkin : teamHealthService.getCourseCheckinsForWeek(List.of(course.getId()), weekStart)) {
+        for (TeamHealthCheckin checkin : courseCheckins) {
             submittedStudentIds.add(checkin.getStudentId());
         }
 
@@ -245,6 +248,25 @@ public class ProfessorHomeController {
                 .sorted()
                 .toList();
 
+        List<SurveySubmissionRow> submissionRows = courseCheckins.stream()
+                .sorted(Comparator.comparing(TeamHealthCheckin::getUpdatedAt).reversed())
+                .map(checkin -> {
+                    User student = findUser(userCache, checkin.getStudentId());
+                    String studentName = student == null ? "Unknown Student" : student.getFullName();
+                    String submittedAt = checkin.getUpdatedAt() == null
+                            ? ""
+                            : SUBMISSION_TIME_FORMAT.format(checkin.getUpdatedAt().toLocalDateTime());
+
+                    return new SurveySubmissionRow(
+                            studentName,
+                            checkin.getHealthScore(),
+                            checkin.getWorkloadScore(),
+                            checkin.getCollaborationScore(),
+                            checkin.getStatusText(),
+                            submittedAt);
+                })
+                .toList();
+
         model.addAttribute("fullName", session.getAttribute("fullName"));
         model.addAttribute("courseId", course.getId());
         model.addAttribute("courseCode", course.getCourseCode());
@@ -255,6 +277,7 @@ public class ProfessorHomeController {
         model.addAttribute("submissionsCount", submissionsCount);
         model.addAttribute("enrolledCount", enrolledCount);
         model.addAttribute("missingStudentNames", missingStudentNames);
+        model.addAttribute("submissionRows", submissionRows);
     }
 
     private List<CourseCardView> toCourseCards(List<Course> courses) {
@@ -387,6 +410,16 @@ public class ProfessorHomeController {
     }
 
     public record ParticipationRow(String studentName, String courseCode, boolean submitted) {
+
+    }
+
+    public record SurveySubmissionRow(
+            String studentName,
+            int healthScore,
+            int workloadScore,
+            int collaborationScore,
+            String statusText,
+            String submittedAt) {
 
     }
 

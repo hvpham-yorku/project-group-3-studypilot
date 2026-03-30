@@ -21,23 +21,37 @@ public class TeamMember {
     private Long studentId;
 
     @Column(nullable = false)
-    private Instant createdAt = Instant.now();
+    private final Instant createdAt = Instant.now();
 
-    public TeamMember() {}
+    public TeamMember() {
+    }
 
     public TeamMember(Long teamId, Long studentId) {
         this.teamId = teamId;
         this.studentId = studentId;
     }
 
-    
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getTeamId() { return teamId; }
-    public void setTeamId(Long teamId) { this.teamId = teamId; }
+    public Long getTeamId() {
+        return teamId;
+    }
 
-    public Long getStudentId() { return studentId; }
-    public void setStudentId(Long studentId) { this.studentId = studentId; }
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
+    }
 
-    public Instant getCreatedAt() { return createdAt; }
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

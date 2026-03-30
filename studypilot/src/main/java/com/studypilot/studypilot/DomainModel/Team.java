@@ -24,21 +24,40 @@ public class Team {
     private String teamName;
 
     @Column(nullable = false)
-    private Instant createdAt = Instant.now();
+    private final Instant createdAt = Instant.now();
 
-    public Team() {}
+    public Team() {
+    }
 
+    public Long getId() {
+        return id;
+    }
 
-    public Long getId() { return id; }
+    public Long getActivityId() {
+        return activityId;
+    }
 
-    public Long getActivityId() { return activityId; }
-    public void setActivityId(Long activityId) { this.activityId = activityId; }
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
+    }
 
-    public String getCourseId() { return courseId; }
-    public void setCourseId(String courseId) { this.courseId = courseId; }
+    public String getCourseId() {
+        return courseId;
+    }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
 
-    public Instant getCreatedAt() { return createdAt; }
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

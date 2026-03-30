@@ -43,6 +43,7 @@ public class StudentPortalServiceTest {
     private StudentPortalService service;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setup() {
         courseRepo = mock(CourseRepo.class);
         enrollmentRepo = mock(CourseEnrollmentRepo.class);
@@ -86,9 +87,10 @@ public class StudentPortalServiceTest {
     //  TEST: null student
     @Test
     void testGetStudentCoursesNullStudent() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             service.getStudentCourses(null);
         });
+        assertTrue(ex.getMessage() != null && !ex.getMessage().isBlank());
     }
 
     //  TEST: enroll by join code success
@@ -112,9 +114,10 @@ public class StudentPortalServiceTest {
     //  TEST: invalid join code length
     @Test
     void testEnrollByJoinCodeInvalidLength() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             service.enrollStudentInCourseByJoinCode(1L, "SHORT");
         });
+        assertTrue(ex.getMessage() != null && !ex.getMessage().isBlank());
     }
 
     //  TEST: already enrolled (should NOT save)
@@ -140,9 +143,10 @@ public class StudentPortalServiceTest {
         when(courseRepo.findByJoinCode("ABCDEFGH"))
                 .thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             service.enrollStudentInCourseByJoinCode(1L, "ABCDEFGH");
         });
+        assertTrue(ex.getMessage() != null && !ex.getMessage().isBlank());
     }
 
     //  TEST: getLatestGroupActivity

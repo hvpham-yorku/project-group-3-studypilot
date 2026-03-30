@@ -4,9 +4,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +53,7 @@ public class OpenAiGroupSortingService {
 
         String aiResponse = callOpenAi(prompt);
 
-        return parseResponse(aiResponse, enrolledStudents);
+        return parseResponse(aiResponse);
     }
 
     private String buildPrompt(
@@ -64,9 +64,6 @@ public class OpenAiGroupSortingService {
             List<StudentGroupPreference> preferences,
             List<User> enrolledStudents) {
 
-        Map<Long, User> userById = enrolledStudents.stream()
-                .collect(Collectors.toMap(User::getId, u -> u));
-
         // Group options by question ID
         Map<Long, List<SurveyQuestionOption>> optionsByQuestionId = allOptions.stream()
                 .collect(Collectors.groupingBy(SurveyQuestionOption::getQuestionId));
@@ -74,14 +71,6 @@ public class OpenAiGroupSortingService {
         // Group responses by student ID
         Map<Long, List<SurveyResponse>> responsesByStudentId = responses.stream()
                 .collect(Collectors.groupingBy(SurveyResponse::getStudentId));
-
-        // Availability from preferences
-        Map<Long, String> availabilityByStudentId = new HashMap<>();
-        for (StudentGroupPreference pref : preferences) {
-            if (pref.getAvailabilitySlots() != null && !pref.getAvailabilitySlots().isBlank()) {
-                availabilityByStudentId.put(pref.getStudentId(), pref.getAvailabilitySlots());
-            }
-        }
 
         StringBuilder sb = new StringBuilder();
         sb.append("You are a group formation assistant for a university course.\n\n");
@@ -91,6 +80,7 @@ public class OpenAiGroupSortingService {
         sb.append("Preferred group size: ").append(activity.getPreferredGroupSize()).append("\n");
         sb.append("Minimum team size: ").append(activity.getMinTeamSize()).append("\n");
         sb.append("Maximum team size: ").append(activity.getMaxTeamSize()).append("\n\n");
+        sb.append("Preference submissions captured: ").append(preferences.size()).append("\n\n");
 
         // Describe each survey question
         sb.append("SURVEY QUESTIONS:\n");
@@ -135,7 +125,9 @@ public class OpenAiGroupSortingService {
             } else {
                 for (SurveyResponse resp : studentResponses) {
                     SurveyQuestion q = questionById.get(resp.getQuestionId());
-                    if (q == null) continue;
+                    if (q == null) {
+                        continue;
+                    }
 
                     sb.append("\n    Q").append(q.getQuestionOrder()).append(" (").append(q.getQuestionTitle()).append("): ");
 
@@ -145,11 +137,6 @@ public class OpenAiGroupSortingService {
                         sb.append("Ratings: ").append(resp.getResponseValue());
                     }
                 }
-            }
-
-            String availability = availabilityByStudentId.get(student.getId());
-            if (availability != null && !availability.isBlank()) {
-                sb.append("\n    Availability: ").append(availability);
             }
 
             sb.append("\n");
@@ -199,19 +186,19 @@ public class OpenAiGroupSortingService {
             throw new RuntimeException("OpenAI API call was interrupted.", e);
         } catch (RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to call OpenAI API: " + e.getMessage(), e);
         }
     }
 
     private String buildRequestJson(String prompt) {
         String escapedPrompt = escapeJson(prompt);
-        return "{" +
-                "\"model\":\"gpt-5.4-nano\"," +
-                "\"temperature\":0.3," +
-                "\"max_completion_tokens\":4096," +
-                "\"messages\":[{\"role\":\"user\",\"content\":\"" + escapedPrompt + "\"}]" +
-                "}";
+        return "{"
+                + "\"model\":\"gpt-5.4-nano\","
+                + "\"temperature\":0.3,"
+                + "\"max_completion_tokens\":4096,"
+                + "\"messages\":[{\"role\":\"user\",\"content\":\"" + escapedPrompt + "\"}]"
+                + "}";
     }
 
     private String extractContent(String responseBody) {
@@ -238,7 +225,7 @@ public class OpenAiGroupSortingService {
         return s.length();
     }
 
-    private List<GroupAssignment> parseResponse(String content, List<User> enrolledStudents) {
+    private List<GroupAssignment> parseResponse(String content) {
         String trimmed = content.trim();
         if (trimmed.startsWith("```")) {
             int firstNewline = trimmed.indexOf('\n');
@@ -336,7 +323,7 @@ public class OpenAiGroupSortingService {
         for (String part : arrayStr.split(",")) {
             String trimmedPart = part.trim();
             if (!trimmedPart.isEmpty()) {
-                ids.add(Long.parseLong(trimmedPart));
+                ids.add(Long.valueOf(trimmedPart));
             }
         }
         return ids;
@@ -362,5 +349,6 @@ public class OpenAiGroupSortingService {
             int groupNumber,
             String groupName,
             List<Long> studentIds) {
+
     }
 }
