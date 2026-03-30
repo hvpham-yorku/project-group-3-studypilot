@@ -84,7 +84,7 @@ branch and replaced their role with the new entities
 
 | Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 2 hours        | 3 hours     |
+| 4 hours        | 5 hours     |
 
 ---
 ### 🗓️ Student Availability & Scheduling Feature
@@ -101,7 +101,7 @@ Implemented:
 
  Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 2 hours        | 3 hours     |
+| 4 hours        | 5 hours     |
 
 ---
 ### 📊 Weekly Team Health Check-ins
@@ -211,8 +211,8 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 
 | Member     | Estimated (hrs) | Actual (hrs) |
 |------------|:---------------:|:------------:|
-| Tessa      | 10              | 10           |
-| Gabriella  | 10              | 10           |
+| Tessa      | 15              | 16           |
+| Gabriella  | 15              | 16           |
 | Monabbir   | 30              | 38           |
 | Ashvin     | 36              | 44           |
 | Sandeepon  | 4               | 0            |
