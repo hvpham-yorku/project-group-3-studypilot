@@ -1,29 +1,13 @@
 package com.studypilot.studypilot.GUILayer;
 
-/**
- * StudentGroupPreferenceForm component.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class StudentGroupPreferenceForm {
 
-    private String topicChoice;
-    private String skillChoice;
     private String notes;
-
-    public String getTopicChoice() {
-        return topicChoice;
-    }
-
-    public void setTopicChoice(String topicChoice) {
-        this.topicChoice = topicChoice;
-    }
-
-    public String getSkillChoice() {
-        return skillChoice;
-    }
-
-    public void setSkillChoice(String skillChoice) {
-        this.skillChoice = skillChoice;
-    }
+    private String availabilitySlots;
+    private Map<String, String> responses = new HashMap<>();
 
     public String getNotes() {
         return notes;
@@ -31,5 +15,21 @@ public class StudentGroupPreferenceForm {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getAvailabilitySlots() {
+        return availabilitySlots;
+    }
+
+    public void setAvailabilitySlots(String availabilitySlots) {
+        this.availabilitySlots = availabilitySlots;
+    }
+
+    public Map<String, String> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(Map<String, String> responses) {
+        this.responses = responses;
     }
 }

@@ -17,9 +17,6 @@ import jakarta.persistence.UniqueConstraint;
         name = "student_group_preferences",
         uniqueConstraints = @UniqueConstraint(columnNames = {"activity_id", "student_id"})
 )
-/**
- * StudentGroupPreference component.
- */
 public class StudentGroupPreference {
 
     @Id
@@ -35,14 +32,20 @@ public class StudentGroupPreference {
     @Column(name = "student_id", nullable = false)
     private Long studentId;
 
-    @Column(name = "topic_choice", nullable = false, length = 120)
-    private String topicChoice;
+    @Column(name = "topic_choice", length = 120, columnDefinition = "varchar(120) default ''")
+    private String topicChoice = "";
 
-    @Column(name = "skill_choice", nullable = false, length = 120)
-    private String skillChoice;
+    @Column(name = "skill_choice", length = 120, columnDefinition = "varchar(120) default ''")
+    private String skillChoice = "";
 
     @Column(name = "notes", length = 600)
     private String notes;
+
+    @Column(name = "question_responses", length = 8000)
+    private String questionResponses;
+
+    @Column(name = "availability_slots", length = 1000)
+    private String availabilitySlots;
 
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
@@ -98,6 +101,10 @@ public class StudentGroupPreference {
         return notes;
     }
 
+    public String getQuestionResponses() {
+        return questionResponses;
+    }
+
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -112,5 +119,17 @@ public class StudentGroupPreference {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public void setQuestionResponses(String questionResponses) {
+        this.questionResponses = questionResponses;
+    }
+
+    public String getAvailabilitySlots() {
+        return availabilitySlots;
+    }
+
+    public void setAvailabilitySlots(String availabilitySlots) {
+        this.availabilitySlots = availabilitySlots;
     }
 }
