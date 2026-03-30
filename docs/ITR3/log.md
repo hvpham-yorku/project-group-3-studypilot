@@ -87,7 +87,6 @@ branch and replaced their role with the new entities
 | 2 hours        | 3 hours     |
 
 ---
----
 ### 📊 Weekly Team Health Check-ins
 **Assignee:** @Monabbir | **Dates:** Mar 18–24, 2026
 
