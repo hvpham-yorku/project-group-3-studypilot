@@ -87,7 +87,7 @@ branch and replaced their role with the new entities
 | 2 hours        | 3 hours     |
 
 ---
-###🗓️ Student Availability & Scheduling Feature
+### 🗓️ Student Availability & Scheduling Feature
 
 **Assignee:** @Gabriella | **Dates:** Mar 26–30, 2026
 
