@@ -1,4 +1,4 @@
-StudyPilot – Iteration 2 Log
+StudyPilot – Iteration 3 Log
 =================================
 
 Repository Structure
@@ -72,21 +72,125 @@ branch and replaced their role with the new entities
 | 14 hours       | 16 hours    |
 
 ---
----
+### 📊 Weekly Team Health Check-ins
+**Assignee:** @Monabbir | **Dates:** Mar 18–24, 2026
 
-## MEETINGS
+**Implemented:**
+- [x] Implemented backend logic for weekly health check-ins.
+- [x] Added capabilities for professors to publish a weekly survey for their courses.
+- [x] Enabled students to submit weekly health, workload, and collaboration scores along with a status text.
+- [x] Built JSON API endpoints in `TeamHealthController` for health-checkin submission and summary retrieval.
 
-**
-
-## TIME SUMMARY
-
-| Member     | Estimated | Actual |
-|------------|-----------|--------|
-| Tessa      |           |        |
-| Gabriella  |           |        |
-| Monabbir   |           |        |
-| Ashvin     |     14    |   16   |
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 4 hours        | 5 hours     |
 
 ---
+
+### 🎨 Frontend GUI Expansion & Integration
+**Assignee:** @Monabbir | **Dates:** Mar 20–28, 2026
+
+**Implemented:**
+- [x] Built out the frontend GUI for the complex group formation interfaces.
+- [x] Implemented the dynamic form builder allowing professors to dynamically add/remove survey questions on the creation page.
+- [x] Designed and integrated the student view for answering surveys (`student_group_formation_page.html`).
+- [x] Integrated Thymeleaf models to render the "Active Group Formations" list and the final "Formed Groups" output.
+
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 6 hours        | 7 hours     |
+
+---
+
+### 🧪 QA, Testing, and Refactoring (Lab 5)
+**Assignees:** @Tessa, @Monabbir, @Ashvin, @Gabriella | **Dates:** Mar 25–29, 2026
+
+**Framework:** Manual End-to-End Testing & Code Review
+
+**Coverage & Fixes:**
+- [x] **Tessa:** Tested User account registration, Professor course creation, Student course joining.
+- [x] **Monabbir:** Tested Professor group formation creation, Student preference submission, Professor roster viewing.
+- [x] **Ashvin:** Tested User login, Professor publishing weekly surveys, Student health check-in submissions.
+- [x] **Code Smells Fixed:** Addressed Duplicated Code (Form Validation), Magic Numbers (Algorithm Service), and Dead Code (Obsolete Repositories).
+
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 6 hours        | 8 hours     |
+
+---
+
+### 📝 Documentation & Course Management Features
+**Assignees:** @Tessa, @Gabriella | **Dates:** Mar 15–29, 2026
+
+**Completed:**
+- [x] Wrote and refined the comprehensive System Architecture overview.
+- [x] Designed the relational Database Schema and generated the Mermaid.js UML Entity-Relationship diagram.
+- [x] Compiled the Iteration 3 Log, Team Dynamics feedback, and Lab 5 QA reporting.
+- [x] Assisted with course management documentation and requirement tracking.
+
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 4 hours        | 5 hours     |
+
+---
+
+## 📖 User Story Development Summary
+
+### User Story 1 — Professor can create group formations
+Professors can now create highly customizable group formation activities, define precise minimum/maximum team sizes, set deadlines, and build a dynamic list of survey questions (Select/Rating) to evaluate students.
+
+### User Story 2 — Student can set group preferences
+Students access pending surveys for their enrolled courses and submit answers to the professor's dynamic questions, alongside their availability slots, driving the data required for the sorting algorithm.
+
+### User Story 3 — Professor can view enrolled students / Manage Health Check-ins
+Professors have full visibility of the course roster, can publish weekly surveys, and monitor team dynamics through student-submitted health, workload, and collaboration scores.
+
+---
+
+## 🏗 System Architecture Reorganization
+**Date:** Mar 22, 2026
+
+The system architecture was refined to handle the external AI dependency. We introduced a dedicated `OpenAiGroupSortingService` to act as an intermediary, isolating the HTTP/JSON parsing logic away from the core `GroupFormationService`. We also shifted away from hardcoded entity relationships for topics/skills, moving toward a generic survey-response schema that relies on logical application-level links.
+
+---
+
+## 🔄 Plan Changes from Iteration 2
+
+**Original Plan:**
+Use a hardcoded, static list of exactly 5 topics and 5 skills for students to choose from during group formation.
+
+**Revised Plan:**
+Implemented a fully dynamic survey builder utilizing `survey_questions` and `survey_question_options` tables.
+
+**Reason:** The original plan was too rigid for different types of courses. A dynamic survey allows professors to tailor questions specifically to their syllabus (e.g., asking about programming languages in a CS course, or research interests in a Humanities course). It also provides much better contextual data for the OpenAI sorting algorithm to form balanced groups.
+
+---
+
+## 📅 Meetings
+- **Mar 18:** Ad-hoc meeting to address technical ambiguities regarding linking group preference models to the frontend displays.
+- **Mar 23:** Structured brainstorming session to determine the most efficient technical path for integrating the OpenAI sorting feature.
+- **Mar 27:** QA sync to distribute end-to-end testing responsibilities (ensuring cross-testing) and to redistribute workload due to a non-contributing team member.
+
+---
+
+## ⏱ Time Summary
+
+| Member     | Estimated (hrs) | Actual (hrs) |
+|------------|:---------------:|:------------:|
+| Tessa      | 8               | 8            |
+| Gabriella  | 8               | 7            |
+| Monabbir   | 10              | 13           |
+| Ashvin     | 10              | 14           |
+| Sandeepon  | 4               | 0            |
+
+---
+
+## 📌 Current Status
+StudyPilot is currently a highly functional, monolithic Spring Boot MVC application. The core workflows for both Professors and Students are complete. Authentication, course management, dynamic group formation (with auto-sorting), and weekly health check-ins are fully integrated between the PostgreSQL database and the Thymeleaf-rendered frontend. 
+
+## 🚀 Next Steps for Delivery
+- [ ] Final polish of the UI/UX across all Thymeleaf templates.
+- [ ] Complete final deployment to a live hosting environment (e.g., Heroku, AWS, or Render) if required.
+- [ ] Preparation of the final demonstration/presentation highlighting the AI auto-sort and the professor analytics dashboard.
 
 
