@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,9 @@ import com.studypilot.studypilot.BusinessLogicLayer.TeamHealthService;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
+import com.studypilot.studypilot.DomainModel.SurveyQuestion;
+import com.studypilot.studypilot.DomainModel.SurveyQuestionOption;
+import com.studypilot.studypilot.DomainModel.SurveyResponse;
 import com.studypilot.studypilot.DomainModel.TeamHealthCheckin;
 import com.studypilot.studypilot.DomainModel.User;
 import com.studypilot.studypilot.DomainModel.WeeklySurvey;
@@ -31,18 +35,11 @@ import com.studypilot.studypilot.DomainModel.WeeklySurvey;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-/**
- * Student portal controller.
- *
- * Handles student dashboard, enrolled courses, weekly surveys, and
- * group-formation preference submission flows.
- */
 public class StudentHomeController {
 
     private static final Pattern NON_ALNUM = Pattern.compile("[^a-z0-9]+");
 
     private final StudentPortalService studentPortalService;
-
     private final TeamHealthService teamHealthService;
     private final UserRepo userRepo;
 
@@ -50,15 +47,11 @@ public class StudentHomeController {
             TeamHealthService teamHealthService,
             UserRepo userRepo) {
         this.studentPortalService = studentPortalService;
-
         this.teamHealthService = teamHealthService;
         this.userRepo = userRepo;
     }
 
     @GetMapping("/student/home")
-    /**
-     * Renders the student home page with enrolled and joinable courses.
-     */
     public String studentHome(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -78,9 +71,6 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/courses")
-    /**
-     * Renders the student's course list page.
-     */
     public String studentCourses(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -93,9 +83,6 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/surveys")
-    /**
-     * Renders weekly survey hub and submission status per active course.
-     */
     public String studentSurveys(HttpSession session, Model model) {
         if (!isStudent(session)) {
             return "redirect:/login";
@@ -132,9 +119,6 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/surveys/checkin")
-    /**
-     * Saves the student's weekly check-in for a specific course.
-     */
     public String submitHealthSurvey(@RequestParam("courseId") String courseId,
             @RequestParam("healthScore") Integer healthScore,
             @RequestParam("workloadScore") Integer workloadScore,
@@ -165,9 +149,6 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/course/join")
-    /**
-     * Enrolls a student into a course using a join code.
-     */
     public String joinCourse(@ModelAttribute("joinForm") StudentJoinCourseForm form,
             HttpSession session,
             Model model) {
@@ -186,9 +167,6 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/{courseId}/{courseSlug}")
-    /**
-     * Renders the student course workspace including survey and team context.
-     */
     public String studentCoursePage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -239,9 +217,6 @@ public class StudentHomeController {
     }
 
     @GetMapping("/student/{courseId}/{courseSlug}/group-formation")
-    /**
-     * Displays group formation preference form for the latest activity.
-     */
     public String groupFormationPage(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             HttpSession session,
@@ -267,16 +242,42 @@ public class StudentHomeController {
 
             GroupFormationActivity activity = maybeActivity.get();
             model.addAttribute("activity", activity);
-            model.addAttribute("topicOptions", studentPortalService.getTopicOptions(activity.getId()));
-            model.addAttribute("skillOptions", studentPortalService.getSkillOptions(activity.getId()));
+            model.addAttribute("activityStatus", activity.getStatus());
 
+            if ("SORTED".equals(activity.getStatus())) {
+                studentPortalService.getStudentGroupForCourse(studentId, courseId).ifPresent(groupInfo -> {
+                    model.addAttribute("studentGroup", groupInfo);
+                });
+            }
+
+            // Load survey questions and options
+            List<SurveyQuestion> questions = studentPortalService.getSurveyQuestions(activity.getId());
+            model.addAttribute("surveyQuestions", questions);
+
+            List<Long> questionIds = questions.stream().map(SurveyQuestion::getId).toList();
+            Map<Long, List<SurveyQuestionOption>> optionsByQuestion =
+                    studentPortalService.getOptionsGroupedByQuestion(questionIds);
+            model.addAttribute("optionsByQuestion", optionsByQuestion);
+
+            // Load existing responses
+            List<SurveyResponse> existingResponses = studentPortalService.getStudentResponses(activity.getId(), studentId);
+            Map<Long, String> savedResponses = existingResponses.stream()
+                    .collect(Collectors.toMap(SurveyResponse::getQuestionId, SurveyResponse::getResponseValue));
+            model.addAttribute("savedResponses", savedResponses);
+
+            // Load preference for availability/notes
             StudentGroupPreferenceForm form = new StudentGroupPreferenceForm();
             studentPortalService.getStudentPreference(activity.getId(), studentId).ifPresent(pref -> {
-                form.setTopicChoice(pref.getTopicChoice());
-                form.setSkillChoice(pref.getSkillChoice());
                 form.setNotes(pref.getNotes());
+                form.setAvailabilitySlots(pref.getAvailabilitySlots());
                 model.addAttribute("savedPreference", true);
+                model.addAttribute("savedAvailability", pref.getAvailabilitySlots() != null ? pref.getAvailabilitySlots() : "");
             });
+
+            // Check if student has any survey responses (counts as having responded)
+            if (!existingResponses.isEmpty()) {
+                model.addAttribute("savedPreference", true);
+            }
 
             model.addAttribute("form", form);
             return "student_group_formation_page";
@@ -286,9 +287,6 @@ public class StudentHomeController {
     }
 
     @PostMapping("/student/{courseId}/{courseSlug}/group-formation")
-    /**
-     * Persists student topic/skill preferences for group formation.
-     */
     public String submitGroupFormation(@PathVariable("courseId") String courseId,
             @PathVariable("courseSlug") String courseSlug,
             @RequestParam("activityId") Long activityId,
@@ -302,15 +300,15 @@ public class StudentHomeController {
         Long studentId = (Long) session.getAttribute("userId");
 
         try {
-            studentPortalService.saveGroupPreference(
+            studentPortalService.saveSurveyResponses(
                     studentId,
                     courseId,
                     activityId,
-                    form.getTopicChoice(),
-                    form.getSkillChoice(),
-                    form.getNotes()
+                    form.getResponses(),
+                    form.getNotes(),
+                    form.getAvailabilitySlots()
             );
-            model.addAttribute("success", "Your group preferences have been saved.");
+            model.addAttribute("success", "Your survey responses have been saved.");
             return groupFormationPage(courseId, courseSlug, session, model);
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
