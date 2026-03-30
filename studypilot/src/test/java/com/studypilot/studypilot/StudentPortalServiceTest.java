@@ -25,7 +25,6 @@ import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
 import com.studypilot.studypilot.DataAccessLayer.SurveyQuestionOptionRepo;
 import com.studypilot.studypilot.DataAccessLayer.SurveyQuestionRepo;
 import com.studypilot.studypilot.DataAccessLayer.SurveyResponseRepo;
-import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
 import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
@@ -42,7 +41,6 @@ public class StudentPortalServiceTest {
     private SurveyQuestionRepo surveyQuestionRepo;
     private SurveyQuestionOptionRepo surveyQuestionOptionRepo;
     private SurveyResponseRepo surveyResponseRepo;
-    private StudentGroupPreferenceRepo studentGroupPreferenceRepo;
     private FormedGroupRepo formedGroupRepo;
     private FormedGroupMemberRepo formedGroupMemberRepo;
     private UserRepo userRepo;
@@ -50,6 +48,7 @@ public class StudentPortalServiceTest {
     private StudentPortalService service;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setup() {
         courseRepo = mock(CourseRepo.class);
         enrollmentRepo = mock(CourseEnrollmentRepo.class);
@@ -57,7 +56,6 @@ public class StudentPortalServiceTest {
         surveyQuestionRepo = mock(SurveyQuestionRepo.class);
         surveyQuestionOptionRepo = mock(SurveyQuestionOptionRepo.class);
         surveyResponseRepo = mock(SurveyResponseRepo.class);
-        studentGroupPreferenceRepo = mock(StudentGroupPreferenceRepo.class);
         formedGroupRepo = mock(FormedGroupRepo.class);
         formedGroupMemberRepo = mock(FormedGroupMemberRepo.class);
         userRepo = mock(UserRepo.class);
@@ -69,7 +67,7 @@ public class StudentPortalServiceTest {
                 surveyQuestionRepo,
                 surveyQuestionOptionRepo,
                 surveyResponseRepo,
-                studentGroupPreferenceRepo,
+                null,
                 formedGroupRepo,
                 formedGroupMemberRepo,
                 userRepo
