@@ -214,7 +214,7 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 | Tessa      | 10              | 10           |
 | Gabriella  | 10              | 10           |
 | Monabbir   | 30              | 38           |
-| Ashvin     | 17              | 19           |
+| Ashvin     | 36              | 44           |
 | Sandeepon  | 4               | 0            |
 
 ---
