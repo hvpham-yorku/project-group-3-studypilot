@@ -111,6 +111,7 @@ branch and replaced their role with the new entities
 - [x] **Tessa:** Tested User account registration, Professor course creation, Student course joining.
 - [x] **Monabbir:** Tested Professor group formation creation, Student preference submission, Professor roster viewing.
 - [x] **Ashvin:** Tested User login, Professor publishing weekly surveys, Student health check-in submissions.
+- [x] **Gabriella:** Tested Student availability submission, Professor team availability overview, and Professor analytics dashboard.
 - [x] **Code Smells Fixed:** Addressed Duplicated Code (Form Validation), Magic Numbers (Algorithm Service), and Dead Code (Obsolete Repositories).
 
 | Estimated Time | Actual Time |
