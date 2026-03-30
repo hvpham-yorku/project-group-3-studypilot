@@ -20,7 +20,7 @@ StudyPilot is an AI-assisted academic workflow tool designed for the EECS2311 So
 ## How to run
 To run the Spring Boot application locally:
 
-### Delivery 1
+### Delivery 2
 
 Second Customer Meeting Video: 
 
