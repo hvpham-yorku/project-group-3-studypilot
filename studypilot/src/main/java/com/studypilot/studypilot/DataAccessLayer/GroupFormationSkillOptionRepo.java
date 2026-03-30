@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.studypilot.studypilot.DomainModel.GroupFormationSkillOption;
 
-/**
- * GroupFormationSkillOptionRepo component.
- */
 public interface GroupFormationSkillOptionRepo extends JpaRepository<GroupFormationSkillOption, Long> {
 
     List<GroupFormationSkillOption> findByActivityIdOrderByOptionOrderAsc(Long activityId);

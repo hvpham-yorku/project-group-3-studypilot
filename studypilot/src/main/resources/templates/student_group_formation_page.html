@@ -11,150 +11,612 @@
 
     <main class="flex-1 flex flex-col min-h-screen">
       <div
-        th:replace="~{fragments/header :: authHeader(${ 'Welcome, ' + fullName + '!' }, false)}"
+        th:replace="~{fragments/header :: authHeader('Group Formation', false)}"
       ></div>
 
-      <div class="p-8 animate-fade-in-up">
-        <div class="max-w-4xl mx-auto w-full space-y-6">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <p class="text-sm text-slate-500">Course Space</p>
-              <h1 class="text-3xl font-bold mt-1">Group Formation</h1>
-              <p class="text-slate-600 mt-2">
-                <span th:text="${course.courseCode}">EECS2311</span>
-                <span> - </span>
-                <span th:text="${course.courseName}">Software Design</span>
-              </p>
-            </div>
-            <a
-              th:href="@{/student/{courseId}/{courseSlug}(courseId=${course.id},courseSlug=${courseSlug})}"
-              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold hover:bg-slate-100"
-            >
-              Back to Course
-            </a>
+      <div class="p-8 animate-fade-in-up space-y-8">
+        <div class="max-w-4xl mx-auto w-full space-y-8">
+          <!-- Header -->
+          <div>
+            <p class="text-sm text-slate-500">Group Formation Survey</p>
+            <h1 class="text-3xl font-bold">
+              <span th:text="${course.courseName}">Course Name</span>
+            </h1>
+            <p class="text-slate-600 mt-1">
+              <span th:text="${course.courseCode}">CODE</span>
+            </p>
           </div>
 
-          <p
+          <!-- Flash messages -->
+          <div
             th:if="${success}"
-            class="text-sm text-green-700 bg-green-50 border border-green-200 px-4 py-3 rounded-xl"
+            class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
             th:text="${success}"
-          >
-            Saved
-          </p>
-
-          <p
+          ></div>
+          <div
             th:if="${error}"
-            class="text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
             th:text="${error}"
-          >
-            Error
-          </p>
+          ></div>
 
-          <section
+          <!-- No activity state -->
+          <div
             th:if="${activity == null}"
-            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 text-sm text-slate-500"
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
           >
-            Your professor has not published a group formation activity for this
-            course yet.
-          </section>
+            <p class="text-sm text-slate-500">
+              No group formation survey is available for this course yet.
+            </p>
+          </div>
 
-          <section
-            th:if="${activity != null}"
-            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-6"
+          <!-- SORTED state: Show group assignment -->
+          <div
+            th:if="${activity != null and activityStatus == 'SORTED'}"
+            class="space-y-6"
           >
-            <div>
+            <div
+              class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4"
+            >
               <h2 class="text-xl font-bold" th:text="${activity.activityName}">
-                Project Teams
+                Activity
               </h2>
-              <p class="text-sm text-slate-500 mt-1">
-                Submit your preferences to help auto-build balanced teams.
-              </p>
-            </div>
+              <div
+                class="inline-block text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 font-semibold"
+              >
+                Groups Formed
+              </div>
 
+              <div th:if="${studentGroup != null}" class="space-y-3">
+                <p class="text-sm font-semibold text-slate-700">
+                  Your Group:
+                  <span
+                    class="text-blue-600"
+                    th:text="${studentGroup.groupName()}"
+                    >Group</span
+                  >
+                </p>
+                <div class="space-y-2">
+                  <div
+                    th:each="member : ${studentGroup.members()}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-50"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold"
+                      th:text="${#strings.substring(member.fullName(), 0, 1).toUpperCase()}"
+                    ></div>
+                    <div>
+                      <p
+                        class="text-sm font-medium"
+                        th:text="${member.fullName()}"
+                      ></p>
+                      <p
+                        class="text-xs text-slate-400"
+                        th:text="${member.email()}"
+                      ></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div th:if="${studentGroup == null}">
+                <p class="text-sm text-slate-500">
+                  Groups have been formed but you have not been assigned to a
+                  group yet.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLOSED state -->
+          <div
+            th:if="${activity != null and activityStatus == 'CLOSED'}"
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+          >
+            <h2 class="text-xl font-bold" th:text="${activity.activityName}">
+              Activity
+            </h2>
+            <p class="text-sm text-slate-500 mt-2">
+              This survey is currently closed. Groups will be formed soon.
+            </p>
             <div
               th:if="${savedPreference}"
-              class="text-sm text-blue-700 bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl"
+              class="mt-3 text-sm text-green-600"
             >
-              You already submitted preferences. You can update them any time
-              before grouping starts.
+              Your responses have been saved.
             </div>
+          </div>
 
-            <form
-              th:action="@{/student/{courseId}/{courseSlug}/group-formation(courseId=${course.id},courseSlug=${courseSlug})}"
-              th:object="${form}"
-              method="post"
-              class="space-y-4"
+          <!-- OPEN state: Survey form -->
+          <div
+            th:if="${activity != null and activityStatus == 'OPEN'}"
+            class="space-y-6"
+          >
+            <div
+              class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-6"
             >
-              <input
-                type="hidden"
-                name="activityId"
-                th:value="${activity.id}"
-              />
-
               <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1"
-                  >Preferred Topic</label
+                <h2
+                  class="text-xl font-bold"
+                  th:text="${activity.activityName}"
                 >
-                <select
-                  th:field="*{topicChoice}"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
-                  required
+                  Activity
+                </h2>
+                <div
+                  th:if="${savedPreference}"
+                  class="mt-2 inline-block text-xs px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 font-semibold"
                 >
-                  <option value="">Select one</option>
-                  <option
-                    th:each="topic : ${topicOptions}"
-                    th:value="${topic.topicText}"
-                    th:text="${topic.topicText}"
+                  Responses saved - you can update them below
+                </div>
+              </div>
+
+              <form
+                th:action="@{/student/{courseId}/{courseSlug}/group-formation(courseId=${course.id},courseSlug=${courseSlug})}"
+                th:object="${form}"
+                method="post"
+                class="space-y-6"
+              >
+                <input
+                  type="hidden"
+                  name="activityId"
+                  th:value="${activity.id}"
+                />
+
+                <!-- Survey Questions -->
+                <div
+                  th:each="question : ${surveyQuestions}"
+                  class="border border-slate-200 rounded-xl p-4 space-y-3"
+                >
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="text-xs px-1.5 py-0.5 rounded font-mono font-semibold"
+                      th:classappend="${question.questionType == 'SELECT' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}"
+                      th:text="${question.questionType}"
+                    ></span>
+                    <h3
+                      class="text-sm font-semibold"
+                      th:text="${question.questionTitle}"
+                    ></h3>
+                  </div>
+
+                  <!-- SELECT question: checkboxes -->
+                  <div
+                    th:if="${question.questionType == 'SELECT'}"
+                    class="space-y-2"
                   >
-                    Topic
-                  </option>
-                </select>
-              </div>
+                    <p class="text-xs text-slate-500">
+                      Select one or more options:
+                    </p>
+                    <div
+                      th:each="opt : ${optionsByQuestion.get(question.id)}"
+                      class="flex items-center gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        class="select-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        th:data-question-id="${question.id}"
+                        th:value="${opt.optionText}"
+                        onchange="updateSelectResponse(this)"
+                      />
+                      <label
+                        class="text-sm text-slate-700"
+                        th:text="${opt.optionText}"
+                      ></label>
+                    </div>
+                    <input
+                      type="hidden"
+                      th:name="'responses[' + ${question.id} + ']'"
+                      th:id="'response_' + ${question.id}"
+                      th:value="${savedResponses != null and savedResponses.containsKey(question.id) ? savedResponses.get(question.id) : ''}"
+                    />
+                  </div>
 
-              <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1"
-                  >Preferred Skill Role</label
-                >
-                <select
-                  th:field="*{skillChoice}"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
-                  required
-                >
-                  <option value="">Select one</option>
-                  <option
-                    th:each="skill : ${skillOptions}"
-                    th:value="${skill.skillText}"
-                    th:text="${skill.skillText}"
+                  <!-- RATING question: 1-5 radio buttons per option -->
+                  <div
+                    th:if="${question.questionType == 'RATING'}"
+                    class="space-y-3"
                   >
-                    Skill
-                  </option>
-                </select>
-              </div>
+                    <p class="text-xs text-slate-500">
+                      Rate each option from 1 (least preferred) to 5 (most
+                      preferred):
+                    </p>
+                    <div
+                      th:each="opt : ${optionsByQuestion.get(question.id)}"
+                      class="flex flex-col sm:flex-row sm:items-center gap-2 py-1"
+                    >
+                      <span
+                        class="text-sm text-slate-700 sm:w-40 flex-shrink-0"
+                        th:text="${opt.optionText}"
+                      ></span>
+                      <div class="flex gap-1">
+                        <span
+                          th:each="rating : ${#numbers.sequence(1, 5)}"
+                        >
+                          <label
+                            class="rating-label inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-300 text-sm cursor-pointer hover:bg-blue-50 transition-colors"
+                            th:data-question-id="${question.id}"
+                            th:data-option="${opt.optionText}"
+                            th:data-rating="${rating}"
+                          >
+                            <input
+                              type="radio"
+                              class="sr-only rating-radio"
+                              th:name="'rating_' + ${question.id} + '_' + ${opt.optionText}"
+                              th:value="${rating}"
+                              onchange="updateRatingResponse(this)"
+                            />
+                            <span th:text="${rating}"></span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+                    <input
+                      type="hidden"
+                      th:name="'responses[' + ${question.id} + ']'"
+                      th:id="'response_' + ${question.id}"
+                      th:value="${savedResponses != null and savedResponses.containsKey(question.id) ? savedResponses.get(question.id) : ''}"
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1"
-                  >Notes (optional)</label
-                >
-                <textarea
-                  th:field="*{notes}"
-                  rows="4"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="Add any constraints or preferences..."
-                ></textarea>
-              </div>
+                <!-- Availability Calendar -->
+                <div class="border border-slate-200 rounded-xl p-4 space-y-3">
+                  <h3 class="text-sm font-semibold">
+                    Availability (optional)
+                  </h3>
+                  <p class="text-xs text-slate-500">
+                    Click time slots when you are available to meet with your
+                    group.
+                  </p>
 
-              <div class="flex justify-end">
-                <button
-                  type="submit"
-                  class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700"
-                >
-                  Save Preferences
-                </button>
-              </div>
-            </form>
-          </section>
+                  <div
+                    class="grid grid-cols-8 gap-1 text-center text-xs select-none"
+                  >
+                    <div></div>
+                    <div class="font-semibold py-1">Mon</div>
+                    <div class="font-semibold py-1">Tue</div>
+                    <div class="font-semibold py-1">Wed</div>
+                    <div class="font-semibold py-1">Thu</div>
+                    <div class="font-semibold py-1">Fri</div>
+                    <div class="font-semibold py-1">Sat</div>
+                    <div class="font-semibold py-1">Sun</div>
+
+                    <div class="font-medium py-2 text-slate-600">Morning</div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="MON_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="TUE_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="WED_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="THU_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="FRI_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SAT_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SUN_MORNING"
+                      onclick="toggleSlot(this)"
+                    >
+                      8-12
+                    </div>
+
+                    <div class="font-medium py-2 text-slate-600">
+                      Afternoon
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="MON_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="TUE_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="WED_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="THU_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="FRI_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SAT_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SUN_AFTERNOON"
+                      onclick="toggleSlot(this)"
+                    >
+                      12-5
+                    </div>
+
+                    <div class="font-medium py-2 text-slate-600">Evening</div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="MON_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="TUE_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="WED_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="THU_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="FRI_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SAT_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                    <div
+                      class="slot-cell cursor-pointer rounded p-2 border border-slate-200 hover:border-green-300 transition-colors"
+                      data-slot="SUN_EVENING"
+                      onclick="toggleSlot(this)"
+                    >
+                      5-9
+                    </div>
+                  </div>
+
+                  <input
+                    type="hidden"
+                    th:field="*{availabilitySlots}"
+                    id="availabilitySlots"
+                  />
+                </div>
+
+                <!-- Notes -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1"
+                    >Additional Notes (optional)</label
+                  >
+                  <textarea
+                    th:field="*{notes}"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    rows="3"
+                    placeholder="Any additional information for group formation..."
+                  ></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex justify-end">
+                  <button
+                    type="submit"
+                    class="px-6 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-bold shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-400"
+                  >
+                    Save Responses
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </main>
+
+    <script>
+      // SELECT question: update hidden input with comma-separated selected values
+      function updateSelectResponse(checkbox) {
+        var questionId = checkbox.dataset.questionId;
+        var checkboxes = document.querySelectorAll(
+          '.select-checkbox[data-question-id="' + questionId + '"]'
+        );
+        var selected = [];
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].checked) {
+            selected.push(checkboxes[i].value);
+          }
+        }
+        document.getElementById("response_" + questionId).value =
+          selected.join(",");
+      }
+
+      // RATING question: update hidden input with "Option:Rating,Option:Rating" format
+      function updateRatingResponse(radio) {
+        var label = radio.closest(".rating-label");
+        var questionId = label.dataset.questionId;
+
+        // Highlight selected rating
+        var optionName = label.dataset.option;
+        var allLabels = document.querySelectorAll(
+          '.rating-label[data-question-id="' +
+            questionId +
+            '"][data-option="' +
+            optionName +
+            '"]'
+        );
+        for (var i = 0; i < allLabels.length; i++) {
+          allLabels[i].classList.remove(
+            "bg-blue-100",
+            "border-blue-400",
+            "text-blue-700"
+          );
+        }
+        label.classList.add("bg-blue-100", "border-blue-400", "text-blue-700");
+
+        // Build rating string for this question
+        var allRatingLabels = document.querySelectorAll(
+          '.rating-label[data-question-id="' + questionId + '"]'
+        );
+        var ratings = {};
+        for (var i = 0; i < allRatingLabels.length; i++) {
+          var r = allRatingLabels[i].querySelector("input");
+          if (r && r.checked) {
+            ratings[allRatingLabels[i].dataset.option] =
+              allRatingLabels[i].dataset.rating;
+          }
+        }
+
+        var parts = [];
+        for (var opt in ratings) {
+          parts.push(opt + ":" + ratings[opt]);
+        }
+        document.getElementById("response_" + questionId).value =
+          parts.join(",");
+      }
+
+      // Availability calendar
+      function toggleSlot(el) {
+        el.classList.toggle("bg-green-200");
+        el.classList.toggle("border-green-400");
+        updateAvailabilityInput();
+      }
+
+      function updateAvailabilityInput() {
+        var selected = document.querySelectorAll(".slot-cell.bg-green-200");
+        var slots = [];
+        for (var i = 0; i < selected.length; i++) {
+          slots.push(selected[i].dataset.slot);
+        }
+        document.getElementById("availabilitySlots").value = slots.join(",");
+      }
+
+      // Restore saved state on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Restore availability
+        var savedAvailability =
+          document.getElementById("availabilitySlots").value;
+        if (savedAvailability) {
+          var slots = savedAvailability.split(",");
+          for (var i = 0; i < slots.length; i++) {
+            var el = document.querySelector(
+              '[data-slot="' + slots[i] + '"]'
+            );
+            if (el) {
+              el.classList.add("bg-green-200", "border-green-400");
+            }
+          }
+        }
+
+        // Restore SELECT responses
+        var selectCheckboxes = document.querySelectorAll(".select-checkbox");
+        for (var i = 0; i < selectCheckboxes.length; i++) {
+          var cb = selectCheckboxes[i];
+          var qId = cb.dataset.questionId;
+          var hidden = document.getElementById("response_" + qId);
+          if (hidden && hidden.value) {
+            var selectedValues = hidden.value.split(",");
+            if (selectedValues.indexOf(cb.value) !== -1) {
+              cb.checked = true;
+            }
+          }
+        }
+
+        // Restore RATING responses
+        var ratingHiddens = document.querySelectorAll(
+          'input[type=hidden][id^="response_"]'
+        );
+        for (var i = 0; i < ratingHiddens.length; i++) {
+          var hidden = ratingHiddens[i];
+          if (!hidden.value || hidden.value.indexOf(":") === -1) continue;
+
+          var pairs = hidden.value.split(",");
+          for (var j = 0; j < pairs.length; j++) {
+            var parts = pairs[j].split(":");
+            if (parts.length !== 2) continue;
+            var optName = parts[0];
+            var ratingVal = parts[1];
+
+            var qId = hidden.id.replace("response_", "");
+            var label = document.querySelector(
+              '.rating-label[data-question-id="' +
+                qId +
+                '"][data-option="' +
+                optName +
+                '"][data-rating="' +
+                ratingVal +
+                '"]'
+            );
+            if (label) {
+              var radio = label.querySelector("input");
+              if (radio) radio.checked = true;
+              label.classList.add(
+                "bg-blue-100",
+                "border-blue-400",
+                "text-blue-700"
+              );
+            }
+          }
+        }
+      });
+    </script>
   </body>
 </html>
