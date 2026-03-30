@@ -13,7 +13,7 @@ TEAM MEMBERS
 
 
 ## FLEXIBLE SURVEY-BASED GROUP FORMATION OVERHAUL
-**Mar 2026 — Ashvin**
+**Mar 2026 — @Ashvin**
 
 **Implemented:**
 - Replaced the fixed 5-topic / 5-skill survey model with a fully flexible, professor-defined question system
@@ -87,6 +87,23 @@ branch and replaced their role with the new entities
 | 2 hours        | 3 hours     |
 
 ---
+### 🗓️ Student Availability & Scheduling Feature
+
+**Assignee:** @Gabriella | **Dates:** Mar 26–30, 2026
+
+Implemented:
+
+- [x] Developed student availability selection using weekday checkboxes and time range dropdowns
+- [x] Implemented backend logic to store and expand availability into time slots
+- [x] Built professor team availability view to identify best meeting times
+- [x] Integrated availability into group formation for improved team compatibility
+- [x] Estimated Time	Actual Time
+
+ Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 2 hours        | 3 hours     |
+
+---
 ### 📊 Weekly Team Health Check-ins
 **Assignee:** @Monabbir | **Dates:** Mar 18–24, 2026
 
@@ -100,10 +117,11 @@ branch and replaced their role with the new entities
 |:--------------:|:-----------:|
 | 4 hours        | 5 hours     |
 
+
 ---
 
 ### 🎨 Frontend GUI Expansion & Integration
-**Assignee:** @Monabbir | **Dates:** Mar 20–28, 2026
+**Assignee:** @Ashvin, @Monabbir | **Dates:** Mar 20–28, 2026
 
 **Implemented:**
 - [x] Built out the frontend GUI for the complex group formation interfaces.
@@ -193,10 +211,10 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 
 | Member     | Estimated (hrs) | Actual (hrs) |
 |------------|:---------------:|:------------:|
-| Tessa      | 8               | 8            |
-| Gabriella  | 8               | 7            |
-| Monabbir   | 10              | 13           |
-| Ashvin     | 14              | 16           |
+| Tessa      | 10              | 10           |
+| Gabriella  | 10              | 10           |
+| Monabbir   | 16              | 19           |
+| Ashvin     | 17              | 19           |
 | Sandeepon  | 4               | 0            |
 
 ---
