@@ -115,7 +115,7 @@ Implemented:
 
 | Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 4 hours        | 5 hours     |
+| 8 hours        | 10 hours     |
 
 
 ---
@@ -131,7 +131,7 @@ Implemented:
 
 | Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 6 hours        | 7 hours     |
+| 16 hours        | 20 hours     |
 
 ---
 
@@ -213,7 +213,7 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 |------------|:---------------:|:------------:|
 | Tessa      | 10              | 10           |
 | Gabriella  | 10              | 10           |
-| Monabbir   | 16              | 19           |
+| Monabbir   | 30              | 38           |
 | Ashvin     | 17              | 19           |
 | Sandeepon  | 4               | 0            |
 
