@@ -13,7 +13,7 @@ TEAM MEMBERS
 
 
 ## FLEXIBLE SURVEY-BASED GROUP FORMATION OVERHAUL
-**Mar 2026 — Ashvin**
+**Mar 2026 — @Ashvin**
 
 **Implemented:**
 - Replaced the fixed 5-topic / 5-skill survey model with a fully flexible, professor-defined question system
@@ -72,6 +72,38 @@ branch and replaced their role with the new entities
 | 14 hours       | 16 hours    |
 
 ---
+
+### ✨ Student Health & Survey Enhancements
+**Assignee:** @Tessa | **Dates:** Mar 28 - 29, 2026
+
+**Implemented:**
+- [x] Added student check-in history page displaying all past weekly health submissions
+- [x] Added visual health indicators (green/yellow/red) on each check-in card based on scores
+- [x] Added professor missing submissions list on the course survey page showing which students have not submitted their check-in for the week
+- [x] Fixed silent fail bug where students received no feedback when attempting to join a course they were already enrolled in — now throws a proper error message
+
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 4 hours        | 5 hours     |
+
+---
+### 🗓️ Student Availability & Scheduling Feature
+
+**Assignee:** @Gabriella | **Dates:** Mar 26–30, 2026
+
+Implemented:
+
+- [x] Developed student availability selection using weekday checkboxes and time range dropdowns
+- [x] Implemented backend logic to store and expand availability into time slots
+- [x] Built professor team availability view to identify best meeting times
+- [x] Integrated availability into group formation for improved team compatibility
+- [x] Estimated Time	Actual Time
+
+ Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 4 hours        | 5 hours     |
+
+---
 ### 📊 Weekly Team Health Check-ins
 **Assignee:** @Monabbir | **Dates:** Mar 18–24, 2026
 
@@ -83,12 +115,13 @@ branch and replaced their role with the new entities
 
 | Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 4 hours        | 5 hours     |
+| 8 hours        | 10 hours     |
+
 
 ---
 
 ### 🎨 Frontend GUI Expansion & Integration
-**Assignee:** @Monabbir | **Dates:** Mar 20–28, 2026
+**Assignee:** @Ashvin, @Monabbir | **Dates:** Mar 20–28, 2026
 
 **Implemented:**
 - [x] Built out the frontend GUI for the complex group formation interfaces.
@@ -98,7 +131,7 @@ branch and replaced their role with the new entities
 
 | Estimated Time | Actual Time |
 |:--------------:|:-----------:|
-| 6 hours        | 7 hours     |
+| 16 hours        | 20 hours     |
 
 ---
 
@@ -178,10 +211,10 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 
 | Member     | Estimated (hrs) | Actual (hrs) |
 |------------|:---------------:|:------------:|
-| Tessa      | 8               | 8            |
-| Gabriella  | 8               | 7            |
-| Monabbir   | 10              | 13           |
-| Ashvin     | 14              | 16           |
+| Tessa      | 15              | 16           |
+| Gabriella  | 15              | 16           |
+| Monabbir   | 30              | 38           |
+| Ashvin     | 36              | 44           |
 | Sandeepon  | 4               | 0            |
 
 ---

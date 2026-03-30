@@ -15,8 +15,8 @@ No changes in the Planning Document.
 [Peer evaluation from](docs/EECS2311Z_Delivery1_PeerReview_Group3.pdf) is in the `docs` folder
 
 ### Delivery 2
+Second Customer Meeting Video: https://drive.google.com/file/d/1NtFCmuqAqrJKnW_NAtoVBaWhjMbao2zk/view?usp=drive_link
 
-Second Customer Meeting Video: 
 
 [Peer evaluation from](docs/EECS2311X_Delivery2_PeerReview_Group3.pdf) is in the `docs` folder
 
