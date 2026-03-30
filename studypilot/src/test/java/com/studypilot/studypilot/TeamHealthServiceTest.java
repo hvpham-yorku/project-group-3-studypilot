@@ -44,7 +44,6 @@ class TeamHealthServiceTest {
     private static final LocalDate WEEK = LocalDate.of(2026, 3, 23);
 
     @BeforeEach
-    @SuppressWarnings("unused")
     void setUp() {
         teamHealthService = new TeamHealthService(
                 courseRepo,

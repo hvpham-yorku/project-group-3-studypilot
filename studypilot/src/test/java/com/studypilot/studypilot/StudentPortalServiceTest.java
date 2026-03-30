@@ -16,14 +16,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.studypilot.studypilot.BusinessLogicLayer.GroupFormationAlgorithmService;
 import com.studypilot.studypilot.BusinessLogicLayer.StudentPortalService;
 import com.studypilot.studypilot.DataAccessLayer.CourseEnrollmentRepo;
 import com.studypilot.studypilot.DataAccessLayer.CourseRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupMemberRepo;
+import com.studypilot.studypilot.DataAccessLayer.FormedGroupRepo;
 import com.studypilot.studypilot.DataAccessLayer.GroupFormationActivityRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationSkillOptionRepo;
-import com.studypilot.studypilot.DataAccessLayer.GroupFormationTopicOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.SurveyQuestionOptionRepo;
+import com.studypilot.studypilot.DataAccessLayer.SurveyQuestionRepo;
+import com.studypilot.studypilot.DataAccessLayer.SurveyResponseRepo;
 import com.studypilot.studypilot.DataAccessLayer.StudentGroupPreferenceRepo;
+import com.studypilot.studypilot.DataAccessLayer.UserRepo;
 import com.studypilot.studypilot.DomainModel.Course;
 import com.studypilot.studypilot.DomainModel.CourseEnrollment;
 import com.studypilot.studypilot.DomainModel.GroupFormationActivity;
@@ -36,31 +39,40 @@ public class StudentPortalServiceTest {
     private CourseRepo courseRepo;
     private CourseEnrollmentRepo enrollmentRepo;
     private GroupFormationActivityRepo activityRepo;
-    private GroupFormationTopicOptionRepo topicRepo;
-    private GroupFormationSkillOptionRepo skillRepo;
-    private StudentGroupPreferenceRepo preferenceRepo;
+    private SurveyQuestionRepo surveyQuestionRepo;
+    private SurveyQuestionOptionRepo surveyQuestionOptionRepo;
+    private SurveyResponseRepo surveyResponseRepo;
+    private StudentGroupPreferenceRepo studentGroupPreferenceRepo;
+    private FormedGroupRepo formedGroupRepo;
+    private FormedGroupMemberRepo formedGroupMemberRepo;
+    private UserRepo userRepo;
 
     private StudentPortalService service;
 
     @BeforeEach
-    @SuppressWarnings("unused")
     void setup() {
         courseRepo = mock(CourseRepo.class);
         enrollmentRepo = mock(CourseEnrollmentRepo.class);
         activityRepo = mock(GroupFormationActivityRepo.class);
-        topicRepo = mock(GroupFormationTopicOptionRepo.class);
-        skillRepo = mock(GroupFormationSkillOptionRepo.class);
-        preferenceRepo = mock(StudentGroupPreferenceRepo.class);
+        surveyQuestionRepo = mock(SurveyQuestionRepo.class);
+        surveyQuestionOptionRepo = mock(SurveyQuestionOptionRepo.class);
+        surveyResponseRepo = mock(SurveyResponseRepo.class);
+        studentGroupPreferenceRepo = mock(StudentGroupPreferenceRepo.class);
+        formedGroupRepo = mock(FormedGroupRepo.class);
+        formedGroupMemberRepo = mock(FormedGroupMemberRepo.class);
+        userRepo = mock(UserRepo.class);
 
-        GroupFormationAlgorithmService algorithmService = mock(GroupFormationAlgorithmService.class);
         service = new StudentPortalService(
                 courseRepo,
                 enrollmentRepo,
                 activityRepo,
-                topicRepo,
-                skillRepo,
-                preferenceRepo,
-                algorithmService
+                surveyQuestionRepo,
+                surveyQuestionOptionRepo,
+                surveyResponseRepo,
+                studentGroupPreferenceRepo,
+                formedGroupRepo,
+                formedGroupMemberRepo,
+                userRepo
         );
     }
 

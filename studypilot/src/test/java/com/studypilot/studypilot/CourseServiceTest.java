@@ -29,7 +29,6 @@ class CourseServiceTest {
     private CourseService courseService;
 
     @BeforeEach
-    @SuppressWarnings("unused")
     void setUp() {
         courseService = new CourseService(courseRepo);
     }

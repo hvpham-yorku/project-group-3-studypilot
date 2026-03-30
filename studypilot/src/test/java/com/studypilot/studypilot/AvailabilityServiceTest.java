@@ -36,7 +36,6 @@ class AvailabilityServiceTest {
     private AvailabilityService availabilityService;
 
     @BeforeEach
-    @SuppressWarnings("unused")
     void setUp() {
         availabilityRepo = mock(AvailabilityRepo.class);
         courseTimeSlotRepo = mock(CourseTimeSlotRepo.class);

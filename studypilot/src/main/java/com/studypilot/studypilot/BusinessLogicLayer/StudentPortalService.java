@@ -30,7 +30,6 @@ import com.studypilot.studypilot.DomainModel.StudentGroupPreference;
 import com.studypilot.studypilot.DomainModel.SurveyQuestion;
 import com.studypilot.studypilot.DomainModel.SurveyQuestionOption;
 import com.studypilot.studypilot.DomainModel.SurveyResponse;
-import com.studypilot.studypilot.DomainModel.User;
 
 @Service
 public class StudentPortalService {
@@ -275,79 +274,54 @@ public class StudentPortalService {
     public StudentTeamSnapshot getStudentTeamForCourse(Long studentId, String courseId) {
         requireStudent(studentId);
 
-        Optional<GroupFormationActivity> maybeActivity = getLatestGroupActivityForCourse(courseId);
-        if (maybeActivity.isEmpty()) {
+        List<FormedGroup> courseGroups = formedGroupRepo.findByCourseId(courseId);
+        if (courseGroups.isEmpty()) {
             return null;
         }
 
-        GroupFormationActivity activity = maybeActivity.get();
-        if (!"SORTED".equals(activity.getStatus())) {
-            return null;
-        }
+        Set<Long> courseGroupIds = courseGroups.stream()
+                .map(FormedGroup::getId)
+                .collect(Collectors.toSet());
 
-        Set<Long> enrolledStudentIds = enrollments.stream()
-                .map(CourseEnrollment::getStudentId)
-                .collect(HashSet::new, Set::add, Set::addAll);
+        List<FormedGroupMember> studentMemberships = formedGroupMemberRepo.findByStudentId(studentId);
+        for (FormedGroupMember membership : studentMemberships) {
+            if (courseGroupIds.contains(membership.getFormedGroupId())) {
+                FormedGroup group = courseGroups.stream()
+                        .filter(g -> g.getId().equals(membership.getFormedGroupId()))
+                        .findFirst()
+                        .orElse(null);
 
-        Map<Long, StudentGroupPreference> preferenceByStudentId = new HashMap<>();
-        for (StudentGroupPreference preference : studentGroupPreferenceRepo.findByActivityId(activity.getId())) {
-            preferenceByStudentId.put(preference.getStudentId(), preference);
-        }
+                if (group != null) {
+                    List<Long> memberIds = formedGroupMemberRepo.findByFormedGroupId(group.getId())
+                            .stream()
+                            .map(FormedGroupMember::getStudentId)
+                            .toList();
 
-        List<GroupFormationAlgorithmService.StudentSurveyProfile> profiles = new ArrayList<>();
-        for (Long enrolledStudentId : enrolledStudentIds) {
-            StudentGroupPreference preference = preferenceByStudentId.get(enrolledStudentId);
-            if (preference == null) {
-                profiles.add(new GroupFormationAlgorithmService.StudentSurveyProfile(
-                        enrolledStudentId,
-                        false,
-                        Set.of("unspecified"),
-                        Set.of(),
-                        Set.of(),
-                        3));
-                continue;
-            }
+                    String activityName = groupFormationActivityRepo.findById(group.getActivityId())
+                            .map(GroupFormationActivity::getActivityName)
+                            .orElse("Group Activity");
 
-            profiles.add(new GroupFormationAlgorithmService.StudentSurveyProfile(
-                    enrolledStudentId,
-                    true,
-                    Set.of("unspecified"),
-                    Set.of(preference.getTopicChoice()),
-                    Set.of(preference.getSkillChoice()),
-                    3));
-        }
-
-        GroupFormationAlgorithmService.GroupingRequest request = new GroupFormationAlgorithmService.GroupingRequest(
-                activity.getPreferredGroupSize(),
-                activity.getMinTeamSize(),
-                activity.getMaxTeamSize(),
-                activity.isGroupTopicsSimilarly(),
-                activity.isGroupSkillsSimilarly(),
-                enrolledStudentIds,
-                profiles);
-
-        GroupFormationAlgorithmService.GroupingResult result = groupFormationAlgorithmService.generateGroups(request,
-                courseId);
-        for (GroupFormationAlgorithmService.GroupTeam team : result.teams()) {
-            if (team.memberIds().contains(studentId)) {
-                return new StudentTeamSnapshot(team.teamNumber(), team.memberIds(), activity.getActivityName());
+                    return new StudentTeamSnapshot(group.getGroupNumber(), memberIds, activityName);
+                }
             }
         }
 
         return null;
     }
 
-    @Transactional
-    public StudentGroupPreference saveGroupPreference(Long studentId,
-            String courseId,
-            Long activityId,
-            List<GroupMemberInfo> members) {
-    }
-
     public record GroupMemberInfo(
             Long studentId,
             String fullName,
             String email) {
+
+    }
+
+    public record StudentGroupInfo(
+            Long groupId,
+            String groupName,
+            int groupNumber,
+            Long activityId,
+            List<GroupMemberInfo> members) {
 
     }
 
