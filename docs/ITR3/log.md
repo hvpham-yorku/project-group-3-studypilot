@@ -72,17 +72,20 @@ branch and replaced their role with the new entities
 | 14 hours       | 16 hours    |
 
 ---
+---
 
-## DATABASE SCHEMA EXTENSION FOR FLEXIBLE SURVEY SYSTEM
-**Mar 2026 — Ashvin**
+## MEETINGS
 
-**Completed:**
+**
 
+## TIME SUMMARY
 
-
-| Estimated Time | Actual Time |
-|----------------|-------------|
-| 2 hours        | 2 hours     |
+| Member     | Estimated | Actual |
+|------------|-----------|--------|
+| Tessa      |           |        |
+| Gabriella  |           |        |
+| Monabbir   |           |        |
+| Ashvin     |     14    |   16   |
 
 ---
 
