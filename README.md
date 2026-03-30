@@ -14,17 +14,17 @@ No changes in the Planning Document.
 ### Delivery 1
 [Peer evaluation from](docs/EECS2311Z_Delivery1_PeerReview_Group3.pdf) is in the `docs` folder
 
-# studypilot
-StudyPilot is an AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. It introduces a smart student grouping system that forms balanced teams using survey data, taking into account students’ skills, interests, and preferences. By automating this process, StudyPilot helps professors save time while creating more effective and compatible student groups.
-
-## How to run
-To run the Spring Boot application locally:
-
 ### Delivery 2
 
 Second Customer Meeting Video: 
 
 [Peer evaluation from](docs/EECS2311Z_Delivery2_PeerReview_Group3.pdf) is in the `docs` folder
+
+# studypilot
+StudyPilot is an AI-assisted academic workflow tool designed for the EECS2311 Software Development Project. It introduces a smart student grouping system that forms balanced teams using survey data, taking into account students’ skills, interests, and preferences. By automating this process, StudyPilot helps professors save time while creating more effective and compatible student groups.
+
+## How to run
+To run the Spring Boot application locally:
 
 ```bash
 cd studypilot
