@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.studypilot.studypilot.DomainModel.GroupFormationTopicOption;
+import com.studypilot.studypilot.DomainModel.SurveyQuestion;
 
-public interface GroupFormationTopicOptionRepo extends JpaRepository<GroupFormationTopicOption, Long> {
+public interface SurveyQuestionRepo extends JpaRepository<SurveyQuestion, Long> {
 
-    List<GroupFormationTopicOption> findByActivityIdOrderByOptionOrderAsc(Long activityId);
+    List<SurveyQuestion> findByActivityIdOrderByQuestionOrderAsc(Long activityId);
 
     @Modifying
-    @Query("delete from GroupFormationTopicOption t where t.activityId = :activityId")
+    @Query("delete from SurveyQuestion q where q.activityId = :activityId")
     void deleteByActivityId(@Param("activityId") Long activityId);
 }
