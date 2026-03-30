@@ -72,6 +72,22 @@ branch and replaced their role with the new entities
 | 14 hours       | 16 hours    |
 
 ---
+
+### ✨ Student Health & Survey Enhancements
+**Assignee:** @Tessa | **Dates:** Mar 28 - 29, 2026
+
+**Implemented:**
+- [x] Added student check-in history page displaying all past weekly health submissions
+- [x] Added visual health indicators (green/yellow/red) on each check-in card based on scores
+- [x] Added professor missing submissions list on the course survey page showing which students have not submitted their check-in for the week
+- [x] Fixed silent fail bug where students received no feedback when attempting to join a course they were already enrolled in — now throws a proper error message
+
+| Estimated Time | Actual Time |
+|:--------------:|:-----------:|
+| 2 hours        | 3 hours     |
+
+---
+---
 ### 📊 Weekly Team Health Check-ins
 **Assignee:** @Monabbir | **Dates:** Mar 18–24, 2026
 
