@@ -13,7 +13,7 @@ TEAM MEMBERS
 
 
 ## FLEXIBLE SURVEY-BASED GROUP FORMATION OVERHAUL
-**Mar 2026 — Ashvin**
+**Mar 2026 — @Ashvin**
 
 **Implemented:**
 - Replaced the fixed 5-topic / 5-skill survey model with a fully flexible, professor-defined question system
@@ -121,7 +121,7 @@ Implemented:
 ---
 
 ### 🎨 Frontend GUI Expansion & Integration
-**Assignee:** @Monabbir | **Dates:** Mar 20–28, 2026
+**Assignee:** @Ashvin, @Monabbir | **Dates:** Mar 20–28, 2026
 
 **Implemented:**
 - [x] Built out the frontend GUI for the complex group formation interfaces.
