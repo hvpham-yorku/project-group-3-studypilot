@@ -4,8 +4,6 @@ StudyPilot – Iteration 2 Log
 Repository Structure
 ---------------------------------
 
-``` 
-
 TEAM MEMBERS
 ==================================================
 * **Tessa Cloutier**
