@@ -49,14 +49,14 @@
           <span>📚</span> My Courses
         </a>
 
-        <!-- Student only: Weekly Surveys -->
+        <!-- Student only: Sprint Survey -->
         <a
           th:if="${session.role == 'STUDENT'}"
           href="/student/surveys"
           class="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors"
           th:classappend="${activePage == 'surveys'} ? ' bg-orange-50 text-orange-700 font-medium border border-orange-200' : ' text-slate-600 hover:bg-orange-50'"
         >
-          <span>📝</span> Weekly Surveys
+          <span>📝</span> Sprint Survey
         </a>
 
         <!-- Both roles: Team Analytics -->

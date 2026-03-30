@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weekly Surveys | StudyPilot</title>
+    <title>Sprint Survey | StudyPilot</title>
     <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
   </head>
   <body class="bg-slate-50 text-slate-900 min-h-screen flex">
@@ -17,7 +17,7 @@
       <div class="p-8 animate-fade-in-up space-y-6">
         <!-- Page Header -->
         <div>
-          <h1 class="text-3xl font-bold">Weekly Surveys</h1>
+          <h1 class="text-3xl font-bold">Sprint Survey</h1>
           <p class="text-sm text-slate-500 mt-1">
             View and complete active surveys from all your enrolled courses.
           </p>
@@ -280,9 +280,9 @@
                 <button
                   type="submit"
                   class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
-                  th:text="${checkinsByCourseId[course.id] != null} ? 'Update Weekly Survey' : 'Submit Weekly Survey'"
+                  th:text="${checkinsByCourseId[course.id] != null} ? 'Update Sprint Survey' : 'Submit Sprint Survey'"
                 >
-                  Submit Weekly Survey
+                  Submit Sprint Survey
                 </button>
               </div>
             </form>

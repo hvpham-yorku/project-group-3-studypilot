@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weekly Surveys | StudyPilot</title>
+    <title>Sprint Survey | StudyPilot</title>
     <th:block th:replace="~{fragments/tailwind :: tailwind}"></th:block>
   </head>
   <body class="bg-slate-50 text-slate-900 min-h-screen flex">
@@ -19,7 +19,7 @@
           <div class="flex items-center justify-between gap-4">
             <div>
               <p class="text-sm text-slate-500">
-                Course Space / Weekly Surveys
+                Course Space / Sprint Survey
               </p>
               <h1 class="text-3xl font-bold mt-1">
                 <span th:text="${courseCode}">EECS2311</span>
@@ -86,7 +86,7 @@
             class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4"
           >
             <div>
-              <h2 class="text-xl font-bold">Publish Weekly Survey</h2>
+              <h2 class="text-xl font-bold">Publish Sprint Survey</h2>
               <p class="text-sm text-slate-500 mt-1">
                 Create or update the survey that students must submit this week.
               </p>
@@ -127,9 +127,9 @@
                 <button
                   type="submit"
                   class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
-                  th:text="${weeklySurvey != null} ? 'Update Weekly Survey' : 'Publish Weekly Survey'"
+                  th:text="${weeklySurvey != null} ? 'Update Sprint Survey' : 'Publish Sprint Survey'"
                 >
-                  Publish Weekly Survey
+                  Publish Sprint Survey
                 </button>
               </div>
             </form>
