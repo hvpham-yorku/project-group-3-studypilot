@@ -27,6 +27,9 @@
           >
             Week of 2026-03-23
           </p>
+          <a href="/student/health/history" class="text-sm text-blue-600 hover:underline mt-1 inline-block">
+            View my past check-ins →
+          </a>
         </div>
 
         <div
@@ -84,21 +87,21 @@
           Error
         </p>
 
-        <!-- Empty state: no enrolled courses -->
+        <!-- Empty state: no active surveys -->
         <div
           th:if="${#lists.isEmpty(courses)}"
           class="bg-white border border-slate-200 rounded-2xl shadow-sm p-10 text-center"
         >
           <p class="text-4xl mb-4">📝</p>
           <p class="text-lg font-semibold text-slate-700">
-            No courses enrolled
+            No active surveys this week
           </p>
           <p class="text-sm text-slate-500 mt-1">
-            Enroll in a course from your
+            Your professors have not published weekly surveys yet. Check your
             <a href="/student/home" class="text-blue-600 hover:underline"
-              >home page</a
+              >course pages</a
             >
-            to see surveys here.
+            for updates.
           </p>
         </div>
 
@@ -125,14 +128,42 @@
               </div>
               <span
                 class="text-xs px-3 py-1 rounded-full font-semibold"
-                th:classappend="${checkinsByCourseId[course.id] != null} ? ' bg-emerald-100 text-emerald-700' : ' bg-amber-100 text-amber-700'"
-                th:text="${checkinsByCourseId[course.id] != null} ? 'Submitted' : 'Pending'"
+                th:classappend="${surveysByCourseId[course.id] == null ? ' bg-slate-100 text-slate-600' : (checkinsByCourseId[course.id] != null ? ' bg-emerald-100 text-emerald-700' : ' bg-amber-100 text-amber-700')}"
+                th:text="${surveysByCourseId[course.id] == null ? 'No Survey' : (checkinsByCourseId[course.id] != null ? 'Submitted' : 'Pending')}"
               >
                 Pending
               </span>
             </div>
 
+            <div
+              th:if="${surveysByCourseId[course.id] != null}"
+              class="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-4"
+            >
+              <p
+                class="text-xs uppercase tracking-wide text-blue-700 font-semibold"
+                th:text="${surveysByCourseId[course.id].title}"
+              >
+                Week 6 Team Pulse
+              </p>
+              <p
+                class="text-sm text-blue-900 mt-1 whitespace-pre-line"
+                th:text="${surveysByCourseId[course.id].description}"
+              >
+                Tell us how your team is doing this week.
+              </p>
+            </div>
+
+            <div
+              th:if="${surveysByCourseId[course.id] == null}"
+              class="mb-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4"
+            >
+              <p class="text-sm text-slate-600">
+                Your professor has not published this week's survey yet.
+              </p>
+            </div>
+
             <form
+              th:if="${surveysByCourseId[course.id] != null}"
               th:action="@{/student/surveys/checkin}"
               method="post"
               class="space-y-4"
@@ -148,36 +179,11 @@
                     class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
                   >
                     <option value="">Select</option>
-                    <option
-                      value="1"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 1}"
-                    >
-                      1 - Very Low
-                    </option>
-                    <option
-                      value="2"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 2}"
-                    >
-                      2 - Low
-                    </option>
-                    <option
-                      value="3"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 3}"
-                    >
-                      3 - Neutral
-                    </option>
-                    <option
-                      value="4"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 4}"
-                    >
-                      4 - Good
-                    </option>
-                    <option
-                      value="5"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 5}"
-                    >
-                      5 - Excellent
-                    </option>
+                    <option value="1" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 1}">1 - Very Low</option>
+                    <option value="2" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 2}">2 - Low</option>
+                    <option value="3" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 3}">3 - Neutral</option>
+                    <option value="4" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 4}">4 - Good</option>
+                    <option value="5" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].healthScore == 5}">5 - Excellent</option>
                   </select>
                 </label>
 
@@ -189,36 +195,11 @@
                     class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
                   >
                     <option value="">Select</option>
-                    <option
-                      value="1"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 1}"
-                    >
-                      1 - Overloaded
-                    </option>
-                    <option
-                      value="2"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 2}"
-                    >
-                      2 - Heavy
-                    </option>
-                    <option
-                      value="3"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 3}"
-                    >
-                      3 - Balanced
-                    </option>
-                    <option
-                      value="4"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 4}"
-                    >
-                      4 - Light
-                    </option>
-                    <option
-                      value="5"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 5}"
-                    >
-                      5 - Very Light
-                    </option>
+                    <option value="1" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 1}">1 - Overloaded</option>
+                    <option value="2" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 2}">2 - Heavy</option>
+                    <option value="3" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 3}">3 - Balanced</option>
+                    <option value="4" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 4}">4 - Light</option>
+                    <option value="5" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].workloadScore == 5}">5 - Very Light</option>
                   </select>
                 </label>
 
@@ -230,36 +211,11 @@
                     class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
                   >
                     <option value="">Select</option>
-                    <option
-                      value="1"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 1}"
-                    >
-                      1 - Poor
-                    </option>
-                    <option
-                      value="2"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 2}"
-                    >
-                      2 - Weak
-                    </option>
-                    <option
-                      value="3"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 3}"
-                    >
-                      3 - Okay
-                    </option>
-                    <option
-                      value="4"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 4}"
-                    >
-                      4 - Strong
-                    </option>
-                    <option
-                      value="5"
-                      th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 5}"
-                    >
-                      5 - Excellent
-                    </option>
+                    <option value="1" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 1}">1 - Poor</option>
+                    <option value="2" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 2}">2 - Weak</option>
+                    <option value="3" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 3}">3 - Okay</option>
+                    <option value="4" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 4}">4 - Strong</option>
+                    <option value="5" th:selected="${checkinsByCourseId[course.id] != null and checkinsByCourseId[course.id].collaborationScore == 5}">5 - Excellent</option>
                   </select>
                 </label>
               </div>
