@@ -111,7 +111,7 @@ public class StudentPortalService {
                 .orElseThrow(() -> new IllegalArgumentException("Course not found for that Course ID."));
 
         if (courseEnrollmentRepo.existsByCourseIdAndStudentId(course.getId(), studentId)) {
-            return;
+        	throw new IllegalArgumentException("You are already enrolled in this course.");
         }
 
         courseEnrollmentRepo.save(new CourseEnrollment(course.getId(), studentId));
