@@ -180,7 +180,7 @@ Implemented a fully dynamic survey builder utilizing `survey_questions` and `sur
 | Tessa      | 8               | 8            |
 | Gabriella  | 8               | 7            |
 | Monabbir   | 10              | 13           |
-| Ashvin     | 10              | 14           |
+| Ashvin     | 14              | 16           |
 | Sandeepon  | 4               | 0            |
 
 ---
