@@ -52,9 +52,11 @@ branch and replaced their role with the new entities
 
 
 **Database Work:**
-- Added table to store professor defined questions per activity with type and grouping strategy
-- Added table to store the answer options for each question in order
-- Added table with a unique constraint on to store each student's answer per question
+- Designed relational schema to replace fixed topic/skill option tables with a general purpose survey question and response structure
+- Added `survey_questions` table with question type and per question grouping strategy fields
+- Added `survey_question_options` table linked to questions with ordering support
+- Added `survey_responses` table with a unique constraint ensuring one response per student per question per activity
+- Extended `student_group_preferences` with `availability_slots` and `question_responses` columns using Hibernate compatible `columnDefinition` defaults to avoid null violations on existing rows
 - Stored SELECT responses as comma separated option texts and RATING responses as `Option:Rating,Option:Rating` format in a single cell
 
 **Testing / Verification:**
@@ -67,7 +69,7 @@ branch and replaced their role with the new entities
 
 | Estimated Time | Actual Time |
 |----------------|-------------|
-| 12 hours       | 14 hours    |
+| 14 hours       | 16 hours    |
 
 ---
 
@@ -75,11 +77,7 @@ branch and replaced their role with the new entities
 **Mar 2026 — Ashvin**
 
 **Completed:**
-- Designed relational schema to replace fixed topic/skill option tables with a general-purpose survey question and response structure
-- Added `survey_questions` table with question type and per question grouping strategy fields
-- Added `survey_question_options` table linked to questions with ordering support
-- Added `survey_responses` table with a unique constraint ensuring one response per student per question per activity
-- Extended `student_group_preferences` with `availability_slots` and `question_responses` columns using Hibernate compatible `columnDefinition` defaults to avoid null violations on existing rows
+
 
 
 | Estimated Time | Actual Time |
