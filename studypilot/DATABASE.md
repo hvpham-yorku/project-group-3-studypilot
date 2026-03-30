@@ -1,120 +1,197 @@
-DATABASE
+# Database Structure
 
-- PostgreSQL
-- Schema managed by JPA/Hibernate (ddl-auto=update)
+Current schema source:
 
-TABLE users
+- Database engine: PostgreSQL
+- Schema management: JPA/Hibernate with `spring.jpa.hibernate.ddl-auto=update`
+- Source of truth: entity classes in `src/main/java/com/studypilot/studypilot/DomainModel`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- email: VARCHAR(320), NOT NULL, UNIQUE
-- password_hash: VARCHAR(255), NOT NULL
-- role: VARCHAR(255), NOT NULL
-- full_name: VARCHAR(255), NOT NULL
-- created_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+Notes:
 
-TABLE courses
+- This project mostly models relationships as scalar ID columns such as `course_id` and `student_id` rather than JPA associations.
+- That means the relationships below are logical/application-level links unless a unique constraint is explicitly listed.
+- If a `String` column has no explicit `length`, Hibernate default sizing applies.
 
-- id: VARCHAR(32), PK, NOT NULL
-- course_code: VARCHAR(255), NOT NULL
-- course_name: VARCHAR(255), NOT NULL
-- join_code: VARCHAR(8), UNIQUE, NULL
-- professor_id: BIGINT, NOT NULL
-- created_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+## Core Tables
 
-TABLE course_enrollments
+### `users`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- student_id: BIGINT, NOT NULL
-- created_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+- `id`: BIGINT, primary key, auto-increment
+- `email`: VARCHAR(320), not null, unique
+- `password_hash`: string, not null
+- `role`: string, not null
+- `full_name`: string, not null
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
 
-TABLE group_formation_activities
+### `courses`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- professor_id: BIGINT, NOT NULL
-- activity_name: VARCHAR(150), NOT NULL
-- preferred_group_size: INTEGER, NOT NULL
-- min_team_size: INTEGER, NOT NULL
-- max_team_size: INTEGER, NOT NULL
-- group_topics_similarly: BOOLEAN, NOT NULL
-- group_skills_similarly: BOOLEAN, NOT NULL
-- created_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+- `id`: VARCHAR(32), primary key, not null
+- `course_code`: string, not null
+- `course_name`: string, not null
+- `join_code`: VARCHAR(8), unique, nullable
+- `professor_id`: BIGINT, not null, logical reference to `users.id`
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
 
-TABLE group_formation_topic_options
+### `course_enrollments`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- activity_id: BIGINT, NOT NULL
-- option_order: INTEGER, NOT NULL
-- topic_text: VARCHAR(120), NOT NULL
+- `id`: BIGINT, primary key, auto-increment
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
 
-TABLE group_formation_skill_options
+### `course_time_slots`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- activity_id: BIGINT, NOT NULL
-- option_order: INTEGER, NOT NULL
-- skill_text: VARCHAR(120), NOT NULL
+- `id`: BIGINT, primary key, auto-increment
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `slot_label`: VARCHAR(50), not null
 
-TABLE student_group_preferences
+### `student_availability`
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- activity_id: BIGINT, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- student_id: BIGINT, NOT NULL
-- topic_choice: VARCHAR(120), NOT NULL
-- skill_choice: VARCHAR(120), NOT NULL
-- notes: VARCHAR(600), NULL
-- updated_at: TIMESTAMP WITH TIME ZONE, NOT NULL
-- UNIQUE(activity_id, student_id)
+- `id`: BIGINT, primary key, auto-increment
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `time_slot`: VARCHAR(50), not null
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
 
-TABLE team_health_checkins
+## Group Formation Tables
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- student_id: BIGINT, NOT NULL
-- week_start: DATE, NOT NULL
-- health_score: INTEGER, NOT NULL
-- workload_score: INTEGER, NOT NULL
-- collaboration_score: INTEGER, NOT NULL
-- status_text: VARCHAR(600), NULL
-- updated_at: TIMESTAMP WITH TIME ZONE, NOT NULL
-- UNIQUE(course_id, student_id, week_start)
+### `group_formation_activities`
 
-TABLE quiz_tests
+- `id`: BIGINT, primary key, auto-increment
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `professor_id`: BIGINT, not null, logical reference to `users.id`
+- `activity_name`: VARCHAR(150), not null
+- `preferred_group_size`: INTEGER, not null
+- `min_team_size`: INTEGER, not null
+- `max_team_size`: INTEGER, not null
+- `group_topics_similarly`: BOOLEAN, default `true`
+- `group_skills_similarly`: BOOLEAN, default `false`
+- `status`: VARCHAR(20), default `OPEN`
+- `deadline`: TIMESTAMP WITH TIME ZONE, nullable
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- professor_id: BIGINT, NOT NULL
-- title: VARCHAR(150), NOT NULL
-- source_file_name: VARCHAR(255), NOT NULL
-- created_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+### `group_formation_topic_options`
 
-TABLE quiz_questions
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `option_order`: INTEGER, not null
+- `topic_text`: VARCHAR(120), not null
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- quiz_test_id: BIGINT, NOT NULL
-- question_order: INTEGER, NOT NULL
-- question_text: VARCHAR(500), NOT NULL
-- option_a: VARCHAR(255), NOT NULL
-- option_b: VARCHAR(255), NOT NULL
-- option_c: VARCHAR(255), NOT NULL
-- option_d: VARCHAR(255), NOT NULL
-- correct_option: VARCHAR(1), NOT NULL
+### `group_formation_skill_options`
 
-TABLE quiz_submissions
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `option_order`: INTEGER, not null
+- `skill_text`: VARCHAR(120), not null
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- quiz_test_id: BIGINT, NOT NULL
-- course_id: VARCHAR(32), NOT NULL
-- student_id: BIGINT, NOT NULL
-- score: INTEGER, NOT NULL
-- total_questions: INTEGER, NOT NULL
-- submitted_at: TIMESTAMP WITH TIME ZONE, NOT NULL
+### `student_group_preferences`
 
-TABLE quiz_submission_answers
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `topic_choice`: VARCHAR(120), default empty string
+- `skill_choice`: VARCHAR(120), default empty string
+- `notes`: VARCHAR(600), nullable
+- `question_responses`: VARCHAR(8000), nullable
+- `availability_slots`: VARCHAR(1000), nullable
+- `updated_at`: TIMESTAMP WITH TIME ZONE, not null
+- Unique constraint: (`activity_id`, `student_id`)
 
-- id: BIGINT, PK, auto-increment, NOT NULL
-- submission_id: BIGINT, NOT NULL
-- question_id: BIGINT, NOT NULL
-- selected_option: VARCHAR(1), NOT NULL
-- is_correct: BOOLEAN, NOT NULL
+### `formed_groups`
+
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `group_number`: INTEGER, not null
+- `group_name`: VARCHAR(150), not null
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
+
+### `formed_group_members`
+
+- `id`: BIGINT, primary key, auto-increment
+- `formed_group_id`: BIGINT, not null, logical reference to `formed_groups.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- Unique constraint: (`formed_group_id`, `student_id`)
+
+## Survey Tables
+
+### `survey_questions`
+
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `question_order`: INTEGER, not null
+- `question_title`: VARCHAR(200), not null
+- `question_type`: VARCHAR(20), not null
+- `grouping_strategy`: VARCHAR(20), not null
+
+### `survey_question_options`
+
+- `id`: BIGINT, primary key, auto-increment
+- `question_id`: BIGINT, not null, logical reference to `survey_questions.id`
+- `option_order`: INTEGER, not null
+- `option_text`: VARCHAR(150), not null
+
+### `survey_responses`
+
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `question_id`: BIGINT, not null, logical reference to `survey_questions.id`
+- `response_value`: VARCHAR(2000), not null
+- `updated_at`: TIMESTAMP WITH TIME ZONE, not null
+- Unique constraint: (`activity_id`, `student_id`, `question_id`)
+
+### `weekly_surveys`
+
+- `id`: BIGINT, primary key, auto-increment
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `professor_id`: BIGINT, not null, logical reference to `users.id`
+- `week_start`: DATE, not null
+- `title`: VARCHAR(120), not null
+- `description`: VARCHAR(1000), not null
+- `created_at`: TIMESTAMP WITH TIME ZONE, not null
+- `updated_at`: TIMESTAMP WITH TIME ZONE, not null
+- Unique constraint: (`course_id`, `week_start`)
+
+## Team Tables
+
+### `teams`
+
+- `id`: BIGINT, primary key, auto-increment
+- `activity_id`: BIGINT, not null, logical reference to `group_formation_activities.id`
+- `course_id`: string, not null, logical reference to `courses.id`
+- `team_name`: string, not null
+- `created_at`: TIMESTAMP, not null
+
+### `team_members`
+
+- `id`: BIGINT, primary key, auto-increment
+- `team_id`: BIGINT, not null, logical reference to `teams.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `created_at`: TIMESTAMP, not null
+
+### `team_health_checkins`
+
+- `id`: BIGINT, primary key, auto-increment
+- `course_id`: VARCHAR(32), not null, logical reference to `courses.id`
+- `student_id`: BIGINT, not null, logical reference to `users.id`
+- `week_start`: DATE, not null
+- `health_score`: INTEGER, not null
+- `workload_score`: INTEGER, not null
+- `collaboration_score`: INTEGER, not null
+- `status_text`: VARCHAR(600), nullable
+- `updated_at`: TIMESTAMP WITH TIME ZONE, not null
+- Unique constraint: (`course_id`, `student_id`, `week_start`)
+
+## Relationship Summary
+
+- A `course` belongs to one professor through `courses.professor_id`.
+- A `course_enrollment` links one student to one course.
+- A `group_formation_activity` belongs to one course and one professor.
+- Topic options, skill options, survey questions, and formed groups belong to one group formation activity.
+- Survey question options belong to one survey question.
+- Student group preferences and survey responses belong to one student for one activity.
+- Formed group members belong to one formed group and one student.
+- Teams belong to one activity and one course; team members belong to one team and one student.
+- Weekly surveys and team health check-ins are course-scoped records.

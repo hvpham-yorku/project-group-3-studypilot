@@ -144,8 +144,11 @@ public class StudentPortalServiceTest {
         when(enrollmentRepo.existsByCourseIdAndStudentId("C1", 1L))
                 .thenReturn(true);
 
-        service.enrollStudentInCourseByJoinCode(1L, "ABCDEFGH");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            service.enrollStudentInCourseByJoinCode(1L, "ABCDEFGH");
+        });
 
+        assertTrue(ex.getMessage() != null && !ex.getMessage().isBlank());
         verify(enrollmentRepo, never()).save(any());
     }
 
